@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var del = require('del');
 var react = require('gulp-react');
 var less = require('gulp-less');
-var Hjson = require('gulp-hjson');
+var cson = require('gulp-cson');
 var nodeunit = require('gulp-nodeunit');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
@@ -34,8 +34,8 @@ gulp.task("less", function(){
 });
 
 gulp.task("data", function(){
-	return gulp.src('data/*.hjson')
-    	.pipe(Hjson({ to: 'json' }))
+	return gulp.src('data/*.cson')
+    	.pipe(cson())
     	.pipe(gulp.dest('build/data/'));
 });
 
