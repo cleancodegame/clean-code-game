@@ -58,7 +58,7 @@ gulp.task("browserify", ['jsx'], function(){
 		.on('error', handleError);
 });
 
-gulp.task("js-with-tests", ['jsx'], function(){
+gulp.task("js-with-tests", ['browserify'], function(){
 	return gulp.src('src/js/tests.js')
 		.pipe(nodeunit())
 		.on('error', handleError);
@@ -70,7 +70,7 @@ gulp.task("default", ['clean'], function(){
 
 gulp.task('watch', ['default'], function(){
 	gulp.watch('src/jsx/*.js', ['js-with-tests']);
-	gulp.watch('data/*.hjson', ['data']);
+	gulp.watch('data/*.cson', ['data']);
 	gulp.watch('src/*.less', ['less']);
 	gulp.watch('src/*.html', ['html']);
 	gulp.watch('libs/**/*', ['libs']);
