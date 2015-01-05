@@ -29,7 +29,31 @@
 			'Console.Write':
 				replace: '  Console.Write'
 				type: 'formatting'
-				description: "Programmers rely heavily on indentation. They visually line up lines on the left to see what scope they appear in."
-	
+				description: "Programmers rely heavily on indentation. They visually line up lines on the left to see what scope they appear in."	
+	},
+	{
+		code: '''
+        string[] GetBigramms (IList<string> {{w}})
+        {
+            int {{kol_bigramm}} = {{w}}.Count - 1;
+            string[] {{Bigramms}} = new string[{{kol_bigramm}}];
+            for (var i = 0; i <= {{kol_bigramm}} - 1; i++)
+            	{{Bigramms}}[i] = w[i] + " " + w[i + 1];
+            return {{Bigramms}}.Distinct().ToArray();
+        }
+		'''
+		bugs:
+			w:
+				replace: 'words'
+				type: 'naming'
+				description: "The length of a name should correspond to the size of its scope. One-letter names allowed for 1-2 lines scope only."
+			kol_bigramm:
+				replace: 'bigrammsCount'
+				type: 'naming'
+				description: "Do not mix russian and english words in names. It may confuse other programmers."
+			Bigramms:
+				type: 'naming'
+				replace: 'bigramms'
+				description: "Try to follow default naming rules for your language. In C# you should start your local variable with lowercase."
 	}
 ]

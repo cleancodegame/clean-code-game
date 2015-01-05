@@ -101,6 +101,7 @@ var Code = React.createClass({
 var Round = React.createClass({
     propTypes: {
         codeSample: React.PropTypes.instanceOf(models.CodeSample).isRequired,
+        onNext: React.PropTypes.func.isRequired
     },
 
     getInitialState: function() {
@@ -167,7 +168,9 @@ var Round = React.createClass({
 
     renderNextButton: function(){
         if (!this.finished()) return "";
-        return <button className="pull-right btn btn-lg btn-success">Next Piece of Code</button>
+        return <button 
+                className="pull-right btn btn-lg btn-success"
+                onClick={this.props.onNext}>Next Piece of Code</button>
     },
 
     renderTitle: function(){

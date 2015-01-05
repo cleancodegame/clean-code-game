@@ -5,22 +5,21 @@ var views = require("./views.js");
 var Round = views.Round;
 var Results = views.Results;
 
-var Game = function(data, totalScore)
+var Game = function(data)
 {
   var me = this;
-  this.totalScore = totalScore;
 
-  this.startGame = function() {
-    me.score = 0;
-    me.codeSample = new models.CodeSample(data[0]);
+  this.runNextRound = function() {
+    me.codeSample = new models.CodeSample(data[++me.currentLevel]);
     me.showNextRound();
   }
 
   this.showNextRound = function(){
+    $("#game").empty();
     React.render(
       <Round
-        onNext={this.handleNext}
         codeSample={this.codeSample}
+        onNext={this.handleNext}
         />,
       document.getElementById("game"));
   };
@@ -38,14 +37,23 @@ var Game = function(data, totalScore)
         score={this.score}
         totalScore={this.totalScore}
         judge={judge(this.score / this.totalScore)}
-        onRepeat={this.startGame} />,
+        onRepeat={this.restart} />,
       document.getElementById("main"));
   };
 
-  this.handleNext = function(solved){
-    console.log("next");
+  this.restart = function(){
+    me.currentLevel = -1;
+    me.score = 0;
+    me.runNextRound();
+
   }
-  this.startGame();
+
+  this.handleNext = function(){
+    console.log("next in game");
+    me.runNextRound();
+  }
+
+  this.restart();
 };
 
 function runGame(){
