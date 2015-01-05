@@ -1,0 +1,50 @@
+<!DOCTYPE htl>
+<html>
+
+<head>
+  <title>Clean code</title>
+  <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" charset="utf-8">
+  <link href="libs/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" charset="utf-8">
+  <link href="libs/codemirror/theme/cobalt.css" rel="stylesheet" type="text/css" charset="utf-8">
+  <link href="libs/animate/animate.css" rel="stylesheet" type="text/css" charset="utf-8">
+  <link href="app.css" rel="stylesheet" type="text/css" charset="utf-8">
+
+  <script src="libs/lodash/lodash.min.js" charset="utf-8"></script>
+  <script src="libs/react/react.js" charset="utf-8"></script>
+  <script src="libs/jquery/jquery-2.1.3.min.js"></script>
+  <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+  <script src="http://vk.com/js/api/share.js?90" charset="windows-1251"></script>
+
+  <script src="libs/codemirror/lib/codemirror.js" charset="utf-8"></script>
+  <script src="libs/codemirror/mode/clike/clike.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <div class="header">
+    <div class="container">
+      <h1>The Clean Code Game</h1>
+    </div>
+  </div>
+  <div class="container">
+    <div id="game"></div>
+  </div>
+  <script>
+    function require(name){
+      if (name == 'lodash') return _;
+      return undefined;
+    }
+  </script>
+  <script src="bundle.js" charset="utf-8"></script>
+
+<script>window.twttr = (function (d, s, id) {
+  var t, js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src= "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+  return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+}(document, "script", "twitter-wjs"));</script>
+
+</body>
+
+</html>

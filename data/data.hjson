@@ -1,0 +1,38 @@
+[
+	{
+		code:
+		'''
+		string {{a}} = Console.ReadLine();
+		bool {{f}} = false;
+		for(int {{indexInReadString}}=0; {{indexInReadString}}<{{a}}.Length; {{indexInReadString}}++)
+		{
+			if ({{f}} || {{a}}[{{indexInReadString}}] != '\\')
+			{{Console.Write}}({{a}}[{{indexInReadString}}]);
+			{{f}} = {{a}}[{{indexInReadString}}] == '\\';
+		}
+		'''
+		bugs:
+		{
+			a: {
+				replace: line
+				type: naming
+				description: Avoid mental mappings. 'line' or even 's' is better than 'a' in this case.
+			}
+			f: {
+				replace: escaped
+				type: naming
+				description: Bool variable have semantics too. Use it in the name to make code more readable. 'escaped' would be better in this case.
+			}
+			indexInReadString: {
+				replace: charIndex
+				type: naming
+				description: The length of a name should correspond to the size of its scope. indexInReadString — is too long for 4-lines scope.
+			}
+			"Console.Write": {
+				replace: "  Console.Write"
+				type: formatting
+				description: Programmers rely heavily on indentation. They visually line up lines on the left to see what scope they appear in.
+			}
+		}
+	}
+]
