@@ -115,15 +115,15 @@
 				'''		
 	},
 	{
-		name: 'bigramms'
+		name: 'bigrams'
 		code: '''
-		string[] GetBigramms (IList<string> {{w}})
+		string[] GetBigrams (IList<string> {{w}})
 		{
-			int {{сol_bigramm}} = {{w}}.Count - 1;
-			string[] {{Bigramms}} = new string[{{сol_bigramm}}];
-			for (var i = 0; i <= {{сol_bigramm}} - 1; i++)
-				{{Bigramms}}[i] = {{w}}[i] + " " + {{w}}[i + 1];
-			return {{Bigramms}}.Distinct().ToArray();
+			int {{сol_bigram}} = {{w}}.Count - 1;
+			string[] {{Bigrams}} = new string[{{сol_bigram}}];
+			for (var i = 0; i <= {{сol_bigram}} - 1; i++)
+				{{Bigrams}}[i] = {{w}}[i] + " " + {{w}}[i + 1];
+			return {{Bigrams}}.Distinct().ToArray();
 		}
 		'''
 		bugs:
@@ -135,8 +135,8 @@
 				Общее правило — чем больше область видимости сущности, тем подробнее у неё должно быть имя.
 				Длинное имя проще найти и сложнее с чем-то перепутать.
 				'''		
-			сol_bigramm:
-				replace: 'bigrammsCount'
+			сol_bigram:
+				replace: 'bigramsCount'
 				type: 'naming'
 				description: '''
 				Не используйте русские слова в именах. Это запутает читателя.
@@ -144,9 +144,9 @@
 				поэтому написанные транслитом русские слова могут быть восприняты неправильно.
 				Например, в данном случае col (количество) легко спутать с сокращением от слова column.
 				'''
-			Bigramms:
+			Bigrams:
 				type: 'naming'
-				replace: 'bigramms'
+				replace: 'bigrams'
 				description: '''
 				В C# имена локальных переменных принято начинать с маленькой буквы.
 				Придерживайтесь стандартного стиля именования для вашего языка программирования.
