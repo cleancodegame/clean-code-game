@@ -5,6 +5,7 @@ var utils = require("./utils");
 
 var CodeSample = function(data) {
 	var me = this;
+	this.name = data.name;
 	this.code = data.code.replace('\r', '');
 	this.bugs = data.bugs;
 	this.bugsCount = _.keys(this.bugs).length;
@@ -90,7 +91,7 @@ var CodeSample = function(data) {
 		var bugs2 = _.cloneDeep(this.bugs);
 		delete bugs2[bug.name];
 		return new CodeSample({
-			name: data.name,
+			name: this.name,
 			code: code2,
 			bugs: bugs2
 		});
