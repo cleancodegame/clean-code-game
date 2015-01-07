@@ -1,4 +1,4 @@
-var CodeSample = require("./models").CodeSample;
+var CodeSample = require("./CodeSample");
 
 exports.testOffsets = function(test){
     var code = new CodeSample({code:"{{a}} {{b}}", bugs:{a: { name:'a'}, b: {name:'b'}} });

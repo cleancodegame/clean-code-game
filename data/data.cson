@@ -1,20 +1,53 @@
 [
 	{
+		code:'''
+		List<int[]> {{GetThemAll}}() {
+			List<int[]> {{list1}} = new List<int[]>();
+			for (int[] {{x}} : {{theList}})
+				if ({{x}}{{[0]==4}})
+					{{list1}}.add({{x}});
+			return {{list1}};
+		}
+		'''
+		bugs:
+			GetThemAll:
+				type: 'naming'
+				replace: 'GetFlaggedCells'
+				description: "Не пытайтесь острить в коде."
+			list1:
+				type: 'naming'
+				replace: 'flaggedCells'
+				description: "Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю."
+			x:
+				type: 'naming'
+				replace: 'cell'
+				description: "Переменные цикла, имеющие семантику тоже заслуживают хорошего имени."
+			theList:
+				type: 'naming'
+				replace: 'allCells'
+				description: "Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю."
+			'[0]==4':
+				type: 'oop'
+				replace: '.IsFlagged'
+				description: "Хранение данных в объектах повышает читаемость кода по сравнению с хранением данных в массивах. x.IsFlagged гораздо понятнее, чем x[0] == 4"
+
+	},
+	{
 		code: '''
-		string {{a}} = Console.ReadLine();
+		string {{rstr}} = Console.ReadLine();
 		bool {{f}} = false;
-		for(int {{indexInReadString}}=0; {{indexInReadString}}<{{a}}.Length; {{indexInReadString}}++)
+		for(int {{indexInReadString}}=0; {{indexInReadString}}<{{rstr}}.Length; {{indexInReadString}}++)
 		{
-			if ({{f}} || {{a}}[{{indexInReadString}}] != '\\')
-			{{Console.Write}}({{a}}[{{indexInReadString}}]);
-			{{f}} = {{a}}[{{indexInReadString}}] == '\\';
+			if ({{f}} || {{rstr}}[{{indexInReadString}}] != '\\')
+			{{Console.Write}}({{rstr}}[{{indexInReadString}}]);
+			{{f}} = {{rstr}}[{{indexInReadString}}] == '\\';
 		}
 		'''
 		bugs: 
-			a:
+			rstr:
 				replace: 'line'
 				type: 'naming'
-				description: "Avoid mental mappings. 'line' or even 's' is better than 'a' in this case."
+				description: "Избегайте труднопроизносимых имен и кодироания, понятного лишь вам."
 			
 			f:
 				replace: 'escaped'
@@ -33,14 +66,14 @@
 	},
 	{
 		code: '''
-        string[] GetBigramms (IList<string> {{w}})
-        {
-            int {{kol_bigramm}} = {{w}}.Count - 1;
-            string[] {{Bigramms}} = new string[{{kol_bigramm}}];
-            for (var i = 0; i <= {{kol_bigramm}} - 1; i++)
-            	{{Bigramms}}[i] = w[i] + " " + w[i + 1];
-            return {{Bigramms}}.Distinct().ToArray();
-        }
+		string[] GetBigramms (IList<string> {{w}})
+		{
+			int {{kol_bigramm}} = {{w}}.Count - 1;
+			string[] {{Bigramms}} = new string[{{kol_bigramm}}];
+			for (var i = 0; i <= {{kol_bigramm}} - 1; i++)
+				{{Bigramms}}[i] = {{w}}[i] + " " + {{w}}[i + 1];
+			return {{Bigramms}}.Distinct().ToArray();
+		}
 		'''
 		bugs:
 			w:
@@ -55,5 +88,66 @@
 				type: 'naming'
 				replace: 'bigramms'
 				description: "Try to follow default naming rules for your language. In C# you should start your local variable with lowercase."
-	}
+	},
+	{
+		code: '''
+		static void Main(string[] args)
+		{
+			string {{arg}} = args.Length > 0 ? args[0] : "input.txt";
+			DateTime {{time}} = new FileInfo({{arg}}).LastWriteTime;
+			bool {{check}} = {{time}} > DateTime.Now - TimeSpan.FromSeconds(1);
+			{{FileConverter}}({{arg}}, {{check}});
+			{{show_content}}({{arg}});
+			Console.WriteLine({{time}});
+		}
+
+		'''
+		bugs:
+			arg:
+				replace: 'inputFile'
+				type: 'naming'
+				description: "В данном случае, 'inputFile' лучше отражает семантику, чем 'arg'."
+			time:
+				replace: 'lastWriteTime'
+				type: 'naming'
+				description: "'lastWriteTime' сообщает больше полезной инфомации читателю, чем просто 'time'."
+			check:
+				replace: 'recentlyModified'
+				type: 'naming'
+				description: "Имя 'check' почти всегда можно улучшить. Сообщите в имени что именно проверяется."
+			FileConverter:
+				replace: 'ConvertFile'
+				type: 'naming'
+				description: "Метод — это действие. Старайтесь называть все свои методы глаголами или глагольными фразами."
+			show_content:
+				replace: "ShowContent"
+				type: "naming"
+				description: '''
+				Придерживайтесь стандартного стиля именования для вашего языка программирования. 
+				В C# принято использовать стиль CamelCase.
+				'''
+	},
+	{
+		code: '''
+		void CopyChars(char[] {{array1}}, char[] {{array2}}){
+			{{//copy arrays item by item.
+			}}for(int i=0; i<{{array1}}.Length; i++)
+				{{array2}}[i] = {{array1}}[i];
+		}
+		'''
+		bugs:
+			array1:
+				replace: 'source'
+				type: 'naming'
+				description: "Имена с номерами на конце — это антипаттерн. Вместо добавления номеров старайтесь отразить различия в именах."
+			array2:
+				replace: 'destination'
+				type: 'naming'
+				description: "Функцией с непонятными именами аргументов очень неудобно пользоваться."
+			'//copy':
+				replace: ''
+				type: 'comments'
+				description: "Нет смысла писать комментарии, повторяющие код"
+	},
+
 ]

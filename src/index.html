@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Clean code</title>
+  <title>The Clean Code Game</title>
   <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" charset="utf-8">
   <link href="libs/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" charset="utf-8">
   <link href="libs/codemirror/theme/cobalt.css" rel="stylesheet" type="text/css" charset="utf-8">
@@ -13,38 +13,50 @@
   <script src="libs/react/react.js" charset="utf-8"></script>
   <script src="libs/jquery/jquery-2.1.3.min.js"></script>
   <script src="libs/bootstrap/js/bootstrap.min.js"></script>
-  <script src="http://vk.com/js/api/share.js?90" charset="windows-1251"></script>
 
   <script src="libs/codemirror/lib/codemirror.js" charset="utf-8"></script>
   <script src="libs/codemirror/mode/clike/clike.js" charset="utf-8"></script>
+  <script src="libs/routie/routie.js"></script>
 </head>
 
 <body>
   <div class="header">
     <div class="container">
-      <h1>The Clean Code Game</h1>
+      <h1 onClick="window.location.reload()">The Clean Code Game</h1>
     </div>
   </div>
   <div class="container">
-    <div id="game"></div>
+    <div id="gameContainer"></div>
   </div>
+
   <script>
     function require(name){
       if (name == 'lodash') return _;
       return undefined;
     }
   </script>
+
   <script src="bundle.js" charset="utf-8"></script>
 
-<script>window.twttr = (function (d, s, id) {
-  var t, js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src= "https://platform.twitter.com/widgets.js";
-  fjs.parentNode.insertBefore(js, fjs);
-  return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
-}(document, "script", "twitter-wjs"));</script>
+  <script type="text/javascript">
+  function initUpToLike(){
+        $("#uptolikescript").remove();
+        s = document.createElement('script');
+        s.id="uptolikescript";
+        s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+        s.src = ('https:' == window.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+        document.getElementsByTagName('body')[0].appendChild(s);
+  }
+  </script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-58306447-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 </body>
-
 </html>

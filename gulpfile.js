@@ -26,6 +26,11 @@ gulp.task("libs", function(){
 		.pipe(gulp.dest('build/libs'));
 });
 
+gulp.task("img", function(){
+	return gulp.src('img/*')
+		.pipe(gulp.dest('build/img'));
+});
+
 gulp.task("less", function(){
 	return gulp.src('src/*.less')
 		.pipe(less())
@@ -48,7 +53,7 @@ gulp.task("jsx", function(){
 
 gulp.task("browserify", ['jsx'], function(){
 	return browserify({
-			entries: './src/js/game.js',
+			entries: './src/js/app.js',
 			'ignore-missing': true
 		})
 		.exclude('lodash')
@@ -65,7 +70,7 @@ gulp.task("js-with-tests", ['browserify'], function(){
 });
 
 gulp.task("default", ['clean'], function(){
-	gulp.start('data', 'less', 'js-with-tests', 'browserify', 'libs', 'html');
+	gulp.start('data', 'less', 'js-with-tests', 'browserify', 'libs', 'html', 'img');
 });
 
 gulp.task('watch', ['default'], function(){
@@ -74,5 +79,6 @@ gulp.task('watch', ['default'], function(){
 	gulp.watch('src/*.less', ['less']);
 	gulp.watch('src/*.html', ['html']);
 	gulp.watch('libs/**/*', ['libs']);
+	gulp.watch('img/*', ['img']);
 });
 
