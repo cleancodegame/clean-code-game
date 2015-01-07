@@ -8,16 +8,17 @@ var CodeView = React.createClass({
 		return {
 			lineNumbers: "true",
 			mode: "text/x-csharp",
-			readOnly: "nocursor"
+			readOnly: "nocursor",
 		};
 	},
 
 	componentDidMount: function() {
 		this.editor = CodeMirror.fromTextArea(this.refs.editor.getDOMNode(), this.props);
 		this.getDOMNode().onmouseup =
-			function(){
+			function(ev){
 				var sel = this.editor.doc.sel.ranges[0].head;
-				this.props.onClick(sel.line, sel.ch);
+				var word = ev.target.innerText;
+				this.props.onClick(sel.line, sel.ch, word);
 			}.bind(this);
 	},
 
@@ -32,7 +33,7 @@ var CodeView = React.createClass({
 			<div>
 				<textarea
 					ref='editor'
-					defaultValue={this.props.code}
+					defaultValue={this.props.code + "\n"}
 					readOnly='true' />
 			</div>);
 	}

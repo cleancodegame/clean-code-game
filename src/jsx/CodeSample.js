@@ -30,11 +30,11 @@ var CodeSample = function(data) {
 	}
 
 	function addBugPosition(token, start, len) {
-		var name = token.split(' ', 2)[0];
+		var name = token.trim().split(' ', 2)[0];
 		var bug = me.bugs[name];
 		if (bug == undefined) {
 			console.log(me.bugs);
-			throw new Error("no bug " + name);
+			throw new Error("In code " + data.name +" unknown bug " + name);
 		}
 		bug.content = token;
 		bug.offsets.push({
@@ -86,10 +86,11 @@ var CodeSample = function(data) {
 	};
 
 	this.fix = function(bug) { //return CodeSample
-		var code2 = this.code.replace(new RegExp("{{" + utils.escapeRe(bug.content) + "}}", "gm"), bug.replace);
+		var code2 = this.code.replace(new RegExp("\\{\\{" + utils.escapeRe(bug.content) + "\\}\\}", "gm"), bug.replace);
 		var bugs2 = _.cloneDeep(this.bugs);
 		delete bugs2[bug.name];
 		return new CodeSample({
+			name: data.name,
 			code: code2,
 			bugs: bugs2
 		});

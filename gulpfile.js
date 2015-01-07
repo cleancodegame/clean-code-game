@@ -6,9 +6,12 @@ var cson = require('gulp-cson');
 var nodeunit = require('gulp-nodeunit');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
+var JSV = require("JSV").JSV;
+var fs = require('fs');
 
 function handleError(err) {
   console.log(err.toString());
+  console.log("\007");
   this.emit('end');
 }
 
@@ -38,7 +41,35 @@ gulp.task("less", function(){
    		.on('error', handleError);
 });
 
-gulp.task("data", function(){
+gulp.task("data", ["cson"], function(){
+	var schema = {
+		type : "array",	items: {
+			type: "object",	properties: {
+				name: { type: "string", required: true },
+				code: { type: "string", required: true },
+				bugs: {	
+					type:"object",	required: true, additionalProperties:{
+						type:"object",	properties:{
+							type: { type: "string", required: true },
+							replace: { type: "string", required: true },
+							description: { type: "string", required: true }
+						}
+					}
+				}
+			}
+		}
+	};
+
+	var json = JSON.parse(fs.readFileSync('build/data/data.json', 'utf8'));	
+	var env = JSV.createEnvironment();
+	var report = env.validate(json, schema)
+	if (report.errors.length > 0) {
+    	console.log(report.errors);
+  		console.log("\007");
+	}
+});
+
+gulp.task("cson", function(){
 	return gulp.src('data/*.cson')
     	.pipe(cson())
     	.pipe(gulp.dest('build/data/'));

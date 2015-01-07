@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "devDependencies": {
+    "JSV": "^4.0.2",
     "browserify": "^8.0.3",
     "del": "^1.1.1",
     "gulp": "^3.8.10",
@@ -12,5 +13,9 @@
     "gulp-react": "^2.0.0",
     "lodash": "^2.4.1",
     "vinyl-source-stream": "^1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xoposhiy/clean-code-game.git"
   }
 }

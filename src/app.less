@@ -1,42 +1,25 @@
-@bgCorrect: #ddf9dd;
-@bgIncorrect: #fad8d8;
-@textCorrect: green;
-@textIncorrect: red;
-
 .header{
   background-color: #6f5499;
   color: white;
   padding-top: 30px;
   padding-bottom: 30px;
   h1{
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace; 
     font-size: 48pt;
     cursor: pointer;
   }
 }
+
 .container {
   max-width: 800px;
 }
 
-.btn-vote, .btn-next {
-  width: 100%;
+.score {
+  font-size: 18pt;
 }
 
-.code {
-  width: 100%;
-}
-
-.verdict {
-  margin-top:10px;
-  margin-bottom:20px;
-
-  &.correct {
-    font-size: large;
-    color: @textCorrect;
-  }
-  &.incorrect {
-    font-size: large;
-    color: @textIncorrect;
-  }
+.last-desc{
+  font-weight: bold;
 }
 
 .share{
@@ -52,29 +35,19 @@
   }
 }
 
-.uptolike-title {
-  float: left;
-  font-size: 14pt;
-  line-height: 50px;
-  margin-right: 20px;
-}
 .CodeMirror {
-  border: 1px solid #ccc;
-  height: 200px;
+  border: 1px solid #ddd;
+  height: auto;
 	margin-bottom: 20px;
 	margin-top: 20px;
 	line-height: 1.3em;
 	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-}
+  .CodeMirror-scroll{
+    height: auto;
+  }
 
-div.CodeMirror-lines {
-  cursor: pointer;
-}
-
-.score {
-  font-size: 18pt;
-}
-
-.last-desc{
-  font-weight: bold;
+  .CodeMirror-lines {
+    padding: 8px 0;
+    cursor: pointer;
+  }
 }

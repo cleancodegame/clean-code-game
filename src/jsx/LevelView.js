@@ -27,8 +27,8 @@ var LevelView = React.createClass({
 	finished: function(){
 		return this.state.codeSample.bugsCount == 0;
 	},
-	
-	handleClick: function(line, ch){
+
+	handleClick: function(line, ch, word){
 		if (this.finished()) return;
 		var bug = this.state.codeSample.findBug(line, ch);
 		var descriptions = this.state.lastDescription ? _.union(this.state.descriptions, [this.state.lastDescription]) : this.state.descriptions
@@ -42,14 +42,24 @@ var LevelView = React.createClass({
 			});
 		}
 		else {
-			console.log("Not a bug!");
-			console.log(this.state.codeSample.bugs);
+			word = word.trim().substring(0, 20);
+			var category = "miss."+this.props.codeSample.name;
+			var miss = category + "." + word;
+			console.log(miss);
+			if (!this.trackedMisses[miss]){
+				_gaq.push(['_trackEvent', category, miss, category + ' at ' + line + ':'+ch]);
+				this.trackedMisses[miss] = true;
+			}
 			this.setState({
 				score: this.state.score - 1,
 				lastDescription: undefined,
 				descriptions: descriptions
 			});
 		}
+	},
+
+	componentDidMount: function() {
+		this.trackedMisses = {};
 	},
 
 	componentDidUpdate: function(prevProps, prevState) {
@@ -93,7 +103,7 @@ var LevelView = React.createClass({
 			<div className="round">
 			  <div className="row">
 				<div className="col-sm-12">
-					<h2>Уровень {this.props.level}{this.finished() && ". Пройден!"}</h2>
+					<h2>Уровень {this.props.level+1}{this.finished() && ". Пройден!"}</h2>
 					<p>Найдите и исправьте все стилевые ошибки в коде. Кликайте мышкой по ошибкам!</p>
 					<CodeView code={this.state.codeSample.text} onClick={this.handleClick} />
 				</div>

@@ -45,7 +45,7 @@ var Game = function(){
 	this.renderLevel = function(){
 		renderGame(<LevelView
 			key={"level_" + this.levelIndex}
-			level={this.levelIndex+1}
+			level={this.levelIndex}
 			score={this.score}
 			codeSample={this.currentLevel()}
 			onNext={this.handleNext} />);

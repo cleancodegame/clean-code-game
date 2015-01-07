@@ -1,23 +1,41 @@
 [
 	{
+		name: 'hello'
 		code:'''
-		List<int[]> {{GetThemAll}}() {
-			List<int[]> {{list1}} = new List<int[]>();
-			for (int[] {{x}} : {{theList}})
-				if ({{x}}{{[0]==4}})
-					{{list1}}.add({{x}});
+		void Main(){
+			Console.WriteLine("Enter your name: ");
+			var {{veryBadVariableName_clickIt}} = Console.ReadLine();
+			Console.WriteLine("Hello, " + {{veryBadVariableName_clickIt}});
+		}
+		'''
+		bugs:
+			veryBadVariableName_clickIt:
+				type: 'naming'
+				replace: 'name'
+				description: "Поздравляем, вы исправили ошибку! Переходите к следующему уровню."
+	},
+	{
+		name: 'GetThem'
+		code:'''
+		List<Position> {{GetThem}}() {
+			var {{list1}} = new List<Position>();
+			for (var {{x}} : {{theList}})
+				if ({{x}}.IsFlagged)
+					{{list1}}.Add({{x}}.Position);
 			return {{list1}};
 		}
 		'''
 		bugs:
-			GetThemAll:
+			GetThem:
 				type: 'naming'
-				replace: 'GetFlaggedCells'
-				description: "Не пытайтесь острить в коде."
+				replace: 'GetFlaggedCellPositions'
+				description: "Не используйте местоимения в именах. Это совсем не добавляет понятности."
 			list1:
 				type: 'naming'
 				replace: 'flaggedCells'
-				description: "Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю."
+				description: '''
+				Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю.
+				'''
 			x:
 				type: 'naming'
 				replace: 'cell'
@@ -26,20 +44,49 @@
 				type: 'naming'
 				replace: 'allCells'
 				description: "Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю."
-			'[0]==4':
-				type: 'oop'
-				replace: '.IsFlagged'
-				description: "Хранение данных в объектах повышает читаемость кода по сравнению с хранением данных в массивах. x.IsFlagged гораздо понятнее, чем x[0] == 4"
-
 	},
 	{
+		name: 'ViewsPerSecond'
+
+		code:'''
+		double GetViewsPerSecond(IEnumerable<PageView> views, DateTime {{d}}){
+			var {{total}} = {{86400}};
+			var viewsCount = views.Count(v => v.Time.Date == {{d}});
+			return (double)viewsCount / {{total}};
+		}
+		'''
+		bugs:
+			d:
+				type: 'naming'
+				replace: 'date'
+				description: '''
+				В данном случае в имени аргумента стоит отразить, 
+				что ожидается не произвольное время, а именно дата — значение с нулевой составляющей времени.
+				Хотя не помешало бы это дополнительно проверить и в самом методе.
+				'''
+			total:
+				type: 'naming'
+				replace: 'secondsInDay'
+				description: '''
+				Имя переменной должно отражать семантику.
+				'''
+			'86400':
+				type: 'other'
+				replace: '24 * 60 * 60'
+				description: '''
+				Иногда в качесте значения констант арифметические выражения понятнее, чем само значение.
+				В этом случае 24 * 60 * 60 проще проверить на корректность, чем 86400.
+				'''
+	},
+	{
+		name: 'rstr'
 		code: '''
-		string {{rstr}} = Console.ReadLine();
-		bool {{f}} = false;
+		var {{rstr}} = Console.ReadLine();
+		var {{f}} = false;
 		for(int {{indexInReadString}}=0; {{indexInReadString}}<{{rstr}}.Length; {{indexInReadString}}++)
 		{
 			if ({{f}} || {{rstr}}[{{indexInReadString}}] != '\\')
-			{{Console.Write}}({{rstr}}[{{indexInReadString}}]);
+				Console.Write({{rstr}}[{{indexInReadString}}]);
 			{{f}} = {{rstr}}[{{indexInReadString}}] == '\\';
 		}
 		'''
@@ -47,30 +94,34 @@
 			rstr:
 				replace: 'line'
 				type: 'naming'
-				description: "Избегайте труднопроизносимых имен и кодироания, понятного лишь вам."
+				description: '''
+				Избегайте труднопроизносимых имен и кодироания, понятного лишь вам.
+				'''
 			
 			f:
 				replace: 'escaped'
 				type: 'naming'
-				description: "Bool variable have semantics too. Use it in the name to make code more readable. 'escaped' would be better in this case."
+				description: '''
+				Не называйте булевы переменные flag, f и подобными именами.
+				У каждого "флага" есть смысл, который и нужно отразить в имени.
+				'''
 			
 			indexInReadString:
 				replace: 'charIndex'
 				type: 'naming'
-				description: "The length of a name should correspond to the size of its scope. indexInReadString — is too long for 4-lines scope."
-			
-			'Console.Write':
-				replace: '  Console.Write'
-				type: 'formatting'
-				description: "Programmers rely heavily on indentation. They visually line up lines on the left to see what scope they appear in."	
+				description: '''
+				Сокращайте длину имен, но не в ущерб информативности.
+				В данном примере, строка единственная, поэтому длинное 'InReadString' можно опустить.
+				'''		
 	},
 	{
+		name: 'bigramms'
 		code: '''
 		string[] GetBigramms (IList<string> {{w}})
 		{
-			int {{kol_bigramm}} = {{w}}.Count - 1;
-			string[] {{Bigramms}} = new string[{{kol_bigramm}}];
-			for (var i = 0; i <= {{kol_bigramm}} - 1; i++)
+			int {{сol_bigramm}} = {{w}}.Count - 1;
+			string[] {{Bigramms}} = new string[{{сol_bigramm}}];
+			for (var i = 0; i <= {{сol_bigramm}} - 1; i++)
 				{{Bigramms}}[i] = {{w}}[i] + " " + {{w}}[i + 1];
 			return {{Bigramms}}.Distinct().ToArray();
 		}
@@ -79,34 +130,49 @@
 			w:
 				replace: 'words'
 				type: 'naming'
-				description: "The length of a name should correspond to the size of its scope. One-letter names allowed for 1-2 lines scope only."
-			kol_bigramm:
+				description: '''
+				Однобуквенные имена лучше использовать только в качестве локальных переменных с совсем малой областью видимости.
+				Общее правило — чем больше область видимости сущности, тем подробнее у неё должно быть имя.
+				Длинное имя проще найти и сложнее с чем-то перепутать.
+				'''		
+			сol_bigramm:
 				replace: 'bigrammsCount'
 				type: 'naming'
-				description: "Do not mix russian and english words in names. It may confuse other programmers."
+				description: '''
+				Не используйте русские слова в именах. Это запутает читателя.
+				Читая код, программисты ожидают видеть английские имена, 
+				поэтому написанные транслитом русские слова могут быть восприняты неправильно.
+				Например, в данном случае col (количество) легко спутать с сокращением от слова column.
+				'''
 			Bigramms:
 				type: 'naming'
 				replace: 'bigramms'
-				description: "Try to follow default naming rules for your language. In C# you should start your local variable with lowercase."
+				description: '''
+				В C# имена локальных переменных принято начинать с маленькой буквы.
+				Придерживайтесь стандартного стиля именования для вашего языка программирования.
+				'''
 	},
 	{
+		name: 'arg'
 		code: '''
 		static void Main(string[] args)
 		{
 			string {{arg}} = args.Length > 0 ? args[0] : "input.txt";
 			DateTime {{time}} = new FileInfo({{arg}}).LastWriteTime;
 			bool {{check}} = {{time}} > DateTime.Now - TimeSpan.FromSeconds(1);
-			{{FileConverter}}({{arg}}, {{check}});
+			ConvertFile({{arg}}, {{check}});
 			{{show_content}}({{arg}});
 			Console.WriteLine({{time}});
 		}
-
 		'''
 		bugs:
 			arg:
 				replace: 'inputFile'
 				type: 'naming'
-				description: "В данном случае, 'inputFile' лучше отражает семантику, чем 'arg'."
+				description: '''
+				Отражайте в имени то, что важно при дальнейшем использовании.
+				В данном случае, то что это имя входного файла важнее того, что оно получено из аргументов командной строки.
+				'''
 			time:
 				replace: 'lastWriteTime'
 				type: 'naming'
@@ -115,19 +181,16 @@
 				replace: 'recentlyModified'
 				type: 'naming'
 				description: "Имя 'check' почти всегда можно улучшить. Сообщите в имени что именно проверяется."
-			FileConverter:
-				replace: 'ConvertFile'
-				type: 'naming'
-				description: "Метод — это действие. Старайтесь называть все свои методы глаголами или глагольными фразами."
 			show_content:
 				replace: "ShowContent"
 				type: "naming"
 				description: '''
-				Придерживайтесь стандартного стиля именования для вашего языка программирования. 
+				Придерживайтесь стандартного стиля именования для вашего языка программирования.
 				В C# принято использовать стиль CamelCase.
 				'''
 	},
 	{
+		name: 'CopyChars'
 		code: '''
 		void CopyChars(char[] {{array1}}, char[] {{array2}}){
 			{{//copy arrays item by item.
@@ -139,15 +202,204 @@
 			array1:
 				replace: 'source'
 				type: 'naming'
-				description: "Имена с номерами на конце — это антипаттерн. Вместо добавления номеров старайтесь отразить различия в именах."
+				description: '''
+				Имена с номерами на конце — это антипаттерн.
+				Вместо добавления номеров старайтесь отразить в именах суть различия.
+				'''
 			array2:
 				replace: 'destination'
 				type: 'naming'
-				description: "Функцией с непонятными именами аргументов очень неудобно пользоваться."
+				description: "Функцию с непонятными именами аргументов неудобно использовать."
 			'//copy':
 				replace: ''
 				type: 'comments'
 				description: "Нет смысла писать комментарии, повторяющие код"
+	},
+	{
+		name: 'Chessboard'
+		code:'''
+		enum {{ColorCell}} { Black, White };
+
+		class Chessboard {
+			private {{ColorCell}}[,] {{array}};
+			private int {{m_brdSz}};
+			
+			public Chessboard(int {{n}}){
+				this.{{m_brdSz}} = {{n}};
+				this.{{array}} = new ColorCell[{{m_brdSz}},{{m_brdSz}}];
+				for(int {{a}}=0; {{a}}<{{m_brdSz}}; {{a}}++)
+					for(int {{b}}=0; {{b}}<{{m_brdSz}}; {{b}}++)
+						{{array}}[{{a}}, {{b}}] = ({{a}}+{{b}} % 2) == 0 ? ColorCell.Black : ColorCell.White;
+			}
+			//...
+		}
+
+		'''
+		bugs:
+			ColorCell:
+				type: 'naming'
+				replace: 'CellColor'
+				description: '''
+				Нарушение правильного для английского языка порядка слов в составных именах — частая ошибка программистов 
+				со слабым знанием английского.
+				ColorCell — это цветная клетка, а цвет клетки — CellColor.
+				Не путайте — не вводите в замешательство читающих.
+				'''
+			n:
+				type: 'naming'
+				replace: 'size'
+				description: '''
+				В данном контексте, n могло бы обозначать что угодно: размер шахматной доски, количество фигур на доске, номер доски.
+				size устраняет эту неоднозначность.
+				'''
+			m_brdSz:
+				type: 'naming'
+				replace: 'size'
+				description: '''
+				Не используйте закодированные или труднопроизносимые имена.
+				Называйте поле класса также как и аргумент конструктора, значением которого это поле инициализируется
+				 — это дополнительно подчеркнет их связь.
+				'''
+			array:
+				type: 'naming'
+				replace: 'cellColors'
+				description: '''
+				Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю.
+				'''
+			a:
+				type: 'naming'
+				replace: 'y'
+				description: '''
+				Избегайте необходимости мысленного декодирования при чтении кода.
+				'''
+			b:
+				type: 'naming'
+				replace: 'x'
+				description: '''
+				Используйте имена x, y для обозначения координат.
+				'''
+	},
+	{
+		name: 'Initialization'
+		code:'''
+		public void {{Initialization}}(int boardSize){
+			log.Info("Board initialization...");
+			this.piecesPlaced = 0;
+			{{Board}}(boardSize, boardSize);
+			log.Info("Board initialization finished");
+		}
+		'''
+		bugs:
+			Initialization:
+				type: 'methods'
+				replace: 'InitializeBoard'
+				description: '''
+				Методы — это действия, называйте их глаголами или глагольными фразами.
+				'''
+			Board:
+				type: 'methods'
+				replace: 'this.board = CreateBoard'
+				description: '''
+				Методы — это действия, называйте их глаголами или глагольными фразами.
+				Кроме того, всегда когда возможно создавайте методы без побочных эффектов. 
+				В этом примере у метода Board до рефакторинга был побочный эффект — изменение поля this.board, а рефакторинг это исправил.
+				'''
+	},
+	{
+		name:'GetSet'
+		code:'''
+		void {{GetFactory}}(){
+			this.factory = {{FactoryCreator}}();
+		}
+
+		TimeSpan GetTimeout(){
+			return this.timeout;
+		}
+
+		void {{SetTimeout}}(){
+			this.timeout  = ReadSettings().Timeout;
+		}
+		'''
+		bugs:
+			GetFactory:
+				type: 'methods'
+				replace: 'InitFactory'
+				description: '''
+				Методы GetXXX, CreateXXX, ReadXXX должны возвращать результат.
+				В данном случае это не Get-метод, а метод инициализации.
+				'''
+			FactoryCreator:
+				type: 'methods'
+				replace: 'CreateFactory'
+				description: '''
+				Методы — это действия, называйте их глаголами или глагольными фразами.
+				'''
+			SetTimeout:
+				type: 'methods'
+				replace: 'InitTimeoutFromSettings'
+				description: '''
+				Методы SetXXX должны принимать устанавливаемое значение в качестве аргумента. 
+				В данном случае это не Set-метод, а метод инициализации.
+				'''
+	},
+	{
+		name:'DRY'
+		code:'''
+		void Main(string[] args){
+			string[] inputLines = File.ReadAllLines(args[0]);
+			string outputPath = args[1];
+			if (Directory.Exists(outputPath))
+				outputPath = Path.Combine(outputPath, Path.GetFilename(args[0]));
+			{{
+			//Convert file}}
+			var escapedLines = inputLines.Select(s => s.Replace(@"\", @"\\"));
+			var outputText = string.Join('\\n', escapedLines);
+			File.WriteAllText(output, outputText);
+			Console.WriteLine("Write {0} characters", outputText.Length);
+		}
+		'''
+		bugs:
+			'//Convert':
+				type: 'methods'
+				replace: '''
+				ConvertFile(inputLines, outputPath);
+				}
+
+				void ConvertFile(IEnumerable<string> inputLines, string outputPath) {
+				'''
+				description: '''
+				Вместо комментария, разделяющего код на две фазы, стоит сделать настоящее разделение кода на методы.
+				Общее правило — каждый метод должен делать ровно одну вещь. В данном случае стоит разделить ввод исходных данных и конвертацию файла.
+
+				'''
+		
+	},
+	{
+		name:'CommentExplainCode'
+		code:'''
+		{{//Check to see if the employee is eligible for full benefits
+		if ((employee.IsHourly()) && (employee.Age > 65))}}
+			Pay(employee, fullBenefitsAmount); {{//Pay largeAmount}}
+		else
+			Pay(employee, reducedAmount);
+		'''
+		bugs:
+			'//Check':
+				type: 'comments'
+				replace: '''
+				if (employee.IsEligibleForFullBenefits())
+				'''
+				description: '''
+				Вместо объясняющего комментария всегда лучше делать сам код понятнее.
+				'''
+			'//Pay':
+				type: 'comment'
+				replace: ''
+				description: '''
+				Комментарии повторяющие код не нужны, а могут быть даже вредны. 
+				Часто при модификации кода они устаревают и становятся неактуальными.
+				В этом примере, видимо, после переименования largeAmount в fullBenefitsAmount комментарий поправить забыли.
+				'''
 	},
 
 ]
