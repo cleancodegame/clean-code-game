@@ -34,6 +34,12 @@ gulp.task("img", function(){
 		.pipe(gulp.dest('build/img'));
 });
 
+gulp.task("web.config", function(){
+	return gulp.src('web.config')
+		.pipe(gulp.dest('build'));
+});
+
+
 gulp.task("less", function(){
 	return gulp.src('src/*.less')
 		.pipe(less())
@@ -101,7 +107,7 @@ gulp.task("js-with-tests", ['browserify'], function(){
 });
 
 gulp.task("default", ['clean'], function(){
-	gulp.start('data', 'less', 'js-with-tests', 'browserify', 'libs', 'html', 'img');
+	gulp.start('data', 'less', 'js-with-tests', 'browserify', 'libs', 'html', 'img', 'web.config');
 });
 
 gulp.task('watch', ['default'], function(){
@@ -111,5 +117,6 @@ gulp.task('watch', ['default'], function(){
 	gulp.watch('src/*.html', ['html']);
 	gulp.watch('libs/**/*', ['libs']);
 	gulp.watch('img/*', ['img']);
+	gulp.watch('web.config', ['web.config']);
 });
 
