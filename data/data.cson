@@ -19,7 +19,7 @@
 		code:'''
 		List<Position> {{GetThem}}() {
 			var {{list1}} = new List<Position>();
-			for (var {{x}} : {{theList}})
+			foreach (var {{x}} in {{theList}})
 				if ({{x}}.IsFlagged)
 					{{list1}}.Add({{x}}.Position);
 			return {{list1}};
@@ -85,9 +85,9 @@
 		var {{f}} = false;
 		for(int {{indexInReadString}}=0; {{indexInReadString}}<{{rstr}}.Length; {{indexInReadString}}++)
 		{
-			if ({{f}} || {{rstr}}[{{indexInReadString}}] != '\\')
+			if ({{f}} || {{rstr}}[{{indexInReadString}}] != '\\\\')
 				Console.Write({{rstr}}[{{indexInReadString}}]);
-			{{f}} = {{rstr}}[{{indexInReadString}}] == '\\';
+			{{f}} = {{rstr}}[{{indexInReadString}}] == '\\\\';
 		}
 		'''
 		bugs: 
@@ -226,10 +226,10 @@
 			
 			public Chessboard(int {{n}}){
 				this.{{m_brdSz}} = {{n}};
-				this.{{array}} = new ColorCell[{{m_brdSz}},{{m_brdSz}}];
+				this.{{array}} = new {{ColorCell}}[{{m_brdSz}},{{m_brdSz}}];
 				for(int {{a}}=0; {{a}}<{{m_brdSz}}; {{a}}++)
 					for(int {{b}}=0; {{b}}<{{m_brdSz}}; {{b}}++)
-						{{array}}[{{a}}, {{b}}] = ({{a}}+{{b}} % 2) == 0 ? ColorCell.Black : ColorCell.White;
+						{{array}}[{{a}}, {{b}}] = ({{a}}+{{b}} % 2) == 0 ? {{ColorCell}}.Black : {{ColorCell}}.White;
 			}
 			//...
 		}
@@ -349,12 +349,12 @@
 			string[] inputLines = File.ReadAllLines(args[0]);
 			string outputPath = args[1];
 			if (Directory.Exists(outputPath))
-				outputPath = Path.Combine(outputPath, Path.GetFilename(args[0]));
+				outputPath = Path.Combine(outputPath, Path.GetFileName(args[0]));
 			{{
 			//Convert file}}
 			var escapedLines = inputLines.Select(s => s.Replace(@"\", @"\\"));
-			var outputText = string.Join('\\n', escapedLines);
-			File.WriteAllText(output, outputText);
+			var outputText = string.Join("\\n", escapedLines);
+			File.WriteAllText(outputPath, outputText);
 			Console.WriteLine("Write {0} characters", outputText.Length);
 		}
 		'''
@@ -402,13 +402,12 @@
 				'''
 	},
 	{
-		name:''
+		name:'endComments'
 		code:'''
 		void Main(string[] args) {
-			string line;
-			int lineCount = 0;
-			int charCount = 0;
 			try {
+				int lineCount = 0;
+				int charCount = 0;
 				var lines = File.ReadAllLines(args[0]);
 				foreach(var line in lines){
 					lineCount++;
@@ -418,7 +417,7 @@
 				Console.WriteLine("charCount = " + charCount);
 			} {{//try}}
 			catch (Exception e) {
-				System.err.println("Error:" + e.getMessage());
+				Console.WriteLine("Error:" + e.Message);
 			} {{//catch}}
 		}
 		'''
@@ -449,7 +448,7 @@
 		protected abstract Responder {{GetResponderInstance}}();
 
 		//format matched: hh:mm:ss, MMM dd, yyyy
-		private Regex timeRegex = new Regex("\\d*:\\d*:\\d*, \\w* \\d*, \\d*");
+		private Regex timeRegex = new Regex(@"\\d*:\\d*:\\d*, \\w* \\d*, \\d*");
 		'''
 		bugs:
 			'//Returns':
@@ -468,16 +467,16 @@
 	{
 		name:'ExplainCompare'
 		code:'''
-		{{//comparison of this and other object}}
-		public int CompareTo(object o)
+		{{//comparison of this and other object
+		}}public int CompareTo(object o)
 		{
 			var other = o as WikiPagePath;
 			if(other != null)
 			{
-				{{//compares concatenated names of this and others}}
-				string thisNames = string.Join("", this.Names);
+				{{//compares concatenated names of this and others
+				}}string thisNames = string.Join("", this.Names);
 				string otherNames = string.Join("", other.Names);
-				return thisNames.compareTo(otherNames);
+				return thisNames.CompareTo(otherNames);
 			}
 			return 1; //we are greater because we are the right type.
 		} {{//end of CompareTo}}
@@ -517,12 +516,13 @@
 			///<remarks>
 			///<para>
 			///Users should implement this interface to implement customized logging
-			///event filtering. Note that <see cref="log4net.Repository.Hierarchy.Logger"/> and 
-			///<see cref="log4net.Appender.AppenderSkeleton"/>, the parent class of all standard
+			///event filtering. Note that <see cref="Logger.Repository.Hierarchy.Logger"/> and 
+			///<see cref="Logger.Appender.AppenderSkeleton"/>, the parent class of all standard
 			///appenders, have built-in filtering rules. It is suggested that you
 			///first use and understand the built-in rules before rushing to write
 			///your own custom filters.
 			///</para>
+			///</remarks>
 			public interface IFilter : IOptionHandler {
 				{{///<summary>Make a decision about logging event.</summary>
 				}}{{///<param name="loggingEvent">The LoggingEvent to decide upon</param>
@@ -574,11 +574,10 @@
 		void {{CollisionHandler}}(GameObject hero, GameObject enemy){
 			{{//If hero and enemy collided
 			if ((hero.X - enemy.X)*(hero.X - enemy.X) + (hero.Y - enemy.Y)*(hero.Y - enemy.Y) 
-				< (hero.Radius + enemy.Radius)*(hero.Radius + enemy.Radius))}}
-			{
-					hero.Life--;
-					if (!hero.Alive) {{//no more life}}
-						HandleHeroDead(hero);
+				< (hero.Radius + enemy.Radius)*(hero.Radius + enemy.Radius))}} {
+				hero.Life--;
+				if (!hero.Alive) {{//no more life}}
+					HandleHeroDead(hero);
 			}
 		}
 		'''
