@@ -33,6 +33,7 @@ var Game = function(){
 	};
 
 	this.start = function(levelIndex){
+		_gaq.push(['_trackEvent', 'start', 'start-from.' + levelIndex, '']);
 		this.score = 0;
 		if (levelIndex > 0 && levelIndex < this.levels.length)
 			this.levelIndex = levelIndex;
@@ -56,6 +57,7 @@ var Game = function(){
 	}.bind(this);
 
 	this.renderResults = function(){
+		_gaq.push(['_trackEvent', 'result', 'result.' + this.score, '']);
 		renderGame(<ResultsView	
 			score={this.score}
 			maxScore={this.maxScore}
@@ -63,6 +65,7 @@ var Game = function(){
 	};
 
 	this.handleNext = function(score){
+		_gaq.push(['_trackEvent', 'level-solved', 'level-solved.' + this.levelIndex, '']);
 		this.score = score;
 		if (this.levelIndex >= this.levels.length-1)
 			this.renderResults();
