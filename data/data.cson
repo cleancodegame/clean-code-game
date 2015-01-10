@@ -601,5 +601,58 @@
 				description: '''
 				Комментарии дословно повторяющие код бессмысленны.
 				'''
-	},	
+	},
+	{
+		name:''
+		code:'''
+		///<param name="path">
+		/// Path to file or directory with map description. 
+		/// If path is a path to directory, file default.map is used.
+		///</param>
+		GameMap LoadMap(string path){
+			var filename = Directory.Exists(path) ? Path.Combine(path, "default.map") : path;
+			var lines = File.ReadAllLines(filename);
+			var height = lines.Length;
+			var width = lines[0].Length;
+			var map = new GameMap(width, height);
+			for(var y=0; y<lines.Length; y++)
+				for(var x=0; x<lines[0].Length; x++) {
+					{{//============Select object to put in (x, y) cell;
+					GameObject obj = null;
+					switch (lines[y][x]){
+						case 'H': 
+							obj = new Hero();
+							break;
+						case '#':
+							obj = new Wall();
+							break;
+						case 'M':
+							obj = new Monster();
+							break;
+					}
+					//============Put created object on map}}
+					map.Put(x, y, obj);
+				}
+			{{//================Initialize map
+			map.Score = 0;
+			map.HeroLifesCount = 3;
+			map.Time = 0;}}
+			return map;
+		}
+		'''
+		bugs:
+			'//============Select':
+				type: 'comments'
+				replace: 'var obj = CreateGameObjectFromChar(lines[y][x]);'
+				description: '''
+				Разделительные комментарии вроде такого часто показывают, что программист поленился выделить вспомогательный метод.
+				'''
+			'//================Initialize':
+				type: 'comments'
+				replace: ''
+				description: '''
+				При виде комментария, разделяющего метод на смысловые части, стоит вынести эти смысловые части в отдельные методы.
+				А в данном случае, инициализацию и вовсе лучше перенести в конструктор класса Map.
+				'''
+	},
 ]
