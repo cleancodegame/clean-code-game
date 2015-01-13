@@ -1,4 +1,6 @@
+var map = require('map-stream');
 var gulp = require('gulp');
+var debug = require('gulp-debug');
 var del = require('del');
 var react = require('gulp-react');
 var less = require('gulp-less');
@@ -14,6 +16,51 @@ function handleError(err) {
   console.log("\007");
   this.emit('end');
 }
+
+function toJsonp(funcName){
+	
+	function toJsonpOne(file, cb){
+		var cont = funcName + "(" + file.contents.toString() + ");";
+		file.contents = new Buffer(cont);
+		cb(null, file);
+	}
+
+	return map(toJsonpOne);
+}
+
+function validateJson(schema){
+	function validateOne(file, cb)	{
+		var json = JSON.parse(file.contents.toString());	
+		var env = JSV.createEnvironment();
+		var report = env.validate(json, dataSchema)
+		if (report.errors.length > 0){
+			console.log(report.errors);
+			cb("Json validation error");
+		}
+		else
+			cb(null, file);
+	}
+
+	return map(validateOne);
+}
+
+var dataSchema = {
+	type : "array",	items: {
+		type: "object",	properties: {
+			name: { type: "string", required: true },
+			code: { type: "string", required: true },
+			bugs: {	
+				type:"object",	required: true, additionalProperties:{
+					type:"object",	properties:{
+						type: { type: "string", required: true },
+						replace: { type: "string", required: true },
+						description: { type: "string", required: true }
+					}
+				}
+			}
+		}
+	}
+};
 
 gulp.task('clean', function(done) {
 	del(['build/**/*'], done);
@@ -43,41 +90,16 @@ gulp.task("web.config", function(){
 gulp.task("less", function(){
 	return gulp.src('src/*.less')
 		.pipe(less())
-		.pipe(gulp.dest('build/'))
-   		.on('error', handleError);
-});
-
-gulp.task("data", ["cson"], function(){
-	var schema = {
-		type : "array",	items: {
-			type: "object",	properties: {
-				name: { type: "string", required: true },
-				code: { type: "string", required: true },
-				bugs: {	
-					type:"object",	required: true, additionalProperties:{
-						type:"object",	properties:{
-							type: { type: "string", required: true },
-							replace: { type: "string", required: true },
-							description: { type: "string", required: true }
-						}
-					}
-				}
-			}
-		}
-	};
-
-	var json = JSON.parse(fs.readFileSync('build/data/data.json', 'utf8'));	
-	var env = JSV.createEnvironment();
-	var report = env.validate(json, schema)
-	if (report.errors.length > 0) {
-    	console.log(report.errors);
-  		console.log("\007");
-	}
+   		.on('error', handleError)
+		.pipe(gulp.dest('build/'));
 });
 
 gulp.task("cson", function(){
 	return gulp.src('data/*.cson')
     	.pipe(cson())
+    	.pipe(validateJson(dataSchema))
+   		.on('error', handleError)
+    	.pipe(toJsonp('handleData'))
     	.pipe(gulp.dest('build/data/'));
 });
 
@@ -90,10 +112,11 @@ gulp.task("jsx", function(){
 
 gulp.task("browserify", ['jsx'], function(){
 	return browserify({
-			entries: './src/js/app.js',
-			'ignore-missing': true
+			entries: './src/js/AppView.js',
+			'ignore-missing': true,
 		})
 		.exclude('lodash')
+		//.require('./src/js/AppView.js', {expose: 'AppView'})
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(gulp.dest('build'))
@@ -107,12 +130,12 @@ gulp.task("js-with-tests", ['browserify'], function(){
 });
 
 gulp.task("default", ['clean'], function(){
-	gulp.start('data', 'less', 'js-with-tests', 'browserify', 'libs', 'html', 'img', 'web.config');
+	gulp.start('cson', 'less', 'js-with-tests', 'browserify', 'libs', 'html', 'img', 'web.config');
 });
 
 gulp.task('watch', ['default'], function(){
 	gulp.watch('src/jsx/*.js', ['js-with-tests']);
-	gulp.watch('data/*.cson', ['data']);
+	gulp.watch('data/*.cson', ['cson']);
 	gulp.watch('src/*.less', ['less']);
 	gulp.watch('src/*.html', ['html']);
 	gulp.watch('libs/**/*', ['libs']);

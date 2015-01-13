@@ -575,7 +575,7 @@
 		code:'''
 		void {{CollisionHandler}}(GameObject hero, GameObject enemy){
 			{{//If hero and enemy collided
-			if ((hero.X - enemy.X)*(hero.X - enemy.X) + (hero.Y - enemy.Y)*(hero.Y - enemy.Y) 
+			if ((hero.X-enemy.X)*(hero.X-enemy.X) + (hero.Y-enemy.Y)*(hero.Y-enemy.Y) 
 				< (hero.Radius + enemy.Radius)*(hero.Radius + enemy.Radius))}} {
 				hero.Life--;
 				if (!hero.Alive) {{//no more life}}
@@ -611,7 +611,9 @@
 		/// If path is a path to directory, file default.map is used.
 		///</param>
 		GameMap LoadMap(string path){
-			var filename = Directory.Exists(path) ? Path.Combine(path, "default.map") : path;
+			var filename = Directory.Exists(path) 
+				? Path.Combine(path, "default.map") 
+				: path;
 			var lines = File.ReadAllLines(filename);
 			var height = lines.Length;
 			var width = lines[0].Length;

@@ -33,7 +33,7 @@ var CodeView = React.createClass({
 			<div>
 				<textarea
 					ref='editor'
-					defaultValue={this.props.code + "\n"}
+					defaultValue={this.props.code}
 					readOnly='true' />
 			</div>);
 	}

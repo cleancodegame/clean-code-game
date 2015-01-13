@@ -1,9 +1,29 @@
 @back: rgb(91, 155, 213);
 @smallWidth: 600px;
+@textFont: "Segoe UI Light", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
+@headerFont: 'Bookman Old Style', 'Times New Roman';
+@codeFont: Menlo,Monaco,Consolas,"Courier New",monospace;
+
+body {
+  font-family: @textFont;
+  font-size: 14pt;
+  margin-bottom: 70px;
+}
+
+.footer {
+  height: 30px;
+  padding-top: 4px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f5f5f5;
+  z-index: 100;
+}
 
 .pointer{
   cursor: pointer;
 }
+
 .header{
   background-color: @back;
   text-align: center;
@@ -23,7 +43,7 @@
     }
     h1{
       margin-bottom: 0px;
-      font-family: 'Bookman Old Style';
+      font-family: @headerFont;
       font-weight: 100;
       font-size: 54pt;
       color: white;
@@ -36,7 +56,6 @@
       color: white;
       text-align: right;
       font-size: 18pt;
-      font-family: 'Segoe UI Light';
     }
   }
 }
@@ -60,12 +79,11 @@
   }
   float:left;
   font-size: 14pt;
-  font-family: 'Segoe UI Light';
   p{
     margin-top: 30px;
   }
   .btn{
-    font-family: 'Bookman Old Style';
+    font-family: @headerFont;
     width: 280px;
     height: 70px;
     font-size: 24pt;
@@ -82,21 +100,6 @@
   margin-top: -70px;
   margin-bottom: -50px;
   margin-right: -1000px;
-}
-
-body {
-  font-family: 'Segoe UI';
-  font-size: 12pt;
-  margin-bottom: 50px;
-}
-
-.footer {
-  height: 50px;
-  padding-top: 15px;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background-color: #f5f5f5;
 }
 
 .score {
@@ -121,20 +124,20 @@ body {
 }
 
 .CodeMirror {
-  border: 0px solid #ddd;
+  border: 0;
   height: auto;
-	margin-bottom: 30px;
-	margin-top: 30px;
+	margin-top: 50px;
+  margin-bottom: 70px;
 	line-height: 1.3em;
-	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-  font-size: 11pt;
+	font-family: @codeFont;
+  font-size: 12pt;
 
   .CodeMirror-scroll{
     height: auto;
+    overflow-y: hidden !important;
+    overflow-x: auto !important;
   }
-
   .CodeMirror-lines {
-    padding: 8px 0;
     cursor: pointer;
   }
 }

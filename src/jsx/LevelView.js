@@ -15,7 +15,6 @@ var LevelView = React.createClass({
 		return {
 			codeSample : this.props.codeSample,
 			score : this.props.score,
-			lastDescription: undefined,
 			descriptions: []
 		};
 	},
@@ -28,32 +27,33 @@ var LevelView = React.createClass({
 		return this.state.codeSample.bugsCount == 0;
 	},
 
+	trackMiss: function (line, ch, word){
+		word = word.trim().substring(0, 20);
+		var category = "miss."+this.props.codeSample.name;
+		var miss = category + "." + word;
+		console.log(miss);
+		if (!this.trackedMisses[miss]){
+			_gaq.push(['_trackEvent', category, miss, category + ' at ' + line + ':'+ch]);
+			this.trackedMisses[miss] = true;
+		}
+	},
+
 	handleClick: function(line, ch, word){
 		if (this.finished()) return;
 		var bug = this.state.codeSample.findBug(line, ch);
-		var descriptions = this.state.lastDescription ? _.union(this.state.descriptions, [this.state.lastDescription]) : this.state.descriptions
 
 		if (bug != null){
+			var descriptions = _.union(this.state.descriptions, [bug.description]);
 			this.setState({
 				codeSample: this.state.codeSample.fix(bug),
 				score: this.state.score + 1,
-				lastDescription: bug.description,
 				descriptions: descriptions
 			});
 		}
 		else {
-			word = word.trim().substring(0, 20);
-			var category = "miss."+this.props.codeSample.name;
-			var miss = category + "." + word;
-			console.log(miss);
-			if (!this.trackedMisses[miss]){
-				_gaq.push(['_trackEvent', category, miss, category + ' at ' + line + ':'+ch]);
-				this.trackedMisses[miss] = true;
-			}
+			this.trackMiss(line, ch, word);
 			this.setState({
 				score: this.state.score - 1,
-				lastDescription: undefined,
-				descriptions: descriptions
 			});
 		}
 	},
@@ -71,7 +71,6 @@ var LevelView = React.createClass({
 			animate(this.refs.score, "rubberBand");
 		if (this.finished())
 			animate(this.refs.title, "flipInX");
-		animate(this.refs.lastDesc, "fadeIn");
 		if (this.finished)
 			animate(this.refs.nextButton, "flipInX");
 	},
@@ -81,12 +80,11 @@ var LevelView = React.createClass({
 	},
 	
 	renderExplanations: function(){
-		if (this.state.descriptions.length == 0 && this.state.lastDescription == undefined) return "";
+		if (this.state.descriptions.length == 0) return "";
 		return <div>
 			<h3>Объяснения:</h3>
 			<ol>
 				{ this.state.descriptions.map(function(d, i){ return <li key={i}>{d}</li> }) }
-				{ this.state.lastDescription != undefined ? <li key="lastDesc" ref="lastDesc" className="last-desc">{this.state.lastDescription}</li> : null }
 			</ol>
 		</div>
 	},
