@@ -39,7 +39,7 @@ var Game = function(){
 			this.levelIndex = levelIndex;
 		else
 			this.levelIndex = 0;
-		this.maxScore = this.currentLevel().bugsCount*10;
+		this.maxScore = this.currentLevel().bugsCount;
 		this.renderLevel();
 	};
 
@@ -72,7 +72,7 @@ var Game = function(){
 		else {
 			this.levelIndex++;
 			this.renderLevel();
-			this.maxScore += this.currentLevel().bugsCount*10;
+			this.maxScore += this.currentLevel().bugsCount;
 		}
 	}.bind(this);
 

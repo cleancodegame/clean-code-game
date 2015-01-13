@@ -36,7 +36,7 @@ var LevelView = React.createClass({
 		if (bug != null){
 			this.setState({
 				codeSample: this.state.codeSample.fix(bug),
-				score: this.state.score + 10,
+				score: this.state.score + 1,
 				lastDescription: bug.description,
 				descriptions: descriptions
 			});

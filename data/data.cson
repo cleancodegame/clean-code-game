@@ -117,7 +117,7 @@
 	{
 		name: 'bigrams'
 		code: '''
-		string[] GetBigrams (IList<string> {{w}})
+		string[] GetBigrams(IList<string> {{w}})
 		{
 			int {{сol_bigram}} = {{w}}.Count - 1;
 			string[] {{Bigrams}} = new string[{{сol_bigram}}];
@@ -228,8 +228,10 @@
 				this.{{m_brdSz}} = {{n}};
 				this.{{array}} = new {{ColorCell}}[{{m_brdSz}},{{m_brdSz}}];
 				for(int {{a}}=0; {{a}}<{{m_brdSz}}; {{a}}++)
-					for(int {{b}}=0; {{b}}<{{m_brdSz}}; {{b}}++)
-						{{array}}[{{a}}, {{b}}] = ({{a}}+{{b}} % 2) == 0 ? {{ColorCell}}.Black : {{ColorCell}}.White;
+					for(int {{b}}=0; {{b}}<{{m_brdSz}}; {{b}}++) {
+						bool isBlack = ({{a}}+{{b}} % 2) == 0;
+						{{array}}[{{a}}, {{b}}] = isBlack ? {{ColorCell}}.Black : {{ColorCell}}.White;
+					}
 			}
 			//...
 		}
@@ -512,13 +514,13 @@
 		* 05-Nov-2011 : Add XML comments 
 		*/
 		}}namespace Logger{
-			///<summary>Implement this interface to provide customized logging event filtering</summary>
+			///<summary>Implement Logger to provide customized event filtering</summary>
 			///<remarks>
 			///<para>
 			///Users should implement this interface to implement customized logging
-			///event filtering. Note that <see cref="Logger.Repository.Hierarchy.Logger"/> and 
-			///<see cref="Logger.Appender.AppenderSkeleton"/>, the parent class of all standard
-			///appenders, have built-in filtering rules. It is suggested that you
+			///event filtering. Note that <see cref="Logger.Repository.Hierarchy.Logger"/>
+			///and <see cref="Logger.Appender.AppenderSkeleton"/>, the parent class of all
+			///standard appenders, have built-in filtering rules. It is suggested that you
 			///first use and understand the built-in rules before rushing to write
 			///your own custom filters.
 			///</para>

@@ -6,7 +6,7 @@ var CodeView = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			lineNumbers: "true",
+			lineNumbers: false,
 			mode: "text/x-csharp",
 			readOnly: "nocursor",
 		};
