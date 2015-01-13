@@ -104,7 +104,7 @@ var LevelView = React.createClass({
 			  <div className="row">
 				<div className="col-sm-12">
 					<h2>Уровень {this.props.level+1}{this.finished() && ". Пройден!"}</h2>
-					<p>Найдите и исправьте все стилевые ошибки в коде. Кликайте мышкой по ошибкам!</p>
+					<p>Найди и исправь все стилевые ошибки в коде. Кликай мышкой по ошибкам!</p>
 					<CodeView code={this.state.codeSample.text} onClick={this.handleClick} />
 				</div>
 			  </div>

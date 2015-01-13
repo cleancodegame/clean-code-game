@@ -65,11 +65,11 @@ var ResultsView = React.createClass({
 		return (
 			<div>
 				{this.renderCat()}
-				<h2>Ого! Да вы профи!</h2>
+				<h2>Ого! Да да перед нами профи!</h2>
 				{this.renderScoreInfo()}
 				<p>
-				Наверняка, вас раздражает неряшливый код ваших коллег.
-				Поделитесь с ними этой игрой, и их код станет чуточку лучше! ;-)
+				Наверняка, тебя раздражает неряшливый код коллег.
+				Поделись с ними этой игрой, и их код станет чуточку лучше! ;-)
 				</p>
 				{this.renderShareButtons()}
 			</div>);
@@ -84,7 +84,7 @@ var ResultsView = React.createClass({
 				{this.renderAgainButton()}
 				{this.renderBooks()}
 				<p>
-				Поделитесь этой игрой с вашими коллегами, и их код тоже станет чуточку лучше! ;-)
+				Поделись этой игрой с коллегами, и их код тоже станет чуточку лучше! ;-)
 				</p>
 				{this.renderShareButtons()}
 			</div>);
@@ -94,12 +94,12 @@ var ResultsView = React.createClass({
 		return (
 			<div>
 				{this.renderCat()}
-				<h2>Ну, по крайней мере вы добрались до конца!</h2>
+				<h2>Ну, по крайней мере ты добрался до конца!</h2>
 				{this.renderScoreInfo()}
 				{this.renderAgainButton()}
 				{this.renderBooks()}
 				<p>
-				Поделитесь этой игрой с вашими коллегами, вдруг они наберут ещё меньше очков! :-D
+				Поделись этой игрой с коллегами, вдруг они наберут ещё меньше очков! :-D
 				</p>
 				{this.renderShareButtons()}
 			</div>);
