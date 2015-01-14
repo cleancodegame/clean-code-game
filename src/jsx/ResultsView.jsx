@@ -1,15 +1,4 @@
-var books = [
-	{
-		title: 'Чистый код. Роберт Мартин',
-		img: 'img/cleancode.jpg',
-		url: 'http://www.ozon.ru/context/detail/id/21916535/'
-	},
-	{
-		title: 'Совершенный код. Стив Макконнелл',
-		img: 'img/codecomplete.jpg',
-		url: 'http://www.ozon.ru/context/detail/id/3159814/'
-	}
-];
+var BooksView = require("./BooksView");
 
 var ResultsView = React.createClass({
 	propTypes: {
@@ -38,7 +27,7 @@ var ResultsView = React.createClass({
 			return this.renderVerdict(
 				"Ого! Да перед нами профи!", 
 				"Раздражает неряшливый код коллег? Поделись с ними этой игрой, и их код станет чуточку лучше! ;-)");
-		else if (rate > 90) 
+		else if (rate > 60)
 			return this.renderVerdict(
 				"Неплохо, неплохо. Но можно и лучше", 
 				"Поделись этой игрой с коллегами, и их код тоже станет чуточку лучше! ;-)");
@@ -57,7 +46,7 @@ var ResultsView = React.createClass({
 				<h2>{headerPhrase}</h2>
 				{this.renderScoreInfo()}
 				{this.renderAgainButton()}
-				{this.renderBooks()}
+				<BooksView />
 				<p>
 				{sharePhrase}
 				</p>
@@ -73,22 +62,6 @@ var ResultsView = React.createClass({
 
 	renderAgainButton: function(){
 		return <p><a href="#" onClick={this.props.onPlayAgain}>Ещё разик?</a></p>
-	},
-
-	renderBooks: function(){
-		return (
-			<div>
-				<p>Больше и подробнее про чистый код можно узнать из этих замечательных книг:</p>
-				<div className="books">
-				{_.map(books, function(b){
-					return <div className="book pull-left" key={b.title}>
-						<a target="blank" title={b.title} href={b.url}><img src={b.img} alt={b.title}/></a>
-					</div>
-				})}
-					<div className="clearfix"/>
-				</div>
-			</div>
-			);
 	},
 
 	renderShareButtons: function(){

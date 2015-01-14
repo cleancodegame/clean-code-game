@@ -63,7 +63,11 @@ var dataSchema = {
 };
 
 gulp.task('clean', function(done) {
-	del(['build/**/*'], done);
+	try{
+		del(['build/**/*'], done);
+	} catch(e){
+		console.log(e);
+	}
 });
 
 gulp.task("html", function(){
@@ -104,7 +108,7 @@ gulp.task("cson", function(){
 });
 
 gulp.task("jsx", function(){
-	return gulp.src('src/jsx/*.js')
+	return gulp.src('src/jsx/*.jsx')
         .pipe(react())
    		.on('error', handleError)
         .pipe(gulp.dest('src/js'));
@@ -134,7 +138,7 @@ gulp.task("default", ['clean'], function(){
 });
 
 gulp.task('watch', ['default'], function(){
-	gulp.watch('src/jsx/*.js', ['js-with-tests']);
+	gulp.watch('src/jsx/*.jsx', ['js-with-tests']);
 	gulp.watch('data/*.cson', ['cson']);
 	gulp.watch('src/*.less', ['less']);
 	gulp.watch('src/*.html', ['html']);

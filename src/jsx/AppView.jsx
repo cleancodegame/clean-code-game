@@ -1,4 +1,4 @@
-var GameView = require("./GameView.js");
+var GameView = require("./GameView");
 
 function renderGame(component){
 	React.render(component, document.getElementById("gameContainer"));
@@ -57,7 +57,7 @@ var AppView = React.createClass({
 		        Но не все могут его создавать.
 		      </p>
 		      <p>Проверь себя!</p>
-		      <p><a className="btn btn-primary btn-lg" onClick={this.handleClick}>Начать игру</a></p>
+		      <p><button className="btn btn-lg btn-primary btn-styled" onClick={this.handleClick}>Начать игру</button></p>
 		    </div>
 		    <img className="home-cat" src="img/cat.svg" />
 		    <div className="clearfix"></div>

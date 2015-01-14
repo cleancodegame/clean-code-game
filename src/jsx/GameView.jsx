@@ -1,6 +1,7 @@
-var CodeSample = require("./CodeSample.js");
-var LevelView = require("./LevelView.js");
-var ResultsView = require("./ResultsView.js");
+var CodeSample = require("./CodeSample");
+var LevelView = require("./LevelView");
+var ResultsView = require("./ResultsView");
+var GameOverView = require("./GameOverView");
 
 
 function removeHash () { 
@@ -30,21 +31,24 @@ var GameView = React.createClass({
 	},
 
 	render: function() {
-		if (this.state.levelIndex >= this.props.levels.length){
-			_gaq.push(['_trackEvent', 'result', 'result.' + this.score, '']);
+		if (this.state.score < 0)
+			return <GameOverView onPlayAgain={this.handlePlayAgain} />;
+		else if (this.state.levelIndex >= this.props.levels.length){
+			_gaq.push(['_trackEvent', 'result', 'result.' + this.state.score, '']);
 			removeHash();
 			return <ResultsView	
 				score={this.state.score}
 				maxScore={this.state.maxScore}
 				onPlayAgain={this.handlePlayAgain}/>;
 		}
-		else
+		else 
 			return <LevelView
 					key={"level_" + this.state.levelIndex}
 					level={this.state.levelIndex}
 					score={this.state.score}
 					codeSample={this.level()}
 					onNext={this.handleNext} />;
+
 	},
 
 	level: function(index){
@@ -55,7 +59,7 @@ var GameView = React.createClass({
 	},
 
 	handleNext: function(score){
-		_gaq.push(['_trackEvent', 'level-solved', 'level-solved.' + this.levelIndex, '']);
+		_gaq.push(['_trackEvent', 'level-solved', 'level-solved.' + this.state.levelIndex, '']);
 		this.setState({
 			score: score,
 			maxScore: this.state.maxScore + this.level().bugsCount,

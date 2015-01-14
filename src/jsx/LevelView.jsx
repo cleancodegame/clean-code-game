@@ -1,6 +1,6 @@
 var CodeView = require("./CodeView");
-var CodeSample = require("./CodeSample.js");
-var utils = require("./utils.js");
+var CodeSample = require("./CodeSample");
+var utils = require("./utils");
 var animate = utils.animate;
 
 var LevelView = React.createClass({
@@ -33,6 +33,7 @@ var LevelView = React.createClass({
 		var miss = category + "." + word;
 		console.log(miss);
 		if (!this.trackedMisses[miss]){
+			console.log(42);
 			_gaq.push(['_trackEvent', category, miss, category + ' at ' + line + ':'+ch]);
 			this.trackedMisses[miss] = true;
 		}
@@ -55,11 +56,14 @@ var LevelView = React.createClass({
 			this.setState({
 				score: this.state.score - 1,
 			});
+			if (this.state.score < 0)
+				this.handleNext(this.state.score);
 		}
 	},
 
 	componentDidMount: function() {
 		this.trackedMisses = {};
+		animate(this.refs.round, "fadeInRight");
 	},
 
 	componentDidUpdate: function(prevProps, prevState) {
@@ -76,7 +80,12 @@ var LevelView = React.createClass({
 	},
 
 	handleNext: function(){
-		this.props.onNext(this.state.score);
+		animate(this.refs.round, "fadeOutLeft");
+		$(this.refs.round.getDOMNode()).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+			
+			console.log(this.state.score);
+			this.props.onNext(this.state.score);
+		}.bind(this));		
 	},
 	
 	renderExplanations: function(){
@@ -92,24 +101,32 @@ var LevelView = React.createClass({
 	renderNextButton: function(){
 		if (!this.finished()) return "";
 		return <button ref="nextButton"
-				className="pull-right btn btn-lg btn-success"
+				className="pull-right btn btn-lg btn-primary btn-styled"
 				onClick={this.handleNext}>Дальше</button>
 	},
 
 	render: function() {
+		var code = this.state.showOriginal ? this.props.codeSample : this.state.codeSample; //from props or from state?
 		return  (
-			<div className="round">
+			<div className="round" ref="round">
 			  <div className="row">
 				<div className="col-sm-12">
 					<h2>Уровень {this.props.level+1}{this.finished() && ". Пройден!"}</h2>
 					<p>Найди и исправь все стилевые ошибки в коде. Кликай мышкой по ошибкам!</p>
-					<CodeView code={this.state.codeSample.text} onClick={this.handleClick} />
+					<div className="code-container">
+						<i className="code-eye glyphicon glyphicon-eye-open" 
+							onMouseDown={this.handleMouseDown} 
+							onTouchStart={this.handleMouseDown} 
+							onMouseUp={this.handleMouseUp} 
+							onTouchEnd={this.handleMouseUp}/>
+						<CodeView code={code.text} onClick={this.handleClick} />
+					</div>
 				</div>
 			  </div>
 			  <div className="row">
 			  	<div className="col-sm-3">
 					<div className="score">
-						Счёт: <span className="score-value" ref="score">{this.state.score}</span>
+						Общий счёт: <span className="score-value" ref="score">{this.state.score}</span>
 					</div>
 			  	</div>
 			  	<div className="col-sm-6">
@@ -130,6 +147,14 @@ var LevelView = React.createClass({
 			  	</div>
 			</div>
 			);
+	},
+
+	handleMouseDown: function() {
+		this.setState({ showOriginal: true });
+	},
+
+	handleMouseUp: function() {
+		this.setState({ showOriginal: false });
 	}
 
 });

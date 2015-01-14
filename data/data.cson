@@ -171,7 +171,7 @@
 				type: 'naming'
 				description: '''
 				Отражайте в имени то, что важно при дальнейшем использовании.
-				В данном случае, то что это имя входного файла важнее того, что оно получено из аргументов командной строки.
+				В данном случае то, что это имя входного файла важнее того, что оно получено из аргументов командной строки.
 				'''
 			time:
 				replace: 'lastWriteTime'
@@ -180,7 +180,7 @@
 			check:
 				replace: 'recentlyModified'
 				type: 'naming'
-				description: "Имя 'check' почти всегда можно улучшить. Сообщите в имени что именно проверяется."
+				description: "Имя 'check' почти всегда можно улучшить. Сообщите в имени, что именно проверяется."
 			show_content:
 				replace: "ShowContent"
 				type: "naming"
@@ -213,7 +213,7 @@
 			'//copy':
 				replace: ''
 				type: 'comments'
-				description: "Нет смысла писать комментарии, повторяющие код"
+				description: "Нет смысла писать комментарии, повторяющие код."
 	},
 	{
 		name: 'Chessboard'
@@ -251,16 +251,14 @@
 				type: 'naming'
 				replace: 'size'
 				description: '''
-				В данном контексте, n могло бы обозначать что угодно: размер шахматной доски, количество фигур на доске, номер доски.
-				size устраняет эту неоднозначность.
+				В данном контексте, n могло бы обозначать как размер шахматной доски, так и количество фигур на доске или номер доски.
+				Имя size устраняет эту неоднозначность.
 				'''
 			m_brdSz:
 				type: 'naming'
 				replace: 'size'
 				description: '''
-				Не используйте закодированные или труднопроизносимые имена.
-				Называйте поле класса также как и аргумент конструктора, значением которого это поле инициализируется
-				 — это дополнительно подчеркнет их связь.
+				Не используйте закодированные или труднопроизносимые имена. Вам их придется произносить или хотя бы мысленно проговаривать!
 				'''
 			array:
 				type: 'naming'
@@ -389,6 +387,7 @@
 			'//Check':
 				type: 'comments'
 				replace: '''
+				
 				if (employee.IsEligibleForFullBenefits())
 				'''
 				description: '''
@@ -434,7 +433,7 @@
 				type: 'comments'
 				replace: ''
 				description: '''
-				Для коротких функций такие комментарии не нужны, а длинные функции лучше разбить на несколько более коротких, вместо написания таких комментариев.
+				Для коротких функций такие комментарии не нужны, а длинные функции лучше разбить на несколько более коротких.
 				'''
 			'//catch':
 				type: 'comments'
@@ -469,14 +468,13 @@
 	{
 		name:'ExplainCompare'
 		code:'''
-		{{//comparison of this and other object
-		}}public int CompareTo(object o)
+		{{//comparison of this and other object}}
+		public int CompareTo(object o)
 		{
 			var other = o as WikiPagePath;
-			if(other != null)
-			{
-				{{//compares concatenated names of this and others
-				}}string thisNames = string.Join("", this.Names);
+			if(other != null) {
+				{{//compares concatenated names of this and others}}
+				string thisNames = string.Join("", this.Names);
 				string otherNames = string.Join("", other.Names);
 				return thisNames.CompareTo(otherNames);
 			}

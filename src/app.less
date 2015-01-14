@@ -1,6 +1,6 @@
 @back: rgb(91, 155, 213);
 @smallWidth: 600px;
-@textFont: "Segoe UI Light", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
+@textFont: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
 @headerFont: 'Bookman Old Style', 'Times New Roman';
 @codeFont: Menlo,Monaco,Consolas,"Courier New",monospace;
 
@@ -25,6 +25,7 @@ body {
 }
 
 .header{
+  z-index: 10000;
   background-color: @back;
   text-align: center;
   .header-text {
@@ -82,16 +83,17 @@ body {
   p{
     margin-top: 30px;
   }
-  .btn{
-    font-family: @headerFont;
+}
+
+.btn-styled {
     width: 280px;
     height: 70px;
+    font-family: @headerFont;
     font-size: 24pt;
     background-color: @back;
     border-radius: 0px;
     border: 0px;
     margin-top: 40px;
-  }
 }
 
 .home-cat{
@@ -140,4 +142,15 @@ body {
   .CodeMirror-lines {
     cursor: pointer;
   }
+}
+.code-container{
+  position:relative;
+}
+
+.code-eye{
+  position: absolute;
+  right: 0px;
+  color: grey;
+  z-index: 10000;
+  cursor: pointer;
 }
