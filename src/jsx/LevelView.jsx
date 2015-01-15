@@ -119,6 +119,9 @@ var LevelView = React.createClass({
 	},
 
 	handleUseHint: function(){
+		var category = "hint."+this.props.codeSample.name;
+		var hint = this.state.availableHints[0].description.substring(0, 20);
+		_gaq.push(['_trackEvent', category, category + "." + hint, category + "." + hint]);
 		this.setState({
 			availableHints: this.state.availableHints.slice(1),
 			score: Math.max(this.state.score - 1, 0),

@@ -26,7 +26,8 @@ var GameView = React.createClass({
 		return {
 			levelIndex: levelIndex,
 			maxScore: 0,
-			score: 0
+			score: 0,
+			time: new Date().getTime()
 		};
 	},
 
@@ -59,11 +60,15 @@ var GameView = React.createClass({
 	},
 
 	handleNext: function(score){
-		_gaq.push(['_trackEvent', 'level-solved', 'level-solved.' + this.state.levelIndex, '']);
+		var elapsed = new Date().getTime() - this.state.time;
+		var category = 'level-solved';
+		var event = category + '.' + this.state.levelIndex;
+		_gaq.push(['_trackEvent', category, event, event + '.' + elapsed]);
 		this.setState({
 			score: score,
 			maxScore: this.state.maxScore + this.level().bugsCount,
 			levelIndex: this.state.levelIndex+1,
+			time: new Date().getTime()
 		});
 	},
 
