@@ -4,7 +4,7 @@
 <head>
   <title>The Clean Code Game</title>
   <meta charset='utf-8'>
-
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
 
   <meta name="title" content="The Clean Code Game" />
   <meta name="description" content="Поиграем в рефакторинг? ;-)" />
@@ -16,12 +16,11 @@
   <meta name="twitter:image" content="http://ulearn.azurewebsites.net/Courses/CleanCode/img/cat.png" />
   <meta name="twitter:url" content="http://ulearn.azurewebsites.net/Courses/CleanCode" />
 
-  <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" charset="utf-8">
-  <link href="libs/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" charset="utf-8">
-  <link href="libs/codemirror/theme/cobalt.css" rel="stylesheet" type="text/css" charset="utf-8">
-  <link href="libs/animate/animate.css" rel="stylesheet" type="text/css" charset="utf-8">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/css/bootstrap.css" rel="stylesheet" charset="utf-8">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css" rel="stylesheet" type="text/css" charset="utf-8">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/themes/cobalt.min.css" rel="stylesheet" type="text/css" charset="utf-8">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css" rel="stylesheet" type="text/css" charset="utf-8">
   <link href="app.css" rel="stylesheet" type="text/css" charset="utf-8">
-
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
@@ -36,17 +35,26 @@
 
   </script>
 
-  <script src="libs/lodash/lodash.min.js" charset="utf-8"></script>
-  <script src="libs/react/react.js" charset="utf-8"></script>
-  <script src="libs/jquery/jquery-2.1.3.min.js"></script>
-  <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
 
-  <script src="libs/codemirror/lib/codemirror.js" charset="utf-8"></script>
-  <script src="libs/codemirror/mode/clike/clike.js" charset="utf-8"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.js" charset="utf-8"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/mode/clike/clike.js" charset="utf-8"></script>
 </head>
 
 <body>
-  <div id="app" />
+  <div id="app">
+  </div>
+
+  <a href="https://github.com/xoposhiy/clean-code-game">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" 
+      src="https://camo.githubusercontent.com/52760788cde945287fbb584134c4cbc2bc36f904/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" 
+      alt="Fork me on GitHub" 
+      data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png">
+  </a>
 
   <script>
     function require(name){

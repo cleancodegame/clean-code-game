@@ -10,7 +10,7 @@ function removeHash () {
 
 function getHash(){
 	if (window.location.hash !== undefined && window.location.hash.length > 0)
-		return ~~window.location.hash.substring(1);
+		return Math.max(0, ~~window.location.hash.substring(1) - 1);
 	else
 		return 0;
 }
@@ -22,7 +22,7 @@ var GameView = React.createClass({
 	},
 
 	getInitialState: function() {
-		var levelIndex = ~~getHash();
+		var levelIndex = getHash();
 		return {
 			levelIndex: levelIndex,
 			maxScore: 0,

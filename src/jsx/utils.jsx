@@ -3,7 +3,7 @@
 module.exports.animate = function(comp, effect){
     if (!comp) return;
     var $el = $(comp.getDOMNode());
-    $el.addClass("animated " + effect);
+    $el.addClass("animated-fast " + effect);
     $el.one(
         'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', 
         function(){$el.removeClass("animated " + effect)}

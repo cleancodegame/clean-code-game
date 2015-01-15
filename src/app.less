@@ -1,4 +1,5 @@
 @back: rgb(91, 155, 213);
+@darkback: rgb(45, 77, 136);
 @smallWidth: 600px;
 @textFont: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
 @headerFont: 'Bookman Old Style', 'Times New Roman';
@@ -94,6 +95,10 @@ body {
     border-radius: 0px;
     border: 0px;
     margin-top: 40px;
+    &.btn-next{
+      margin-top: 0;
+      margin-bottom: 40px;
+  }
 }
 
 .home-cat{
@@ -106,6 +111,20 @@ body {
 
 .score {
   font-size: 18pt;
+}
+
+.score-value{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.minus-one {
+  font-weight: bold;
+  color: white;
+  margin-left: 10px;
+  border-radius1: 20px;
+  background-color: @darkback;
+  padding: 5px;
+
 }
 
 .last-desc{
@@ -127,9 +146,8 @@ body {
 
 .CodeMirror {
   border: 0;
+  margin-top: 10px;
   height: auto;
-	margin-top: 50px;
-  margin-bottom: 70px;
 	line-height: 1.3em;
 	font-family: @codeFont;
   font-size: 12pt;
@@ -145,12 +163,30 @@ body {
 }
 .code-container{
   position:relative;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
-.code-eye{
-  position: absolute;
-  right: 0px;
-  color: grey;
-  z-index: 10000;
+.code-toolbar{
+  font-size: 12pt;
+  color: #888;
   cursor: pointer;
+  
+  .tb-item{
+    cursor: pointer;
+    border-bottom: 1px dashed;
+    margin-right: 10px;
+    &.disabled{
+      border-bottom: none;
+      cursor: auto;
+      color: #aaa;
+    }
+  }
+}
+
+.animated-fast {
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
 }

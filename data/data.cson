@@ -2,7 +2,7 @@
 	{
 		name: 'hello'
 		code:'''
-		void Main(){
+		void Main() {
 			Console.WriteLine("Enter your name: ");
 			var {{veryBadVariableName_clickIt}} = Console.ReadLine();
 			Console.WriteLine("Hello, " + {{veryBadVariableName_clickIt}});
@@ -12,16 +12,16 @@
 			veryBadVariableName_clickIt:
 				type: 'naming'
 				replace: 'name'
-				description: "Поздравляем, вы исправили ошибку! Переходите к следующему уровню."
+				description: "Длинное и ужасное имя переменной!"
 	},
 	{
 		name: 'GetThem'
 		code:'''
 		List<Position> {{GetThem}}() {
 			var {{list1}} = new List<Position>();
-			foreach (var {{x}} in {{theList}})
-				if ({{x}}.IsFlagged)
-					{{list1}}.Add({{x}}.Position);
+			foreach (var cell in {{theBigList}})
+				if (cell.IsFlagged)
+					{{list1}}.Add(cell.Position);
 			return {{list1}};
 		}
 		'''
@@ -36,11 +36,7 @@
 				description: '''
 				Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю.
 				'''
-			x:
-				type: 'naming'
-				replace: 'cell'
-				description: "Переменные цикла, имеющие семантику тоже заслуживают хорошего имени."
-			theList:
+			theBigList:
 				type: 'naming'
 				replace: 'allCells'
 				description: "Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю."
@@ -49,9 +45,9 @@
 		name: 'ViewsPerSecond'
 
 		code:'''
-		double GetViewsPerSecond(IEnumerable<PageView> views, DateTime {{d}}){
+		double GetViewsPerSecond(IEnumerable<PageView> views, DateTime {{t}}) {
 			var {{total}} = {{86400}};
-			var viewsCount = views.Count(v => v.Time.Date == {{d}});
+			var viewsCount = views.Count(v => v.Timestamp.Date == {{t}});
 			return (double)viewsCount / {{total}};
 		}
 		'''
@@ -60,15 +56,14 @@
 				type: 'naming'
 				replace: 'date'
 				description: '''
-				В данном случае в имени аргумента стоит отразить, 
-				что ожидается не произвольное время, а именно дата — значение с нулевой составляющей времени.
-				Хотя не помешало бы это дополнительно проверить и в самом методе.
+				В именах стоит отражать существенные особенности. 
+				Например, если переменная типа DateTime хранит только дату, можно назвать ее date.
 				'''
 			total:
 				type: 'naming'
 				replace: 'secondsInDay'
 				description: '''
-				Имя переменной должно отражать семантику.
+				Имя переменной должно кратко, но емко отражать семантику.
 				'''
 			'86400':
 				type: 'other'
@@ -83,11 +78,10 @@
 		code: '''
 		var {{rstr}} = Console.ReadLine();
 		var {{f}} = false;
-		for(int {{indexInReadString}}=0; {{indexInReadString}}<{{rstr}}.Length; {{indexInReadString}}++)
-		{
-			if ({{f}} || {{rstr}}[{{indexInReadString}}] != '\\\\')
-				Console.Write({{rstr}}[{{indexInReadString}}]);
-			{{f}} = {{rstr}}[{{indexInReadString}}] == '\\\\';
+		for(var {{indxInReadString}} = 0; {{indxInReadString}} < {{rstr}}.Length; {{indxInReadString}}++) {
+			if ({{f}} || {{rstr}}[{{indxInReadString}}] != '\\\\')
+				Console.Write({{rstr}}[{{indxInReadString}}]);
+			{{f}} = {{rstr}}[{{indxInReadString}}] == '\\\\';
 		}
 		'''
 		bugs: 
@@ -106,24 +100,22 @@
 				У каждого "флага" есть смысл, который и нужно отразить в имени.
 				'''
 			
-			indexInReadString:
+			indxInReadString:
 				replace: 'charIndex'
 				type: 'naming'
 				description: '''
-				Сокращайте длину имен, но не в ущерб информативности.
-				В данном примере, строка единственная, поэтому длинное 'InReadString' можно опустить.
+				Слишком длинные имена — тоже плохо. Сокращайте длину имен, но не в ущерб информативности.
 				'''		
 	},
 	{
 		name: 'bigrams'
 		code: '''
-		string[] GetBigrams(IList<string> {{w}})
-		{
-			int {{сol_bigram}} = {{w}}.Count - 1;
-			string[] {{Bigrams}} = new string[{{сol_bigram}}];
-			for (var i = 0; i <= {{сol_bigram}} - 1; i++)
+		List<string> GetBigrams(IList<string> {{w}}) {
+			var {{сol_bigram}} = {{w}}.Count - 1;
+			var {{Bigrams}} = new string[{{сol_bigram}}];
+			for (var i = 0; i < {{сol_bigram}}; i++)
 				{{Bigrams}}[i] = {{w}}[i] + " " + {{w}}[i + 1];
-			return {{Bigrams}}.Distinct().ToArray();
+			return {{Bigrams}}.Distinct().ToList();
 		}
 		'''
 		bugs:
@@ -155,9 +147,8 @@
 	{
 		name: 'arg'
 		code: '''
-		static void Main(string[] args)
-		{
-			string {{arg}} = args.Length > 0 ? args[0] : "input.txt";
+		static void Main(string[] args) {
+			var {{arg}} = args.Length > 0 ? args[0] : "input.txt";
 			DateTime {{time}} = new FileInfo({{arg}}).LastWriteTime;
 			bool {{check}} = {{time}} > DateTime.Now - TimeSpan.FromSeconds(1);
 			ConvertFile({{arg}}, {{check}});
@@ -192,9 +183,9 @@
 	{
 		name: 'CopyChars'
 		code: '''
-		void CopyChars(char[] {{array1}}, char[] {{array2}}){
+		void CopyChars(char[] {{array1}}, char[] {{array2}}) {
 			{{//copy arrays item by item.
-			}}for(int i=0; i<{{array1}}.Length; i++)
+			}}for(var i = 0; i < {{array1}}.Length; i++)
 				{{array2}}[i] = {{array1}}[i];
 		}
 		'''
@@ -216,6 +207,31 @@
 				description: "Нет смысла писать комментарии, повторяющие код."
 	},
 	{
+		name: 'English'
+		code: '''
+		enum {{QualityRender}} { High, Medium, Low };
+		
+		private string {{directoryInput}};
+
+		private string outputDirectory;
+		'''
+		bugs:
+			QualityRender:
+				type: 'naming'
+				replace: 'RenderQuality'
+				description: '''
+				Нарушение правильного порядка слов в составных именах — частая ошибка программистов 
+				со слабым знанием английского.
+				Качество рендера — это QualityOfRender или просто RenderQuality.
+				'''
+			directoryInput:
+				type: 'naming'
+				replace: 'inputDirectory'
+				description: '''
+				directoryInput с английского — это ввод директории. Входная директория — это inputDirectory.
+				'''
+	},
+	{
 		name: 'Chessboard'
 		code:'''
 		enum {{ColorCell}} { Black, White };
@@ -224,16 +240,15 @@
 			private {{ColorCell}}[,] {{array}};
 			private int {{m_brdSz}};
 			
-			public Chessboard(int {{n}}){
+			public Chessboard(int {{n}}) {
 				this.{{m_brdSz}} = {{n}};
 				this.{{array}} = new {{ColorCell}}[{{m_brdSz}},{{m_brdSz}}];
-				for(int {{a}}=0; {{a}}<{{m_brdSz}}; {{a}}++)
-					for(int {{b}}=0; {{b}}<{{m_brdSz}}; {{b}}++) {
+				for(var {{a}} = 0; {{a}} < {{m_brdSz}}; {{a}}++)
+					for(var {{b}} = 0; {{b}} < {{m_brdSz}}; {{b}}++) {
 						bool isBlack = ({{a}}+{{b}} % 2) == 0;
 						{{array}}[{{a}}, {{b}}] = isBlack ? {{ColorCell}}.Black : {{ColorCell}}.White;
 					}
 			}
-			//...
 		}
 
 		'''
@@ -251,8 +266,8 @@
 				type: 'naming'
 				replace: 'size'
 				description: '''
-				В данном контексте, n могло бы обозначать как размер шахматной доски, так и количество фигур на доске или номер доски.
-				Имя size устраняет эту неоднозначность.
+				В данном контексте, n может обозначать как размер шахматной доски, так и количество фигур на доске или номер доски.
+				Имя size устранит эту неоднозначность.
 				'''
 			m_brdSz:
 				type: 'naming'
@@ -282,10 +297,10 @@
 	{
 		name: 'Initialization'
 		code:'''
-		public void {{Initialization}}(int boardSize){
+		public void {{Initialization}}(int boardSize) {
 			log.Info("Board initialization...");
 			this.piecesPlaced = 0;
-			{{Board}}(boardSize, boardSize);
+			this.board = {{Board}}(boardSize, boardSize);
 			log.Info("Board initialization finished");
 		}
 		'''
@@ -301,23 +316,23 @@
 				replace: 'this.board = CreateBoard'
 				description: '''
 				Методы — это действия, называйте их глаголами или глагольными фразами.
-				Кроме того, всегда когда возможно создавайте методы без побочных эффектов. 
-				В этом примере у метода Board до рефакторинга был побочный эффект — изменение поля this.board, а рефакторинг это исправил.
 				'''
 	},
 	{
 		name:'GetSet'
 		code:'''
-		void {{GetFactory}}(){
-			this.factory = {{FactoryCreator}}();
+		void {{GetFactory}}() {
+			var user = Environment.UserName;
+			this.factory = {{FactoryCreator}}(user);
 		}
 
-		TimeSpan GetTimeout(){
+		TimeSpan GetTimeout() {
 			return this.timeout;
 		}
 
-		void {{SetTimeout}}(){
-			this.timeout  = ReadSettings().Timeout;
+		void {{SetTimeout}}() {
+			var sectionName = systemName + "/timeout";
+			this.timeout  = ReadSettings(sectionName).Timeout;
 		}
 		'''
 		bugs:
@@ -326,7 +341,7 @@
 				replace: 'InitFactory'
 				description: '''
 				Методы GetXXX, CreateXXX, ReadXXX должны возвращать результат.
-				В данном случае это не Get-метод, а метод инициализации.
+				void-методы, инициализирующие поля класса лучше так не называть.
 				'''
 			FactoryCreator:
 				type: 'methods'
@@ -339,13 +354,13 @@
 				replace: 'InitTimeoutFromSettings'
 				description: '''
 				Методы SetXXX должны принимать устанавливаемое значение в качестве аргумента. 
-				В данном случае это не Set-метод, а метод инициализации.
+				Методы без аргументов лучше так не называть.
 				'''
 	},
 	{
-		name:'DRY'
+		name:'SplitMethod'
 		code:'''
-		void Main(string[] args){
+		void Main(string[] args) {
 			string[] inputLines = File.ReadAllLines(args[0]);
 			string outputPath = args[1];
 			if (Directory.Exists(outputPath))
@@ -369,7 +384,7 @@
 				'''
 				description: '''
 				Вместо комментария, разделяющего код на две фазы, стоит сделать настоящее разделение кода на методы.
-				Общее правило — каждый метод должен делать ровно одну вещь. В данном случае стоит разделить ввод исходных данных и конвертацию файла.
+				Каждый метод должен делать ровно одну вещь.
 
 				'''
 		
@@ -378,8 +393,10 @@
 		name:'CommentExplainCode'
 		code:'''
 		{{//Check to see if the employee is eligible for full benefits
-		if ((employee.IsHourly()) && (employee.Age > 65))}}
+		if (employee.IsHourly() && employee.Age > 65)}} {
+			AddBadge(employee, Badges.GreatAge);
 			Pay(employee, fullBenefitsAmount); {{//Pay largeAmount}}
+		}
 		else
 			Pay(employee, reducedAmount);
 		'''
@@ -397,9 +414,7 @@
 				type: 'comments'
 				replace: ''
 				description: '''
-				Комментарии повторяющие код не нужны, а могут быть даже вредны. 
-				Часто при модификации кода они устаревают и становятся неактуальными.
-				В этом примере, видимо, после переименования largeAmount в fullBenefitsAmount комментарий поправить забыли.
+				Комментарии повторяющие код не нужны. Они легко могут устареть!
 				'''
 	},
 	{
@@ -407,10 +422,10 @@
 		code:'''
 		void Main(string[] args) {
 			try {
-				int lineCount = 0;
-				int charCount = 0;
+				var lineCount = 0;
+				var charCount = 0;
 				var lines = File.ReadAllLines(args[0]);
-				foreach(var line in lines){
+				foreach(var line in lines) {
 					lineCount++;
 					charCount += line.Length;
 				} {{//foreach}}
@@ -445,32 +460,24 @@
 	{
 		name:'nameInsteadOfComment'
 		code:'''
-		{{//Returns an instance of the Responder being tested.}}
-		protected abstract Responder {{GetResponderInstance}}();
+		Responder {{GetResponder(); //Returns the Responder being tested.}}
 
 		//format matched: hh:mm:ss, MMM dd, yyyy
 		private Regex timeRegex = new Regex(@"\\d*:\\d*:\\d*, \\w* \\d*, \\d*");
 		'''
 		bugs:
-			'//Returns':
-				type: 'comments'
-				replace: ''
-				description: '''
-				Не используйте комментарии там, где можно использовать правильное имя.
-				'''
-			GetResponderInstance:
+			'GetResponder();':
 				type: 'naming'
-				replace: 'GetTestResponder'
+				replace: 'GetTestResponder();'
 				description: '''
-				Если появляется написать поясняющий комментарий к методу, стоит вместо этого изменить имя метода.
+				Если появляется желание написать поясняющий комментарий к методу, стоит вместо этого постараться придумать более удачное имя методу.
 				'''
 	},
 	{
 		name:'ExplainCompare'
 		code:'''
 		{{//comparison of this and other object}}
-		public int CompareTo(object o)
-		{
+		public int CompareTo(object o) {
 			var other = o as WikiPagePath;
 			if(other != null) {
 				{{//compares concatenated names of this and others}}
@@ -478,7 +485,7 @@
 				string otherNames = string.Join("", other.Names);
 				return thisNames.CompareTo(otherNames);
 			}
-			return 1; //we are greater because we are the right type.
+			return 1; // WikiPagePath should be greater than any other wrong type.
 		} {{//end of CompareTo}}
 		'''
 		bugs:
@@ -525,8 +532,8 @@
 			///</remarks>
 			public interface IFilter : IOptionHandler {
 				{{///<summary>Make a decision about logging event.</summary>
-				}}{{///<param name="loggingEvent">The LoggingEvent to decide upon</param>
-				}}{{///<returns>The decision of the filter</returns>}}
+				///<param name="loggingEvent">The LoggingEvent to decide upon</param>
+				///<returns>The decision of the filter</returns>}}
 				FilterDecision Decide(LoggingEvent loggingEvent);
 
 				{{///<summary>Property to get and set the next filter</summary>
@@ -540,19 +547,7 @@
 				type: 'comments'
 				replace: ''
 				description: '''
-				XML-комментарии не несущие новой информации тоже бесполезны.
-				'''
-			'///<param':
-				type: 'comments'
-				replace: ''
-				description: '''
-				XML-комментарии может быть полезным, если сообщает что-то существенное, о чем трудно догадаться глядя только на имя метода.
-				'''
-			'///<returns>The':
-				type: 'comments'
-				replace: ''
-				description: '''
-				XML-комментарии мог бы сообщить какие-то важные подробности о возвращаемом значении. Без этого он бесполезен.
+				XML-комментарии не несущие новой информации бесполезны.
 				'''
 			'///<summary>Property':
 				type: 'comments'
@@ -571,13 +566,13 @@
 	{
 		name:'collision'
 		code:'''
-		void {{CollisionHandler}}(GameObject hero, GameObject enemy){
+		void {{CollisionHandler}}(GameObject hero, GameObject enemy) {
 			{{//If hero and enemy collided
 			if ((hero.X-enemy.X)*(hero.X-enemy.X) + (hero.Y-enemy.Y)*(hero.Y-enemy.Y) 
 				< (hero.Radius + enemy.Radius)*(hero.Radius + enemy.Radius))}} {
 				hero.Life--;
-				if (!hero.Alive) {{//no more life}}
-					HandleHeroDead(hero);
+				if (!hero.IsAlive) {{//no more life}}
+					HandleHeroDeath(hero);
 			}
 		}
 		'''
@@ -590,7 +585,7 @@
 				'''
 			'//If':
 				type: 'comments'
-				replace: 'if (AreCollided(hero, enemy))'
+				replace: 'if (Collided(hero, enemy))'
 				description: '''
 				Не используйте комментарии там, где можно выделить метод с говорящим именем.
 				'''
@@ -608,7 +603,7 @@
 		/// Path to file or directory with map description. 
 		/// If path is a path to directory, file default.map is used.
 		///</param>
-		GameMap LoadMap(string path){
+		GameMap LoadMap(string path) {
 			var filename = Directory.Exists(path) 
 				? Path.Combine(path, "default.map") 
 				: path;
@@ -620,7 +615,7 @@
 				for(var x=0; x<lines[0].Length; x++) {
 					{{//============Select object to put in (x, y) cell;
 					GameObject obj = null;
-					switch (lines[y][x]){
+					switch (lines[y][x]) {
 						case 'H': 
 							obj = new Hero();
 							break;
@@ -653,7 +648,7 @@
 				replace: ''
 				description: '''
 				При виде комментария, разделяющего метод на смысловые части, стоит вынести эти смысловые части в отдельные методы.
-				А в данном случае, инициализацию и вовсе лучше перенести в конструктор класса Map.
+				А в данном случае, инициализацию карты можно перенести в конструктор класса GameMap.
 				'''
 	},
 ]

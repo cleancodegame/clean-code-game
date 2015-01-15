@@ -75,11 +75,6 @@ gulp.task("html", function(){
 		.pipe(gulp.dest('build/'));
 });
 
-gulp.task("libs", function(){
-	return gulp.src('libs/**/*')
-		.pipe(gulp.dest('build/libs'));
-});
-
 gulp.task("img", function(){
 	return gulp.src('img/*')
 		.pipe(gulp.dest('build/img'));
@@ -134,7 +129,7 @@ gulp.task("js-with-tests", ['browserify'], function(){
 });
 
 gulp.task("default", ['clean'], function(){
-	gulp.start('cson', 'less', 'js-with-tests', 'browserify', 'libs', 'html', 'img', 'web.config');
+	gulp.start('cson', 'less', 'js-with-tests', 'browserify', 'html', 'img', 'web.config');
 });
 
 gulp.task('watch', ['default'], function(){
@@ -142,7 +137,6 @@ gulp.task('watch', ['default'], function(){
 	gulp.watch('data/*.cson', ['cson']);
 	gulp.watch('src/*.less', ['less']);
 	gulp.watch('src/*.html', ['html']);
-	gulp.watch('libs/**/*', ['libs']);
 	gulp.watch('img/*', ['img']);
 	gulp.watch('web.config', ['web.config']);
 });

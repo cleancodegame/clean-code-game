@@ -17,7 +17,7 @@ var CodeView = React.createClass({
 		this.getDOMNode().onmouseup =
 			function(ev){
 				var sel = this.editor.doc.sel.ranges[0].head;
-				var word = ev.target.innerText;
+				var word = $(ev.target).text();
 				this.props.onClick(sel.line, sel.ch, word);
 			}.bind(this);
 	},
