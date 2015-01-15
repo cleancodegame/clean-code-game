@@ -52,7 +52,7 @@
 		}
 		'''
 		bugs:
-			d:
+			t:
 				type: 'naming'
 				replace: 'date'
 				description: '''
@@ -313,7 +313,7 @@
 				'''
 			Board:
 				type: 'methods'
-				replace: 'this.board = CreateBoard'
+				replace: 'CreateBoard'
 				description: '''
 				Методы — это действия, называйте их глаголами или глагольными фразами.
 				'''
