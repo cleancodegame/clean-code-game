@@ -59,7 +59,7 @@ var AppView = React.createClass({
 		      <p>Проверь себя!</p>
 		      <p><button className="btn btn-lg btn-primary btn-styled" onClick={this.handleClick}>Начать игру</button></p>
 		    </div>
-		    <img className="home-cat" src="img/cat.svg" />
+			<img className="home-cat" src="img/cat.png" />
 		    <div className="clearfix"></div>
 		  </div>
 	},

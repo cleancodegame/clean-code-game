@@ -1,6 +1,6 @@
 @back: rgb(91, 155, 213);
 @darkback: rgb(45, 77, 136);
-@smallWidth: 600px;
+@smallWidth: 700px;
 @textFont: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
 @headerFont: 'Bookman Old Style', 'Times New Roman';
 @codeFont: Menlo,Monaco,Consolas,"Courier New",monospace;
@@ -26,7 +26,6 @@ body {
 }
 
 .header{
-  z-index: 10000;
   background-color: @back;
   text-align: center;
   .header-text {
@@ -63,6 +62,7 @@ body {
 }
 
 .container{
+  position: relative;
   max-width: 800px;
 
   &.header{
@@ -75,7 +75,7 @@ body {
 }
 
 .home-text{
-  margin: 70px 80px 20px 20px;
+  margin: 70px 0px 20px 20px;
   @media (max-width: @smallWidth) {
     margin-right: 0px;
   }
@@ -102,11 +102,16 @@ body {
 }
 
 .home-cat{
-  float: left;
-  width: 400px;
-  margin-top: -70px;
-  margin-bottom: -50px;
-  margin-right: -1000px;
+  float:right;
+  margin-right: -90px;
+  margin-top: 20px;
+  @media (max-width: @smallWidth){
+    position: absolute;
+    left: 330px;
+    &.hide-small{
+      display: none;
+    }
+  }
 }
 
 .score {
@@ -189,4 +194,19 @@ body {
           animation-duration: 0.5s;
   -webkit-animation-fill-mode: both;
           animation-fill-mode: both;
+}
+
+.bootbox-body{
+  margin: 30px;
+}
+
+.modal-footer{
+  .btn-primary{
+    border-radius: 0px;
+    border: 0px;
+    font-family: @headerFont;
+    font-size: 18pt;
+    width: 150px;
+    height: 50px;
+ }
 }

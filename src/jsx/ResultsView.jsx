@@ -17,6 +17,7 @@ var ResultsView = React.createClass({
 	},
 
 	getScorePercentage: function(){
+		if (this.props.maxScore >= 0) return 0;
 		return Math.round(100 * this.props.score / this.props.maxScore);
 	},
 
@@ -40,9 +41,6 @@ var ResultsView = React.createClass({
 	renderVerdict: function(headerPhrase, sharePhrase){
 		return (
 			<div>
-				<div className="pull-right">
-					<img src="img/cat.png" />
-				</div>
 				<h2>{headerPhrase}</h2>
 				{this.renderScoreInfo()}
 				{this.renderAgainButton()}

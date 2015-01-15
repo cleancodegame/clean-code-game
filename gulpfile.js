@@ -11,6 +11,8 @@ var source = require('vinyl-source-stream');
 var JSV = require("JSV").JSV;
 var fs = require('fs');
 
+var outputDir = 'cleancodegame.github.io/'
+
 function handleError(err) {
   console.log(err.toString());
   console.log("\007");
@@ -64,7 +66,7 @@ var dataSchema = {
 
 gulp.task('clean', function(done) {
 	try{
-		del(['build/**/*'], done);
+		del([outputDir + '/**/*'], done);
 	} catch(e){
 		console.log(e);
 	}
@@ -72,17 +74,22 @@ gulp.task('clean', function(done) {
 
 gulp.task("html", function(){
 	return gulp.src('src/*.html')
-		.pipe(gulp.dest('build/'));
+		.pipe(gulp.dest(outputDir));
 });
 
 gulp.task("img", function(){
 	return gulp.src('img/*')
-		.pipe(gulp.dest('build/img'));
+		.pipe(gulp.dest(outputDir + '/img'));
 });
 
 gulp.task("web.config", function(){
-	return gulp.src('web.config')
-		.pipe(gulp.dest('build'));
+	return gulp.src('src/web.config')
+		.pipe(gulp.dest(outputDir));
+});
+
+gulp.task("web.config", function(){
+	return gulp.src('src/favicon.ico')
+		.pipe(gulp.dest(outputDir));
 });
 
 
@@ -90,7 +97,7 @@ gulp.task("less", function(){
 	return gulp.src('src/*.less')
 		.pipe(less())
    		.on('error', handleError)
-		.pipe(gulp.dest('build/'));
+		.pipe(gulp.dest(outputDir));
 });
 
 gulp.task("cson", function(){
@@ -99,7 +106,7 @@ gulp.task("cson", function(){
     	.pipe(validateJson(dataSchema))
    		.on('error', handleError)
     	.pipe(toJsonp('handleData'))
-    	.pipe(gulp.dest('build/data/'));
+    	.pipe(gulp.dest(outputDir + '/data/'));
 });
 
 gulp.task("jsx", function(){
@@ -118,7 +125,7 @@ gulp.task("browserify", ['jsx'], function(){
 		//.require('./src/js/AppView.js', {expose: 'AppView'})
         .bundle()
         .pipe(source('bundle.js'))
-        .pipe(gulp.dest('build'))
+        .pipe(gulp.dest(outputDir))
 		.on('error', handleError);
 });
 
@@ -138,6 +145,7 @@ gulp.task('watch', ['default'], function(){
 	gulp.watch('src/*.less', ['less']);
 	gulp.watch('src/*.html', ['html']);
 	gulp.watch('img/*', ['img']);
-	gulp.watch('web.config', ['web.config']);
+	gulp.watch('src/web.config', ['web.config']);
+	gulp.watch('src/favicon.ico', ['favicon']);
 });
 

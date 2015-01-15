@@ -15,14 +15,14 @@ var BooksView = React.createClass({
 		return (
 			<div>
 				<p>Больше и подробнее про чистый код можно узнать из этих замечательных книг:</p>
-				<div className="books">
-				{_(this.books).map(function(b){
-					return <div className="book pull-left" key={b.title}>
-						<a target="blank" title={b.title} href={b.url}><img src={b.img} alt={b.title}/></a>
-					</div>
-				})}
-					<div className="clearfix"/>
+				<div className="books pull-left">
+					{_(this.books).map(function(b){
+						return <a className="book" key={b.title} target="blank" 
+								title={b.title} href={b.url}><img src={b.img} alt={b.title}/></a>
+					})}
+					<img className="book" src="img/cat.png" width="250" alt="Чистый кот" />
 				</div>
+				<div className="clearfix"/>
 			</div>
 			);
 	}

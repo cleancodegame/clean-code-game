@@ -1,0 +1,3 @@
+[submodule "cleancodegame.github.io"]
+	path = cleancodegame.github.io
+	url = git@github.com:cleancodegame/cleancodegame.github.io.git
