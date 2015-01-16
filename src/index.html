@@ -21,6 +21,7 @@
   <link href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.11.0/codemirror.min.css" rel="stylesheet" type="text/css" charset="utf-8">
   <link href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css" rel="stylesheet" type="text/css" charset="utf-8">
   <link href="app.css" rel="stylesheet" type="text/css" charset="utf-8">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.0.1/outdatedBrowser.min.css" rel="stylesheet" type="text/css" charset="utf-8">
   <script type="text/javascript">
 
     var _gaq = _gaq || [];
@@ -73,6 +74,22 @@
   <script src="bundle.js" charset="utf-8"></script>
 
   <script src="data/data.json"></script>
+
+
+<div id="outdated">
+     <h6>Your browser is out-of-date!</h6>
+     <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.0.1/outdatedBrowser.min.js"></script>
+  <script type="text/javascript">
+      outdatedBrowser({
+        bgColor: '#f25648',
+        color: '#ffffff',
+        lowerThan: 'transform',
+        languagePath: ''
+      });
+  </script>
 
 </body>
 </html>
