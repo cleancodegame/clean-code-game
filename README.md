@@ -1,5 +1,7 @@
 # The Clean Code Game
 
+The game itself: https://cleancodegame.github.io/
+
 ## How to build and run
 
 1. Install `nodejs`.
