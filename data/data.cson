@@ -89,7 +89,7 @@
 				replace: 'line'
 				type: 'naming'
 				description: '''
-				Избегайте труднопроизносимых имен и кодироания, понятного лишь вам.
+				Избегайте труднпрзнсимых имен и кодирования, понятного лишь вам.
 				'''
 			
 			f:
@@ -245,7 +245,7 @@
 				this.{{array}} = new {{ColorCell}}[{{m_brdSz}},{{m_brdSz}}];
 				for(var {{a}} = 0; {{a}} < {{m_brdSz}}; {{a}}++)
 					for(var {{b}} = 0; {{b}} < {{m_brdSz}}; {{b}}++) {
-						bool isBlack = ({{a}}+{{b}} % 2) == 0;
+						bool isBlack = ({{a}} + {{b}}) % 2 == 0;
 						{{array}}[{{a}}, {{b}}] = isBlack ? {{ColorCell}}.Black : {{ColorCell}}.White;
 					}
 			}
@@ -332,7 +332,7 @@
 
 		void {{SetTimeout}}() {
 			var sectionName = systemName + "/timeout";
-			this.timeout  = ReadSettings(sectionName).Timeout;
+			this.timeout = ReadSettings(sectionName).Timeout;
 		}
 		'''
 		bugs:
