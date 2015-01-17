@@ -171,7 +171,7 @@ var LevelView = React.createClass({
 	},
 
 	render: function() {
-		var code = this.state.showOriginal ? this.getModel().level() : this.state.codeSample; //from props or from state?
+		var code = this.state.showOriginal ? this.getModel().level() : this.state.codeSample;
 		var hasProgress = this.state.codeSample.bugsCount < this.getModel().level();
 		if (this.state.solved) return null;
 		return  (
@@ -179,7 +179,8 @@ var LevelView = React.createClass({
 			  <div className="row">
 				<div className="col-sm-12">
 					<h2>Уровень {this.props.levelIndex+1}{this.finished() && ". Пройден!"}</h2>
-					<p>Найди и исправь все стилевые ошибки в коде. Кликай мышкой по ошибкам!</p>
+					<p>Найди и исправь все стилевые ошибки в коде. Кликай мышкой по ошибкам.<br/>
+					Каждая найденная ошибка: +1 балл. Каждый промах или подсказка: &ndash;1 балл.</p>
 					<div className="code-container">
 						<span className="code-toolbar">
 							<HoverButton text="сравнить" enabled={hasProgress} onEnter={this.showOriginalCode} onLeave={this.showCurrentCode} />

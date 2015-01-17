@@ -88,7 +88,7 @@ var AppView = React.createClass({
 		return <div className="footer">
 			    <div className="container">
 			      <p className="text-muted">
-			        © 2015 <a href="https://kontur.ru/career">СКБ Контур</a>
+			        © 2015 <a href="https://kontur.ru/career">СКБ Контур</a>. Связаться с <a href="mailto:pe@kontur.ru">автором</a>.
 			      </p>
 			    </div>
 			  </div>;
