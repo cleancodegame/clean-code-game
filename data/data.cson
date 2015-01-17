@@ -69,8 +69,8 @@
 				type: 'other'
 				replace: '24 * 60 * 60'
 				description: '''
-				Иногда в качесте значения констант арифметические выражения понятнее, чем само значение.
-				В этом случае 24 * 60 * 60 проще проверить на корректность, чем 86400.
+				Иногда, арифметические выражения понятнее, чем значение этого выражения.
+				Запись 24 * 60 * 60 проще проверить на корректность, чем 86400.
 				'''
 	},
 	{
@@ -167,7 +167,7 @@
 			time:
 				replace: 'lastWriteTime'
 				type: 'naming'
-				description: "'lastWriteTime' сообщает больше полезной инфомации читателю, чем просто 'time'."
+				description: "'lastWriteTime' сообщает больше полезной информации читателю, чем просто 'time'."
 			check:
 				replace: 'recentlyModified'
 				type: 'naming'
@@ -230,6 +230,30 @@
 				description: '''
 				directoryInput с английского — это ввод директории. Входная директория — это inputDirectory.
 				'''
+	},
+	{
+		name: 'ShareIfYouLike'
+		code: '''
+		if (you.Like(this.Game)) {
+			you.Tweet(); 
+			you.Post();
+			you.Instagram(); // why not?
+		}
+		else {
+			you.{{HATE_AUTHOR()}};
+		}
+
+		'''
+		bugs:
+			'HATE_AUTHOR()':
+				type: 'naming'
+				replace: 'EmailAuthor("pe@kontur.ru")'
+				description: '''
+				Придерживайтесь стандартного стиля именования для вашего языка программирования.
+				В C# принято использовать стиль CamelCase.
+				'''
+
+
 	},
 	{
 		name: 'Chessboard'
