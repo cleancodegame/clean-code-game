@@ -20,7 +20,7 @@
 		List<Position> {{GetThem}}() {
 			var {{list1}} = new List<Position>();
 			foreach (var cell in {{theBigList}})
-				if (cell.IsFlagged)
+				if (cell.IsEmpty)
 					{{list1}}.Add(cell.Position);
 			return {{list1}};
 		}
@@ -28,11 +28,11 @@
 		bugs:
 			GetThem:
 				type: 'naming'
-				replace: 'GetFlaggedCellPositions'
+				replace: 'GetEmptyPositions'
 				description: "Не используйте местоимения в именах. Это совсем не добавляет понятности."
 			list1:
 				type: 'naming'
-				replace: 'flaggedCells'
+				replace: 'emptyPositions'
 				description: '''
 				Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю.
 				'''
@@ -148,7 +148,7 @@
 		name: 'arg'
 		code: '''
 		static void Main(string[] args) {
-			var {{arg}} = args.Length > 0 ? args[0] : "input.txt";
+			var {{arg}} = args.Length > 0 ? args[0] : defaultFilename;
 			DateTime {{time}} = new FileInfo({{arg}}).LastWriteTime;
 			bool {{check}} = {{time}} > DateTime.Now - TimeSpan.FromSeconds(1);
 			ConvertFile({{arg}}, {{check}});
@@ -299,7 +299,7 @@
 		code:'''
 		public void {{Initialization}}(int boardSize) {
 			log.Info("Board initialization...");
-			this.piecesPlaced = 0;
+			this.piecesCount = 0;
 			this.board = {{Board}}(boardSize, boardSize);
 			log.Info("Board initialization finished");
 		}
@@ -370,7 +370,7 @@
 			var escapedLines = inputLines.Select(s => s.Replace(@"\", @"\\"));
 			var outputText = string.Join("\\n", escapedLines);
 			File.WriteAllText(outputPath, outputText);
-			Console.WriteLine("Write {0} characters", outputText.Length);
+			Console.WriteLine("{0} characters", outputText.Length);
 		}
 		'''
 		bugs:
@@ -460,10 +460,10 @@
 	{
 		name:'nameInsteadOfComment'
 		code:'''
-		Responder {{GetResponder(); //Returns the Responder being tested.}}
-
 		//format matched: hh:mm:ss, MMM dd, yyyy
 		private Regex timeRegex = new Regex(@"\\d*:\\d*:\\d*, \\w* \\d*, \\d*");
+
+		Responder {{GetResponder(); //Returns the Responder being tested.}}
 		'''
 		bugs:
 			'GetResponder();':
@@ -597,7 +597,7 @@
 				'''
 	},
 	{
-		name:''
+		name:'LoadMap'
 		code:'''
 		///<param name="path">
 		/// Path to file or directory with map description. 

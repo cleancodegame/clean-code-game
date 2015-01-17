@@ -9,6 +9,7 @@ body {
   font-family: @textFont;
   font-size: 14pt;
   margin-bottom: 70px;
+  overflow-x:hidden;
 }
 
 .footer {
@@ -57,6 +58,20 @@ body {
       color: white;
       text-align: right;
       font-size: 18pt;
+    }
+  }
+}
+.header-progress{
+  width:100%;
+  .progress-tile{
+    border-top: 4px solid white;
+    height: 16px;
+    background-color: white;
+    &.solved{
+      background-color: @back;
+    }
+    &.partial-solved{
+      background-color: lightyellow;
     }
   }
 }

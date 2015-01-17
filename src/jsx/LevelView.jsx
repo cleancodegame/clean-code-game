@@ -2,6 +2,8 @@ var CodeView = require("./CodeView");
 var CodeSample = require("./CodeSample");
 var utils = require("./utils");
 var animate = utils.animate;
+var tracker = require("./Tracker");
+
 
 var HintButton = React.createClass({
 	propTypes: {
@@ -32,32 +34,26 @@ var HoverButton = React.createClass({
 	render: function() {
 		if (this.props.enabled)
 			return <span className="tb-item"
-					onMouseEnter={this.props.onEnter} 
-					onTouchStart={this.props.onEnter} 
-					onMouseLeave={this.props.onLeave} 
-					onTouchEnd={this.props.onLeave}>{this.props.text}</span>
+				onMouseEnter={this.props.onEnter} 
+				onTouchStart={this.props.onEnter} 
+				onMouseLeave={this.props.onLeave} 
+				onTouchEnd={this.props.onLeave}>{this.props.text}</span>
 		else
 			return <span className="tb-item disabled">{this.props.text}</span>
 	},
-
-
 });
 
 var LevelView = React.createClass({
-	propTypes: {
-		level: React.PropTypes.number.isRequired,
-		score: React.PropTypes.number.isRequired,
-		codeSample: React.PropTypes.instanceOf(CodeSample).isRequired,
-		onNext: React.PropTypes.func.isRequired
-	},
+	mixins: [Backbone.React.Component.mixin],
 
 	getInitialState: function() {
+		var level = this.getModel().level();
 		return {
-			codeSample : this.props.codeSample,
-			score : this.props.score,
+			codeSample : level,
 			descriptions: [],
-			availableHints: _.values(this.props.codeSample.bugs),
-			showOriginal: false
+			availableHints: _.values(level.bugs),
+			showOriginal: false,
+			solved: false
 		};
 	},
 
@@ -67,11 +63,11 @@ var LevelView = React.createClass({
 
 	handleMiss: function (line, ch, word){
 		word = word.trim().substring(0, 20);
-		var category = "miss."+this.props.codeSample.name;
+		var category = "miss."+this.state.codeSample.name;
 		var miss = category + "." + word;
 		console.log(miss);
 		if (!this.trackedMisses[miss]){
-			_gaq.push(['_trackEvent', category, miss, category + ' at ' + line + ':'+ch]);
+			tracker.missed(this.state.codeSample, miss);
 			this.trackedMisses[miss] = true;
 			this.reduceScore();
 		}
@@ -82,10 +78,11 @@ var LevelView = React.createClass({
 		var fixedCode = this.state.codeSample.fix(bug);
 		var lastHint = this.state.availableHints[0];
 		var newHints = _.filter(this.state.availableHints, function(h) { return h.name != bug.name });
-
+		this.getModel().set({
+			score: this.props.score + 1,
+		});
 		this.setState({
 			codeSample: fixedCode,
-			score: this.state.score + 1,
 			deltaScore: +1,
 			availableHints: newHints,
 			descriptions: descriptions
@@ -93,12 +90,12 @@ var LevelView = React.createClass({
 	},
 
 	reduceScore: function(){
+		this.getModel().set({
+			score: this.props.score - 1,
+		});
 		this.setState({
-			score: this.state.score - 1,
 			deltaScore: -1
 		});
-		if (this.state.score < 0)
-			this.handleNext(this.state.score);
 	},
 
 	handleClick: function(line, ch, word){
@@ -119,12 +116,12 @@ var LevelView = React.createClass({
 	},
 
 	handleUseHint: function(){
-		var category = "hint."+this.props.codeSample.name;
-		var hint = this.state.availableHints[0].description.substring(0, 20);
-		_gaq.push(['_trackEvent', category, category + "." + hint, category + "." + hint]);
+		tracker.hintUsed(this.state.codeSample, this.state.availableHints[0]);
+		this.getModel().set({
+			score: Math.max(this.props.score - 1, 0),
+		});
 		this.setState({
 			availableHints: this.state.availableHints.slice(1),
-			score: Math.max(this.state.score - 1, 0),
 			deltaScore: -1
 		});
 	},
@@ -139,12 +136,16 @@ var LevelView = React.createClass({
 	handleNext: function(){
 		animate(this.refs.round, "fadeOutLeft");
 		$(this.refs.round.getDOMNode()).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-			
-			console.log(this.state.score);
-			this.props.onNext(this.state.score);
+			var m = this.getModel();
+			this.setState({solved: true});
+			tracker.levelSolved(m.get('levelIndex'));
+			this.getModel().set({
+				maxScore: m.get('maxScore') + _.keys(m.level().bugs).length,
+				levelIndex: m.get('levelIndex')+1,
+			});
 		}.bind(this));		
 	},
-	
+
 	renderExplanations: function(){
 		if (this.state.descriptions.length == 0) return "";
 		return <div>
@@ -170,13 +171,14 @@ var LevelView = React.createClass({
 	},
 
 	render: function() {
-		var code = this.state.showOriginal ? this.props.codeSample : this.state.codeSample; //from props or from state?
-		var hasProgress = this.state.codeSample.bugsCount < this.props.codeSample.bugsCount;
+		var code = this.state.showOriginal ? this.getModel().level() : this.state.codeSample; //from props or from state?
+		var hasProgress = this.state.codeSample.bugsCount < this.getModel().level();
+		if (this.state.solved) return null;
 		return  (
 			<div className="round" ref="round">
 			  <div className="row">
 				<div className="col-sm-12">
-					<h2>Уровень {this.props.level+1}{this.finished() && ". Пройден!"}</h2>
+					<h2>Уровень {this.props.levelIndex+1}{this.finished() && ". Пройден!"}</h2>
 					<p>Найди и исправь все стилевые ошибки в коде. Кликай мышкой по ошибкам!</p>
 					<div className="code-container">
 						<span className="code-toolbar">
@@ -196,9 +198,9 @@ var LevelView = React.createClass({
 						<div className="pull-left">
 							Общий счёт: 
 						</div>
-						<div className="pull-left score-value" ref="score">{this.state.score}</div>
+						<div className="pull-left score-value" ref="score">{this.props.score}</div>
 						{ this.state.deltaScore < 0
-							? <div key={this.state.score} className="pull-left minus-one animated fadeOutDown"> —1</div>
+							? <div key={this.props.score} className="pull-left minus-one animated fadeOutDown"> —1</div>
 							: null }
 						<div className="clearfix" />
 					</div>

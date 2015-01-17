@@ -38,6 +38,8 @@
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/backbone-react-component/0.7.3/backbone-react-component-min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js"></script>
@@ -65,15 +67,14 @@
 	</script>
 
 	<script>
-		var levelsHolder = { ready:false };
-		function handleData(data){
-			levelsHolder.levels = data;
-			levelsHolder.ready = true;
-		}
+		var levels;
+		function handleData(data) { levels = data; }
 	</script>
+	<script src="data/data.json"></script>
+
 	<script src="bundle.js" charset="utf-8"></script>
 
-	<script src="data/data.json"></script>
+
 
 
 	<div id="outdated">

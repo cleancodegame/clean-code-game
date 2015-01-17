@@ -1,4 +1,10 @@
 var BooksView = require("./BooksView");
+var utils = require("./utils");
+var tracker = require("./Tracker");
+
+function removeHash () { 
+	history.pushState("", document.title, window.location.pathname + window.location.search);
+}
 
 var ResultsView = React.createClass({
 	propTypes: {
@@ -8,12 +14,9 @@ var ResultsView = React.createClass({
 	},
 
 	componentDidMount: function() {
-        $("#uptolikescript").remove();
-        s = document.createElement('script');
-        s.id="uptolikescript";
-        s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
-        s.src = ('https:' == window.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
-        document.getElementsByTagName('body')[0].appendChild(s);
+		tracker.finished(this.props.score);
+		removeHash();
+		utils.initUpToLike();
 	},
 
 	getScorePercentage: function(){

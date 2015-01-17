@@ -1,16 +1,28 @@
+var GameModel = require("./GameModel");
 var GameView = require("./GameView");
 
-function renderGame(component){
-	React.render(component, document.getElementById("gameContainer"));
-};
+var ProgressBar = React.createClass({
+	mixins: [Backbone.React.Component.mixin],
+
+	render: function() {
+		return <table className="header-progress">
+					<tr>
+						{
+							_.map(_.keys(this.props.levels), function(level, i){
+								var classes = "progress-tile" + ((i < this.props.levelIndex) ? " solved" : "");
+								return <td key={level.name} className={classes} />
+							}.bind(this))
+						}
+					</tr>
+				</table>
+	},
+});
 
 var AppView = React.createClass({
-	propTypes: {
-		levelsHolder: React.PropTypes.object.isRequired
-	},
+	mixins: [Backbone.React.Component.mixin],
 	getInitialState: function() {
 		return {
-			started: false
+			started: false,
 		};
 	},
 	render: function() {
@@ -23,15 +35,17 @@ var AppView = React.createClass({
 			  );
 	},
 
+
 	renderHeader: function(){
 		var classes = "header-text" + (this.state.started ? '' : ' tall');
 		return <div className="header">
 		    <div className="container header">
 		      <div className={classes}>
-		      <h1 className="pointer" onClick={this.handleHome}>The Clean Code Game</h1>
-		      <h2>Версия C#</h2>
+			      <h1 className="pointer" onClick={this.handleHome}>The Clean Code Game</h1>
+			      <h2>Версия C#</h2>
 		      </div>
 		    </div>
+		    {this.state.started && <ProgressBar model={this.getModel()}/>}
 		  </div>
 	},
 
@@ -42,7 +56,7 @@ var AppView = React.createClass({
 	renderBody: function(){
 		if (this.state.started)
 			return <div className="container">
-					<GameView levels={this.props.levelsHolder.levels} />
+					<GameView model={gameModel}/>
 				</div>
 		else
 			return this.renderIntro();
@@ -65,11 +79,9 @@ var AppView = React.createClass({
 	},
 
 	handleClick: function(){
-		if (this.props.levelsHolder.ready){
-			this.setState({
-				started: true
-			});
-		}
+		this.setState({
+			started: true
+		});
 	},
 
 	renderFooter: function(){
@@ -83,4 +95,18 @@ var AppView = React.createClass({
 	}
 });
 
-React.render(<AppView levelsHolder={levelsHolder} />, document.getElementById("app"));
+function getHash(){
+	if (window.location.hash !== undefined && window.location.hash.length > 0)
+		return Math.max(0, ~~window.location.hash.substring(1) - 1);
+	else
+		return 0;
+}
+
+var gameModel = new GameModel({
+	levelIndex: getHash(),
+	levels: levels,
+	score: 0,
+	maxScore: 0
+});
+
+React.render(<AppView model={gameModel} />, document.getElementById("app"));
