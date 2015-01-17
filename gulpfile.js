@@ -121,6 +121,7 @@ gulp.task("browserify", ['jsx'], function(){
 			entries: './src/js/AppView.js',
 			'ignore-missing': true,
 		})
+		.exclude('lodash')
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(gulp.dest(outputDir))
