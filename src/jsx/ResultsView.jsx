@@ -7,9 +7,9 @@ function removeHash () {
 }
 
 var ResultsView = React.createClass({
+	mixins: [Backbone.React.Component.mixin],
+
 	propTypes: {
-		score: React.PropTypes.number.isRequired,
-		maxScore: React.PropTypes.number.isRequired,
 		onPlayAgain: React.PropTypes.func.isRequired
 	},
 
@@ -46,6 +46,7 @@ var ResultsView = React.createClass({
 			<div>
 				<h2>{headerPhrase}</h2>
 				{this.renderScoreInfo()}
+				{this.renderMistakeDetails()}
 				{this.renderAgainButton()}
 				<BooksView />
 				<p>
@@ -59,6 +60,23 @@ var ResultsView = React.createClass({
 		return (
 			<p>{this.getScorePercentage()}% очков ({this.props.score} из {this.props.maxScore} возможных).</p>
 			);
+	},
+
+	renderMistakeDetails: function(){
+		var types = _.sortBy(_.keys(this.props.penalty), function(t){return -this.props.penalty[t]}, this);
+		console.log(types);
+		if (types.length == 0) return "";
+		return <div>
+				<h3>Статистика ошибок</h3>
+				<table className="table">
+				{_.map(types, function(t){
+					return <tr key={t}>
+							<th>{t}</th>
+							<td>{this.props.penalty[t]}</td>
+						</tr>
+				}, this)}
+			</table>
+			</div>;
 	},
 
 	renderAgainButton: function(){

@@ -47,10 +47,9 @@ var LevelView = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
 
 	getInitialState: function() {
-		var level = this.getModel().level();
+		var level = this.getModel().get('level');
 		return {
-			codeSample : level,
-			descriptions: [],
+			explanations: [],
 			availableHints: _.values(level.bugs),
 			showOriginal: false,
 			solved: false
@@ -58,41 +57,39 @@ var LevelView = React.createClass({
 	},
 
 	finished: function(){
-		return this.state.codeSample.bugsCount == 0;
+		return this.props.level.bugsCount == 0;
 	},
 
 	handleMiss: function (line, ch, word){
 		word = word.trim().substring(0, 20);
-		var category = "miss."+this.state.codeSample.name;
+		var category = "miss."+this.props.level.name;
 		var miss = category + "." + word;
 		console.log(miss);
 		if (!this.trackedMisses[miss]){
-			tracker.missed(this.state.codeSample, miss);
+			tracker.missed(this.props.level, miss);
 			this.trackedMisses[miss] = true;
 			this.reduceScore();
 		}
 	},
 
 	handleFix: function(bug){
-		var descriptions = _.union(this.state.descriptions, [bug.description]);
-		var fixedCode = this.state.codeSample.fix(bug);
+		var explanations = _.union(this.state.explanations, [bug.description]);
+		var fixedCode = this.props.level.fix(bug);
 		var lastHint = this.state.availableHints[0];
 		var newHints = _.filter(this.state.availableHints, function(h) { return h.name != bug.name });
 		this.getModel().set({
 			score: this.props.score + 1,
+			level: fixedCode,
 		});
 		this.setState({
-			codeSample: fixedCode,
 			deltaScore: +1,
 			availableHints: newHints,
-			descriptions: descriptions
+			explanations: explanations
 		});
 	},
 
 	reduceScore: function(){
-		this.getModel().set({
-			score: this.props.score - 1,
-		});
+		this.getModel().missClick();
 		this.setState({
 			deltaScore: -1
 		});
@@ -100,7 +97,7 @@ var LevelView = React.createClass({
 
 	handleClick: function(line, ch, word){
 		if (this.finished()) return;
-		var bug = this.state.codeSample.findBug(line, ch);
+		var bug = this.props.level.findBug(line, ch);
 
 		if (bug != null){
 			this.handleFix(bug);
@@ -116,50 +113,39 @@ var LevelView = React.createClass({
 	},
 
 	handleUseHint: function(){
-		tracker.hintUsed(this.state.codeSample, this.state.availableHints[0]);
-		this.getModel().set({
-			score: Math.max(this.props.score - 1, 0),
-		});
+		tracker.hintUsed(this.props.level, this.state.availableHints[0]);
+		this.getModel().useHint();
 		this.setState({
 			availableHints: this.state.availableHints.slice(1),
 			deltaScore: -1
 		});
 	},
 
-	componentDidUpdate: function(prevProps, prevState) {
-		if (prevState.codeSample.bugsCount != this.state.codeSample.bugsCount)
-			animate(this.refs.bugsCount, "bounce");
-		if (this.finished && prevState.codeSample.bugsCount > 0)
-			animate(this.refs.nextButton, "flipInX");
-	},
-
 	handleNext: function(){
 		animate(this.refs.round, "fadeOutLeft");
 		$(this.refs.round.getDOMNode()).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
-			var m = this.getModel();
 			this.setState({solved: true});
-			tracker.levelSolved(m.get('levelIndex'));
-			this.getModel().set({
-				maxScore: m.get('maxScore') + _.keys(m.level().bugs).length,
-				levelIndex: m.get('levelIndex')+1,
-			});
+			tracker.levelSolved(this.props.levelIndex);
+			this.getModel().finishLevel();
 		}.bind(this));		
 	},
 
 	renderExplanations: function(){
-		if (this.state.descriptions.length == 0) return "";
+		if (this.state.explanations.length == 0) return "";
 		return <div>
 			<h3>Объяснения:</h3>
 			<ol>
-				{ this.state.descriptions.map(function(d, i){ return <li key={i}>{d}</li> }) }
+				{ this.state.explanations.map(function(d, i){ return <li key={i}>{d}</li> }) }
 			</ol>
 		</div>
 	},
 
 	renderNextButton: function(){
 		if (!this.finished()) return "";
+		var classes = "btn btn-lg btn-primary btn-styled btn-next";
+		if (this.state.deltaScore > 0) classes += " animated flipInX";
 		return <button ref="nextButton"
-				className="btn btn-lg btn-primary btn-styled btn-next"
+				className={classes}
 				onClick={this.handleNext}>Дальше</button>
 	},
 
@@ -169,10 +155,17 @@ var LevelView = React.createClass({
 		else
 			return undefined;
 	},
+	renderBugsCount: function(){
+		var classes = this.state.deltaScore > 0 ? "animated bounce" : "";
+		var bugsCount = this.props.level.bugsCount;
+		return <div className="score">
+				Осталось найти: <span key={bugsCount} className={classes}>{bugsCount}</span>
+			</div>
+	},
 
 	render: function() {
-		var code = this.state.showOriginal ? this.getModel().level() : this.state.codeSample;
-		var hasProgress = this.state.codeSample.bugsCount < this.getModel().level().bugsCount;
+		var code = this.state.showOriginal ? this.props.originalLevel : this.props.level;
+		var hasProgress = this.props.level.bugsCount < this.props.originalLevel.bugsCount;
 		if (this.state.solved) return null;
 		return  (
 			<div className="round" ref="round">
@@ -207,9 +200,7 @@ var LevelView = React.createClass({
 					</div>
 			  	</div>
 			  	<div className="col-sm-5">
-					<div className="score">
-						Осталось найти: <span ref="bugsCount">{this.state.codeSample.bugsCount}</span>
-					</div>
+					{this.renderBugsCount()}
 			  	</div>
 			  	</div>
 			  	<div className="row">

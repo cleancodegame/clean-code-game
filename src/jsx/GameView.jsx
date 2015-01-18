@@ -12,10 +12,7 @@ var GameView = React.createClass({
 		if (m.get('score') < 0)
 			return <GameOverView onPlayAgain={this.handlePlayAgain} />;
 		else if (m.get('levelIndex') >= m.get('levels').length){
-			return <ResultsView	
-				score={m.get('score')}
-				maxScore={m.get('maxScore')}
-				onPlayAgain={this.handlePlayAgain}/>;
+			return <ResultsView model={m} onPlayAgain={this.handlePlayAgain}/>;
 		}
 		else 
 			return <LevelView key={m.get('levelIndex')} model={m} />;

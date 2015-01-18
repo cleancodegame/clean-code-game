@@ -1,5 +1,6 @@
 var GameModel = require("./GameModel");
 var GameView = require("./GameView");
+var tracker = require("./Tracker");
 
 var ProgressBar = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
@@ -56,7 +57,7 @@ var AppView = React.createClass({
 	renderBody: function(){
 		if (this.state.started)
 			return <div className="container">
-					<GameView model={gameModel}/>
+					<GameView model={this.getModel()}/>
 				</div>
 		else
 			return this.renderIntro();
@@ -84,29 +85,19 @@ var AppView = React.createClass({
 		});
 	},
 
+	handleKonturClick: function(){
+		tracker.track("career");
+	},
+
 	renderFooter: function(){
 		return <div className="footer">
 			    <div className="container">
 			      <p className="text-muted">
-			        © 2015 <a href="https://kontur.ru/career">СКБ Контур</a>. Связаться с <a href="mailto:pe@kontur.ru">автором</a>.
+			        © 2015 <a href="https://kontur.ru/career" onClick={this.handleKonturClick}>СКБ Контур</a>. Связаться с <a href="mailto:pe@kontur.ru">автором</a>.
 			      </p>
 			    </div>
 			  </div>;
 	}
 });
 
-function getHash(){
-	if (window.location.hash !== undefined && window.location.hash.length > 0)
-		return Math.max(0, ~~window.location.hash.substring(1) - 1);
-	else
-		return 0;
-}
-
-var gameModel = new GameModel({
-	levelIndex: getHash(),
-	levels: levels,
-	score: 0,
-	maxScore: 0
-});
-
-React.render(<AppView model={gameModel} />, document.getElementById("app"));
+React.render(<AppView model={new GameModel()} />, document.getElementById("app"));

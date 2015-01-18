@@ -18,5 +18,9 @@ module.exports = {
 	missed: function(level, miss){
 		var category = "miss." + level.name;
 		_gaq.push(['_trackEvent', category, miss, category]);
+	},
+	
+	track: function(event){
+		_gaq.push(['_trackEvent', event, event, event]);	
 	}
 };
