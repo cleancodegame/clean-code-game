@@ -62,11 +62,9 @@ var LevelView = React.createClass({
 
 	handleMiss: function (line, ch, word){
 		word = word.trim().substring(0, 20);
-		var category = "miss."+this.props.level.name;
-		var miss = category + "." + word;
-		console.log(miss);
+		var miss = this.props.level.name + "." + word;
 		if (!this.trackedMisses[miss]){
-			tracker.missed(this.props.level, miss);
+			tracker.missed(this.props.level, word);
 			this.trackedMisses[miss] = true;
 			this.reduceScore();
 		}

@@ -9,10 +9,6 @@ function removeHash () {
 var ResultsView = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
 
-	propTypes: {
-		onPlayAgain: React.PropTypes.func.isRequired
-	},
-
 	componentDidMount: function() {
 		tracker.finished(this.props.score);
 		removeHash();
@@ -64,7 +60,6 @@ var ResultsView = React.createClass({
 
 	renderMistakeDetails: function(){
 		var types = _.sortBy(_.keys(this.props.penalty), function(t){return -this.props.penalty[t]}, this);
-		console.log(types);
 		if (types.length == 0) return "";
 		return <div>
 				<h3>Статистика ошибок</h3>
@@ -80,7 +75,12 @@ var ResultsView = React.createClass({
 	},
 
 	renderAgainButton: function(){
-		return <p><a href="#" onClick={this.props.onPlayAgain}>Ещё разик?</a></p>
+		return <p><a href="#" onClick={this.handlePlayAgain}>Ещё разик?</a></p>
+	},
+
+	handlePlayAgain: function(){
+		tracker.track("again_after_success_with", this.props.score);
+		this.getModel().reset();
 	},
 
 	renderShareButtons: function(){

@@ -1,8 +1,11 @@
 var BooksView = require("./BooksView");
+var tracker = require("./Tracker");
 
 var GameOverView = React.createClass({
-	propTypes: {
-		onPlayAgain: React.PropTypes.func.isRequired
+	mixins: [Backbone.React.Component.mixin],
+
+	componentDidMount: function() {
+		tracker.track("fail_on", this.props.levelIndex);
 	},
 
 	render: function() {
@@ -18,8 +21,13 @@ var GameOverView = React.createClass({
 				Впрочем, возможно, вам просто не повезло. Попробуйте ещё раз!
 			</p>
 
-			<button className="btn btn-lg btn-primary btn-styled" onClick={this.props.onPlayAgain}>Ещё раз</button>
+			<button className="btn btn-lg btn-primary btn-styled" onClick={this.handlePlayAgain}>Ещё раз</button>
 		</div>;
+	},
+
+	handlePlayAgain: function(){
+		tracker.track("again_after_fail_on", this.props.levelIndex);
+		this.getModel().reset();
 	},
 });
 

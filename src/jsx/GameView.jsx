@@ -10,18 +10,13 @@ var GameView = React.createClass({
 	render: function() {
 		var m = this.getModel();
 		if (m.get('score') < 0)
-			return <GameOverView onPlayAgain={this.handlePlayAgain} />;
+			return <GameOverView model={m} />;
 		else if (m.get('levelIndex') >= m.get('levels').length){
-			return <ResultsView model={m} onPlayAgain={this.handlePlayAgain}/>;
+			return <ResultsView model={m} />;
 		}
 		else 
 			return <LevelView key={m.get('levelIndex')} model={m} />;
 	},
-
-	handlePlayAgain: function(){
-		this.getModel().reset();
-	}
-
 });
 
 module.exports = GameView;
