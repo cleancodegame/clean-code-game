@@ -157,11 +157,11 @@
 		static void Main(string[] args)
 		{
 			var {{arg}} = args.Length > 0 ? args[0] : defaultFilename;
-			DateTime {{time}} = new FileInfo({{arg}}).LastWriteTime;
-			bool {{check}} = {{time}} > DateTime.Now - TimeSpan.FromSeconds(1);
+			DateTime lastWriteTime = new FileInfo({{arg}}).LastWriteTime;
+			bool {{check}} = lastWriteTime > DateTime.Now - TimeSpan.FromSeconds(1);
 			ConvertFile({{arg}}, {{check}});
 			{{show_content}}({{arg}});
-			Console.WriteLine({{time}});
+			Console.WriteLine(lastWriteTime);
 		}
 		'''
 		bugs:
@@ -172,10 +172,6 @@
 				Отражайте в имени то, что важно при дальнейшем использовании.
 				В данном случае то, что это имя входного файла важнее того, что оно получено из аргументов командной строки.
 				'''
-			time:
-				replace: 'lastWriteTime'
-				type: 'naming'
-				description: "'lastWriteTime' сообщает больше полезной информации читателю, чем просто 'time'."
 			check:
 				replace: 'recentlyModified'
 				type: 'naming'
@@ -268,8 +264,6 @@
 				Придерживайтесь стандартного стиля именования для вашего языка программирования.
 				В C# принято использовать стиль CamelCase.
 				'''
-
-
 	},
 	{
 		name: 'Chessboard'
@@ -332,13 +326,13 @@
 				type: 'naming'
 				replace: 'y'
 				description: '''
-				Избегайте необходимости мысленного декодирования при чтении кода.
+				Для обозначения координат вместо i, j и a, b лучше использовать предсказуемые и понятные x, y. 
 				'''
 			b:
 				type: 'naming'
 				replace: 'x'
 				description: '''
-				Используйте имена x, y для обозначения координат.
+				Избегайте необходимости мысленного декодирования при чтении кода.
 				'''
 	},
 	{

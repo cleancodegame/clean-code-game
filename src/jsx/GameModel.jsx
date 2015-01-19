@@ -21,6 +21,10 @@ var GameModel = Backbone.Model.extend({
 		levelPenalty: [],
 	},
 
+	reset: function(){
+		this.set(this.defaults);
+	},
+
 	finishLevel: function(){
 		var newLevelIndex = this.get('levelIndex')+1;
 		var newLevel = newLevelIndex < this.get('levels').length ? new CodeSample(levels[newLevelIndex]) : null;

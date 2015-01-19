@@ -19,11 +19,7 @@ var GameView = React.createClass({
 	},
 
 	handlePlayAgain: function(){
-		this.getModel().set(
-		{
-			levelIndex: 0,
-			score: 0,
-		});
+		this.getModel().reset();
 	}
 
 });
