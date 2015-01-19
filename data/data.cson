@@ -2,7 +2,8 @@
 	{
 		name: 'hello'
 		code:'''
-		void Main() {
+		void Main()
+		{
 			Console.WriteLine("Enter your name: ");
 			var {{veryBadVariableName_clickIt}} = Console.ReadLine();
 			Console.WriteLine("Hello, " + {{veryBadVariableName_clickIt}});
@@ -17,11 +18,14 @@
 	{
 		name: 'GetThem'
 		code:'''
-		List<Position> {{GetThem}}() {
+		List<Position> {{GetThem}}()
+		{
 			var {{list1}} = new List<Position>();
 			foreach (var cell in {{theBigList}})
-				if (cell.IsEmpty)
+			{
+				if (cell.IsEmpty) 
 					{{list1}}.Add(cell.Position);
+			}
 			return {{list1}};
 		}
 		'''
@@ -45,7 +49,8 @@
 		name: 'ViewsPerSecond'
 
 		code:'''
-		double GetViewsPerSecond(IEnumerable<PageView> views, DateTime {{t}}) {
+		double GetViewsPerSecond(IEnumerable<PageView> views, DateTime {{t}})
+		{
 			var {{total}} = {{86400}};
 			var viewsCount = views.Count(v => v.Timestamp.Date == {{t}});
 			return (double)viewsCount / {{total}};
@@ -78,7 +83,8 @@
 		code: '''
 		var {{rstr}} = Console.ReadLine();
 		var {{f}} = false;
-		for(var {{indxInReadString}} = 0; {{indxInReadString}} < {{rstr}}.Length; {{indxInReadString}}++) {
+		for(var {{indxInReadString}} = 0; {{indxInReadString}} < {{rstr}}.Length; {{indxInReadString}}++)
+		{
 			if ({{f}} || {{rstr}}[{{indxInReadString}}] != '\\\\')
 				Console.Write({{rstr}}[{{indxInReadString}}]);
 			{{f}} = {{rstr}}[{{indxInReadString}}] == '\\\\';
@@ -110,7 +116,8 @@
 	{
 		name: 'bigrams'
 		code: '''
-		List<string> GetBigrams(IList<string> {{w}}) {
+		List<string> GetBigrams(IList<string> {{w}})
+		{
 			var {{сol_bigram}} = {{w}}.Count - 1;
 			var {{Bigrams}} = new string[{{сol_bigram}}];
 			for (var i = 0; i < {{сol_bigram}}; i++)
@@ -147,7 +154,8 @@
 	{
 		name: 'arg'
 		code: '''
-		static void Main(string[] args) {
+		static void Main(string[] args)
+		{
 			var {{arg}} = args.Length > 0 ? args[0] : defaultFilename;
 			DateTime {{time}} = new FileInfo({{arg}}).LastWriteTime;
 			bool {{check}} = {{time}} > DateTime.Now - TimeSpan.FromSeconds(1);
@@ -183,7 +191,8 @@
 	{
 		name: 'CopyChars'
 		code: '''
-		void CopyChars(char[] {{array1}}, char[] {{array2}}) {
+		void CopyChars(char[] {{array1}}, char[] {{array2}})
+		{
 			{{//copy arrays item by item.
 			}}for(var i = 0; i < {{array1}}.Length; i++)
 				{{array2}}[i] = {{array1}}[i];
@@ -209,7 +218,12 @@
 	{
 		name: 'English'
 		code: '''
-		enum {{QualityRender}} { High, Medium, Low };
+		public enum {{QualityRender}} 
+		{
+			High,
+			Medium,
+			Low
+		};
 		
 		private string {{directoryInput}};
 
@@ -234,12 +248,14 @@
 	{
 		name: 'ShareIfYouLike'
 		code: '''
-		if (you.Like(this.Game)) {
+		if (you.Like(this.Game))
+		{
 			you.Tweet(); 
 			you.Post();
 			you.Instagram(); // why not?
 		}
-		else {
+		else
+		{
 			you.{{HATE_AUTHOR()}};
 		}
 
@@ -258,17 +274,24 @@
 	{
 		name: 'Chessboard'
 		code:'''
-		enum {{ColorCell}} { Black, White };
+		enum {{ColorCell}}
+		{ 
+			Black, 
+			White
+		};
 
-		class Chessboard {
+		class Chessboard 
+		{
 			private {{ColorCell}}[,] {{array}};
 			private int {{m_brdSz}};
-			
-			public Chessboard(int {{n}}) {
+
+			public Chessboard(int {{n}}) 
+			{
 				this.{{m_brdSz}} = {{n}};
 				this.{{array}} = new {{ColorCell}}[{{m_brdSz}},{{m_brdSz}}];
 				for(var {{a}} = 0; {{a}} < {{m_brdSz}}; {{a}}++)
-					for(var {{b}} = 0; {{b}} < {{m_brdSz}}; {{b}}++) {
+					for(var {{b}} = 0; {{b}} < {{m_brdSz}}; {{b}}++) 
+					{
 						bool isBlack = ({{a}} + {{b}}) % 2 == 0;
 						{{array}}[{{a}}, {{b}}] = isBlack ? {{ColorCell}}.Black : {{ColorCell}}.White;
 					}
@@ -321,7 +344,8 @@
 	{
 		name: 'Initialization'
 		code:'''
-		public void {{Initialization}}(int boardSize) {
+		public void {{Initialization}}(int boardSize)
+		{
 			log.Info("Board initialization...");
 			this.piecesCount = 0;
 			this.board = {{Board}}(boardSize, boardSize);
@@ -345,16 +369,19 @@
 	{
 		name:'GetSet'
 		code:'''
-		void {{GetFactory}}() {
+		void {{GetFactory}}()
+		{
 			var user = Environment.UserName;
 			this.factory = {{FactoryCreator}}(user);
 		}
 
-		TimeSpan GetTimeout() {
+		TimeSpan GetTimeout()
+		{
 			return this.timeout;
 		}
 
-		void {{SetTimeout}}() {
+		void {{SetTimeout}}()
+		{
 			var sectionName = systemName + "/timeout";
 			this.timeout = ReadSettings(sectionName).Timeout;
 		}
@@ -384,7 +411,8 @@
 	{
 		name:'SplitMethod'
 		code:'''
-		void Main(string[] args) {
+		void Main(string[] args)
+		{
 			string[] inputLines = File.ReadAllLines(args[0]);
 			string outputPath = args[1];
 			if (Directory.Exists(outputPath))
@@ -404,7 +432,8 @@
 				ConvertFile(inputLines, outputPath);
 				}
 
-				void ConvertFile(IEnumerable<string> inputLines, string outputPath) {
+				void ConvertFile(IEnumerable<string> inputLines, string outputPath)
+				{
 				'''
 				description: '''
 				Вместо комментария, разделяющего код на две фазы, стоит сделать настоящее разделение кода на методы.
@@ -417,7 +446,8 @@
 		name:'CommentExplainCode'
 		code:'''
 		{{//Check to see if the employee is eligible for full benefits
-		if (employee.IsHourly() && employee.Age > 65)}} {
+		if (employee.IsHourly() && employee.Age > 65)}}
+		{
 			AddBadge(employee, Badges.GreatAge);
 			Pay(employee, fullBenefitsAmount); {{//Pay largeAmount}}
 		}
@@ -444,19 +474,23 @@
 	{
 		name:'endComments'
 		code:'''
-		void Main(string[] args) {
-			try {
+		void Main(string[] args)
+		{
+			try
+			{
 				var lineCount = 0;
 				var charCount = 0;
 				var lines = File.ReadAllLines(args[0]);
-				foreach(var line in lines) {
+				foreach(var line in lines)
+				{
 					lineCount++;
 					charCount += line.Length;
 				} {{//foreach}}
 				Console.WriteLine("lineCount = " + lineCount);
 				Console.WriteLine("charCount = " + charCount);
 			} {{//try}}
-			catch (Exception e) {
+			catch (Exception e)
+			{
 				Console.WriteLine("Error:" + e.Message);
 			} {{//catch}}
 		}
@@ -501,9 +535,11 @@
 		name:'ExplainCompare'
 		code:'''
 		{{//comparison of this and other object}}
-		public int CompareTo(object o) {
+		public int CompareTo(object o)
+		{
 			var other = o as WikiPagePath;
-			if(other != null) {
+			if(other != null)
+			{
 				{{//compares concatenated names of this and others}}
 				string thisNames = string.Join("", this.Names);
 				string otherNames = string.Join("", other.Names);
@@ -542,7 +578,8 @@
 		* 11-Oct-2011 : Move implementation to another file
 		* 05-Nov-2011 : Add XML comments 
 		*/
-		}}namespace Logger{
+		}}namespace Logger
+		{
 			///<summary>Implement Logger to provide customized event filtering</summary>
 			///<remarks>
 			///<para>
@@ -554,7 +591,8 @@
 			///your own custom filters.
 			///</para>
 			///</remarks>
-			public interface IFilter : IOptionHandler {
+			public interface IFilter : IOptionHandler
+			{
 				{{///<summary>Make a decision about logging event.</summary>
 				///<param name="loggingEvent">The LoggingEvent to decide upon</param>
 				///<returns>The decision of the filter</returns>}}
@@ -590,10 +628,12 @@
 	{
 		name:'collision'
 		code:'''
-		void {{CollisionHandler}}(GameObject hero, GameObject enemy) {
+		void {{CollisionHandler}}(GameObject hero, GameObject enemy)
+		{
 			{{//If hero and enemy collided
 			if ((hero.X-enemy.X)*(hero.X-enemy.X) + (hero.Y-enemy.Y)*(hero.Y-enemy.Y) 
-				< (hero.Radius + enemy.Radius)*(hero.Radius + enemy.Radius))}} {
+				< (hero.Radius + enemy.Radius)*(hero.Radius + enemy.Radius))}}
+			{
 				hero.Life--;
 				if (!hero.IsAlive) {{//no more life}}
 					HandleHeroDeath(hero);
@@ -627,7 +667,8 @@
 		/// Path to file or directory with map description. 
 		/// If path is a path to directory, file default.map is used.
 		///</param>
-		GameMap LoadMap(string path) {
+		GameMap LoadMap(string path)
+		{
 			var filename = Directory.Exists(path) 
 				? Path.Combine(path, "default.map") 
 				: path;
@@ -636,10 +677,12 @@
 			var width = lines[0].Length;
 			var map = new GameMap(width, height);
 			for(var y=0; y<lines.Length; y++)
-				for(var x=0; x<lines[0].Length; x++) {
+				for(var x=0; x<lines[0].Length; x++)
+				{
 					{{//============Select object to put in (x, y) cell;
 					GameObject obj = null;
-					switch (lines[y][x]) {
+					switch (lines[y][x])
+					{
 						case 'H': 
 							obj = new Hero();
 							break;
