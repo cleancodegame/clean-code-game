@@ -23,7 +23,11 @@ var ResultsView = React.createClass({
 
 	render: function() {
 		var rate = this.getScorePercentage();
-		if (rate == 100) 
+		if (rate > 100)
+			return this.renderVerdict(
+				"Ай-яй-яй, нехорошо читы использовать!",
+				"Поделись этой игрой с коллегами, докажи, что разбираешься в чужом коде лучше них! :P");
+		else if (rate == 100) 
 			return this.renderVerdict(
 				"Ого! Да перед нами профи!", 
 				"Раздражает неряшливый код коллег? Поделись с ними этой игрой, и их код станет чуточку лучше! ;-)");
