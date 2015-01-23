@@ -15,6 +15,7 @@ var GameModel = Backbone.Model.extend({
 		levels: levels,
 		level: new CodeSample(levels[getHash()]),
 		originalLevel: new CodeSample(levels[getHash()]),
+		prevScore: 0,
 		score: 0,
 		maxScore: 0,
 		penalty: {},

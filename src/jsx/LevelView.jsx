@@ -1,47 +1,11 @@
 var CodeView = require("./CodeView");
 var CodeSample = require("./CodeSample");
+var HoverButton = require("./HoverButton");
+var MessageButton = require("./MessageButton");
+
 var utils = require("./utils");
 var animate = utils.animate;
 var tracker = require("./Tracker");
-
-
-var HintButton = React.createClass({
-	propTypes: {
-		text: React.PropTypes.string,
-		onUsed: React.PropTypes.func
-	},
-
-	handleClick: function(){
-		bootbox.alert(this.props.text, this.props.onUsed);
-	},
-
-	render: function() {
-		if (this.props.text !== undefined)
-			return <span className="tb-item" onClick={this.handleClick}>подсказка</span>;
-		else 
-			return <span className='tb-item disabled'>подсказок нет</span>
-	}
-});
-
-var HoverButton = React.createClass({
-	propTypes: {
-		text: React.PropTypes.string.isRequired,
-		enabled: React.PropTypes.bool.isRequired,
-		onEnter: React.PropTypes.func.isRequired,
-		onLeave: React.PropTypes.func.isRequired
-	},
-
-	render: function() {
-		if (this.props.enabled)
-			return <span className="tb-item"
-				onMouseEnter={this.props.onEnter} 
-				onTouchStart={this.props.onEnter} 
-				onMouseLeave={this.props.onLeave} 
-				onTouchEnd={this.props.onLeave}>{this.props.text}</span>
-		else
-			return <span className="tb-item disabled">{this.props.text}</span>
-	},
-});
 
 var LevelView = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
@@ -84,21 +48,22 @@ var LevelView = React.createClass({
 		this.getModel().missClick();
 	},
 
-	handleClick: function(line, ch, word){
+	handleClick: function(line, ch, word, $target){
 		if (this.finished()) return;
 		var bug = this.props.level.findBug(line, ch);
-
 		if (bug != null){
 			this.handleFix(bug);
 		}
 		else {
-			this.handleMiss(line, ch, word);
+			utils.animate$($target, "shake", function(){
+				this.handleMiss(line, ch, word);
+			}.bind(this));
 		}
 	},
 
 	componentDidMount: function() {
 		this.trackedMisses = {};
-		animate(this.refs.round, "fadeInRight");
+		utils.animate(this.refs.round, "fadeInRight");
 	},
 
 	handleUseHint: function(){
@@ -110,7 +75,7 @@ var LevelView = React.createClass({
 	},
 
 	handleNext: function(){
-		animate(this.refs.round, "fadeOutLeft");
+		utils.animate(this.refs.round, "fadeOutLeft");
 		$(this.refs.round.getDOMNode()).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
 			this.setState({solved: true});
 			tracker.levelSolved(this.props.levelIndex);
@@ -160,11 +125,23 @@ var LevelView = React.createClass({
 			  <div className="row">
 				<div className="col-sm-12">
 					<h2>Уровень {this.props.levelIndex+1}{this.finished() && ". Пройден!"}</h2>
-					<p>{this.props.level.instruction}</p>
+					{
+						_.map(
+							this.props.level.instruction.split('\n'), 
+							function(text, i){return <div key={"instruction-" + i}>{text}</div>})
+					}
 					<div className="code-container">
 						<span className="code-toolbar">
-							<HoverButton text="сравнить" enabled={hasProgress} onEnter={this.showOriginalCode} onLeave={this.showCurrentCode} />
-							<HintButton text={this.getHint()} onUsed={this.handleUseHint}/>
+							<HoverButton 
+								text="сравнить" 
+								enabled={hasProgress}
+								onEnter={this.showOriginalCode}
+								onLeave={this.showCurrentCode} />
+							<MessageButton 
+								title="подсказка" disabledTitle="нет подсказок" 
+								enabled={this.getHint()!==undefined} 
+								message={this.getHint()} 
+								onClick={this.handleUseHint}/>
 						</span>
 						<CodeView code={code.text} onClick={this.handleClick} />
 					</div>

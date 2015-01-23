@@ -2,22 +2,7 @@ var GameModel = require("./GameModel");
 var GameView = require("./GameView");
 var tracker = require("./Tracker");
 
-var ProgressBar = React.createClass({
-	mixins: [Backbone.React.Component.mixin],
-
-	render: function() {
-		return <table className="header-progress">
-					<tr>
-						{
-							_.map(_.keys(this.props.levels), function(level, i){
-								var classes = "progress-tile" + ((i < this.props.levelIndex) ? " solved" : "");
-								return <td key={level.name} className={classes} />
-							}.bind(this))
-						}
-					</tr>
-				</table>
-	},
-});
+var ProgressBar = require("./ProgressBar");
 
 var AppView = React.createClass({
 	mixins: [Backbone.React.Component.mixin],

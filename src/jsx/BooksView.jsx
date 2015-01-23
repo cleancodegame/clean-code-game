@@ -14,7 +14,9 @@ var BooksView = React.createClass({
 	render: function() {
 		return (
 			<div>
-				<p>Больше и подробнее про чистый код можно узнать из этих замечательных книг:</p>
+				<p>
+				Далеко не все аспекты чистого кода можно раскрыть в такой короткой и простой игре.
+				Больше и подробнее можно узнать из этих замечательных книг:</p>
 				<div className="books pull-left">
 					{_(this.books).map(function(b){
 						return <a className="book" key={b.title} target="blank" 

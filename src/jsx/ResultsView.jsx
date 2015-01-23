@@ -1,4 +1,5 @@
 var BooksView = require("./BooksView");
+var PulsoView = require("./PulsoView");
 var utils = require("./utils");
 var tracker = require("./Tracker");
 
@@ -12,7 +13,6 @@ var ResultsView = React.createClass({
 	componentDidMount: function() {
 		tracker.finished(this.props.score);
 		removeHash();
-		utils.initUpToLike();
 	},
 
 	getScorePercentage: function(){
@@ -33,7 +33,7 @@ var ResultsView = React.createClass({
 				"Раздражает неряшливый код коллег? Поделись с ними этой игрой, и их код станет чуточку лучше! ;-)");
 		else if (rate > 60)
 			return this.renderVerdict(
-				"Неплохо, неплохо. Но можно и лучше", 
+				"Неплохо, неплохо. Но можно и лучше!", 
 				"Поделись этой игрой с коллегами, и их код тоже станет чуточку лучше! ;-)");
 		else
 			return this.renderVerdict(
@@ -42,23 +42,24 @@ var ResultsView = React.createClass({
 	},
 
 	renderVerdict: function(headerPhrase, sharePhrase){
+		var title = "Я прошел Clean Code Game с результатом " + this.getScorePercentage() + "%!"
 		return (
 			<div>
 				<h2>{headerPhrase}</h2>
 				{this.renderScoreInfo()}
+
+				<PulsoView title={title} />
+
 				{this.renderMistakeDetails()}
+				
+				<p><BooksView /></p>
 				{this.renderAgainButton()}
-				<BooksView />
-				<p>
-				{sharePhrase}
-				</p>
-				{this.renderShareButtons()}
 			</div>);
 	},
 
 	renderScoreInfo: function(){
 		return (
-			<p>{this.getScorePercentage()}% очков ({this.props.score} из {this.props.maxScore} возможных).</p>
+			<p>Ты прошел Clean Code Game с результатом {this.getScorePercentage()}%! ({this.props.score} из {this.props.maxScore} возможных).</p>
 			);
 	},
 
@@ -79,7 +80,7 @@ var ResultsView = React.createClass({
 	},
 
 	renderAgainButton: function(){
-		return <p><a href="#" onClick={this.handlePlayAgain}>Ещё разик?</a></p>
+		return <p><a className="btn btn-lg btn-primary btn-styled" href="#" onClick={this.handlePlayAgain}>Ещё разик?</a></p>
 	},
 
 	handlePlayAgain: function(){
@@ -90,9 +91,7 @@ var ResultsView = React.createClass({
 	renderShareButtons: function(){
 		return (
 			<div className="share">
-				<div className="uptolike-container">
-					<div data-share-size="40" data-like-text-enable="false" data-background-alpha="0.0" data-pid="1330841" data-mode="share" data-background-color="#ffffff" data-share-shape="rectangle" data-share-counter-size="12" data-icon-color="#ffffff" data-text-color="#000000" data-buttons-color="#ffffff" data-counter-background-color="#ffffff" data-share-counter-type="disable" data-orientation="horizontal" data-following-enable="false" data-sn-ids="fb.vk.tw." data-selection-enable="false" data-exclude-show-more="false" data-share-style="1" data-counter-background-alpha="1.0" data-top-button="false" className="uptolike-buttons" ></div>
-				</div>
+				<PulsoView result={this.getScorePercentage() + "%"} />
 			</div>);
 	},
 });
