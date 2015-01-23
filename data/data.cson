@@ -1,6 +1,8 @@
 [
 	{
 		name: 'hello'
+		instruction: 'Найди и исправь все стилевые ошибки в коде. Кликай мышкой по ошибкам. Каждая найденная ошибка: +1 балл.'
+		learning: true
 		code:'''
 		void Main()
 		{
@@ -17,8 +19,10 @@
 	},
 	{
 		name: 'GetThem'
+		instruction: 'Качественно выбранные имена — то что делает ваш код понятнее!'
+		learning: true
 		code:'''
-		List<Position> {{GetThem}}()
+		List<Position> {{GetThem}}(List<Cell> {{theBigList}})
 		{
 			var {{list1}} = new List<Position>();
 			foreach (var cell in {{theBigList}})
@@ -37,9 +41,7 @@
 			list1:
 				type: 'naming'
 				replace: 'emptyPositions'
-				description: '''
-				Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю.
-				'''
+				description: 'Имя должно отражать семантику, а не тип переменной. Имена вида s, list, array не дают полезной информации читателю.'
 			theBigList:
 				type: 'naming'
 				replace: 'allCells'
@@ -47,13 +49,14 @@
 	},
 	{
 		name: 'ViewsPerSecond'
-
+		instruction: 'А что ещё, кроме качественных имен может сделать код понятнее?'
+		learning: true
 		code:'''
 		double GetViewsPerSecond(IEnumerable<PageView> views, DateTime {{t}})
 		{
-			var {{total}} = {{86400}};
+			var {{n}} = {{86400}};
 			var viewsCount = views.Count(v => v.Timestamp.Date == {{t}});
-			return (double)viewsCount / {{total}};
+			return (double)viewsCount / {{n}};
 		}
 		'''
 		bugs:
@@ -64,11 +67,12 @@
 				В именах стоит отражать существенные особенности. 
 				Например, если переменная типа DateTime хранит только дату, можно назвать ее date.
 				'''
-			total:
+			n:
 				type: 'naming'
 				replace: 'secondsInDay'
 				description: '''
-				Имя переменной должно кратко, но емко отражать семантику.
+				Имя переменной должно отражать семантику. 
+				Старайтесь избегать однобуквенных имен. Общее правило: чем больше область видимости — тем подробнее должно быть имя.
 				'''
 			'86400':
 				type: 'other'
@@ -80,14 +84,15 @@
 	},
 	{
 		name: 'rstr'
+		instruction: 'Осторожнее — начиная с этого уровня, за каждый неверный клик и каждую подсказку вы будете терять один балл!'
 		code: '''
 		var {{rstr}} = Console.ReadLine();
-		var {{f}} = false;
-		for(var {{indxInReadString}} = 0; {{indxInReadString}} < {{rstr}}.Length; {{indxInReadString}}++)
+		var {{flag}} = false;
+		for(var charIndex = 0; charIndex < {{rstr}}.Length; charIndex++)
 		{
-			if ({{f}} || {{rstr}}[{{indxInReadString}}] != '\\\\')
-				Console.Write({{rstr}}[{{indxInReadString}}]);
-			{{f}} = {{rstr}}[{{indxInReadString}}] == '\\\\';
+			if ({{flag}} || {{rstr}}[charIndex] != '\\\\')
+				Console.Write({{rstr}}[charIndex]);
+			{{flag}} = {{rstr}}[charIndex] == '\\\\';
 		}
 		'''
 		bugs: 
@@ -98,69 +103,61 @@
 				Избегайте труднпрзнсимых имен и кодирования, понятного лишь вам.
 				'''
 			
-			f:
+			flag:
 				replace: 'escaped'
 				type: 'naming'
 				description: '''
 				Не называйте булевы переменные flag, f и подобными именами.
 				У каждого "флага" есть смысл, который и нужно отразить в имени.
 				'''
-			
-			indxInReadString:
-				replace: 'charIndex'
-				type: 'naming'
-				description: '''
-				Слишком длинные имена — тоже плохо. Сокращайте длину имен, но не в ущерб информативности.
-				'''		
 	},
 	{
 		name: 'bigrams'
+		instruction: 'Придерживайтесь общепринятого стиля именования для текущего языка программирования.'
 		code: '''
-		List<string> GetBigrams(IList<string> {{w}})
+		List<string> GetBigrams(IList<string> words)
 		{
-			var {{сol_bigram}} = {{w}}.Count - 1;
-			var {{Bigrams}} = new string[{{сol_bigram}}];
-			for (var i = 0; i < {{сol_bigram}}; i++)
-				{{Bigrams}}[i] = {{w}}[i] + " " + {{w}}[i + 1];
-			return {{Bigrams}}.Distinct().ToList();
+			var {{colBigrams}} = words.Count - 1;
+			var {{bigrams_list}} = new string[{{colBigrams}}];
+			for (var {{I}} = 0; {{I}} < {{colBigrams}}; {{I}}++)
+				{{bigrams_list}}[{{I}}] = words[{{I}}] + " " + words[{{I}} + 1];
+			return {{bigrams_list}}.Distinct().ToList();
 		}
 		'''
 		bugs:
-			w:
-				replace: 'words'
+			I:
+				replace: 'i'
 				type: 'naming'
 				description: '''
-				Однобуквенные имена лучше использовать только в качестве локальных переменных с совсем малой областью видимости.
-				Общее правило — чем больше область видимости сущности, тем подробнее у неё должно быть имя.
-				Длинное имя проще найти и сложнее с чем-то перепутать.
+				В C# имена локальных переменных принято начинать с маленькой буквы.
+				Нарушение таких, казалось бы, несущественных правил часто сильно раздражает опытных программистов.
 				'''		
-			сol_bigram:
+			colBigrams:
 				replace: 'bigramsCount'
 				type: 'naming'
 				description: '''
-				Не используйте русские слова в именах. Это запутает читателя.
+				Не используйте русские слова в именах (если только вы не программируете на 1C).
 				Читая код, программисты ожидают видеть английские имена, 
 				поэтому написанные транслитом русские слова могут быть восприняты неправильно.
 				Например, в данном случае col (количество) легко спутать с сокращением от слова column.
 				'''
-			Bigrams:
+			bigrams_list:
 				type: 'naming'
 				replace: 'bigrams'
 				description: '''
-				В C# имена локальных переменных принято начинать с маленькой буквы.
-				Придерживайтесь стандартного стиля именования для вашего языка программирования.
+				В C# для составных имен принято использовать стиль CamelCase, и не использовать snake_case.
 				'''
 	},
 	{
 		name: 'arg'
+		instruction: 'В имени нужно отражать полезный для понимания смысл и стараться избегать слов заместителей с неопределенным смыслом.'
 		code: '''
 		static void Main(string[] args)
 		{
 			var {{arg}} = args.Length > 0 ? args[0] : defaultFilename;
 			DateTime lastWriteTime = new FileInfo({{arg}}).LastWriteTime;
 			bool {{check}} = lastWriteTime > DateTime.Now - TimeSpan.FromSeconds(1);
-			ConvertFile({{arg}}, {{check}});
-			{{show_content}}({{arg}});
+			new {{ConvertManager}}().{{Handle}}({{arg}}, {{check}});
 			Console.WriteLine(lastWriteTime);
 		}
 		'''
@@ -176,16 +173,22 @@
 				replace: 'recentlyModified'
 				type: 'naming'
 				description: "Имя 'check' почти всегда можно улучшить. Сообщите в имени, что именно проверяется."
-			show_content:
-				replace: "ShowContent"
-				type: "naming"
+			ConvertManager:
+				type: 'naming'
+				replace: 'FileConverter'
 				description: '''
-				Придерживайтесь стандартного стиля именования для вашего языка программирования.
-				В C# принято использовать стиль CamelCase.
+				Manager — слово заместитель, не добавляющее смысла. Например, менеджер по продажам — это просто продавец! :-)
+				'''
+			Handle:
+				type: 'methods'
+				replace: 'Convert'
+				description: '''
+				Handle — слово заместитель, не добавляющее смысла. В чем именно заключается "обработка"? Отразите это в имени вместо слова Handle.
 				'''
 	},
 	{
 		name: 'CopyChars'
+		instruction: 'Проблемы с именами в этом коде очевидны. Но тут есть кое-что еще!'
 		code: '''
 		void CopyChars(char[] {{array1}}, char[] {{array2}})
 		{
@@ -213,7 +216,12 @@
 	},
 	{
 		name: 'English'
+		instruction: 'В составных именах очень легко случайно продемонстрировать своё незнание английского :-)'
 		code: '''
+		private string {{directoryInput}};
+
+		private string outputDirectory;
+
 		public enum {{QualityRender}} 
 		{
 			High,
@@ -221,9 +229,6 @@
 			Low
 		};
 		
-		private string {{directoryInput}};
-
-		private string outputDirectory;
 		'''
 		bugs:
 			QualityRender:
@@ -243,30 +248,31 @@
 	},
 	{
 		name: 'ShareIfYouLike'
+		instruction: 'Кстати, автору будет очень приятно, если вы поделитесь ссылкой на эту игру с коллегами! Заранее спасибо! :-)'
 		code: '''
 		if (you.Like(this.Game))
 		{
-			you.Tweet(); 
+			you.Tweet();
 			you.Post();
-			you.Instagram(); // why not?
+			you.Share();
 		}
 		else
 		{
-			you.{{HATE_AUTHOR()}};
+			you.{{H4Te_AUth0R()}};
 		}
 
 		'''
 		bugs:
-			'HATE_AUTHOR()':
+			'H4Te_AUth0R()':
 				type: 'naming'
 				replace: 'EmailAuthor("pe@kontur.ru")'
 				description: '''
-				Придерживайтесь стандартного стиля именования для вашего языка программирования.
-				В C# принято использовать стиль CamelCase.
+				Ненависть — плохое чувство! :-)
 				'''
 	},
 	{
 		name: 'Chessboard'
+		instruction: 'Время закрепить все полученные на предыдущих уровнях знания!'
 		code:'''
 		enum {{ColorCell}}
 		{ 
@@ -283,6 +289,7 @@
 			{
 				this.{{m_brdSz}} = {{n}};
 				this.{{array}} = new {{ColorCell}}[{{m_brdSz}},{{m_brdSz}}];
+				{{//Fill board with black and white colors}}
 				for(var {{a}} = 0; {{a}} < {{m_brdSz}}; {{a}}++)
 					for(var {{b}} = 0; {{b}} < {{m_brdSz}}; {{b}}++) 
 					{
@@ -294,6 +301,12 @@
 
 		'''
 		bugs:
+			'//Fill':
+				type: 'comments'
+				replace: ''
+				description: '''
+				Комментарии повторяющие код не имеют смысла.
+				'''
 			ColorCell:
 				type: 'naming'
 				replace: 'CellColor'
@@ -337,13 +350,14 @@
 	},
 	{
 		name: 'Initialization'
+		instruction: 'Переменные и классы — это как правило сущности, а методы — действия. Имейте это в виду!'
 		code:'''
 		public void {{Initialization}}(int boardSize)
 		{
-			log.Info("Board initialization...");
+			logger.Info("Board initialization...");
 			this.piecesCount = 0;
 			this.board = {{Board}}(boardSize, boardSize);
-			log.Info("Board initialization finished");
+			logger.Info("Board initialization finished");
 		}
 		'''
 		bugs:
@@ -362,6 +376,7 @@
 	},
 	{
 		name:'GetSet'
+		instruction: 'Имена должны выполнять обещания и не вводить читателя в замешательство.'
 		code:'''
 		void {{GetFactory}}()
 		{
@@ -404,6 +419,7 @@
 	},
 	{
 		name:'SplitMethod'
+		instruction: 'Имена переменных и методов тут в порядке. Но не только это делает код хорошим!'
 		code:'''
 		void Main(string[] args)
 		{
@@ -431,42 +447,46 @@
 				'''
 				description: '''
 				Вместо комментария, разделяющего код на две фазы, стоит сделать настоящее разделение кода на методы.
-				Каждый метод должен делать ровно одну вещь.
+				Каждый метод должен делать ровно одну вещь. Если вы можете естественным образом разбить один метод на два — сделайте это!
 
 				'''
 		
 	},
 	{
 		name:'CommentExplainCode'
+		instruction: 'Крохотные методы в одну-две строки часто могут значительно повысить читаемость кода.'
 		code:'''
-		{{//Check to see if the employee is eligible for full benefits
-		if (employee.IsHourly() && employee.Age > 65)}}
-		{
-			AddBadge(employee, Badges.GreatAge);
+		{{//If employee deserves full benefits}}
+		if ({{employee.IsHourly() && employee.Age > 65 || employee.HasSpecialReward}}))
 			Pay(employee, fullBenefitsAmount); {{//Pay largeAmount}}
-		}
 		else
 			Pay(employee, reducedAmount);
 		'''
 		bugs:
-			'//Check':
-				type: 'comments'
-				replace: '''
-				
-				if (employee.IsEligibleForFullBenefits())
-				'''
-				description: '''
-				Вместо объясняющего комментария всегда лучше делать сам код понятнее.
-				'''
 			'//Pay':
 				type: 'comments'
 				replace: ''
 				description: '''
 				Комментарии повторяющие код не нужны. Они легко могут устареть!
 				'''
+			'employee.IsHourly()':
+				type: 'methods'
+				replace: '''
+				employee.DeservesFullBenefits()
+				'''
+				description: '''
+				Сложные булевы выражения стоит выделять в методы или вспомогательные переменные, давая им говорящие названия. Это улучшит читаемость.
+				'''
+			'//If':
+				type: 'comments'
+				replace: ''
+				description: '''
+				Вместо поясняющего комментария лучше изменить код так, чтобы в комментарии не было нужды.
+				'''
 	},
 	{
 		name:'endComments'
+		instruction: 'Как вы уже поняли, далеко не все комментарии полезны!'
 		code:'''
 		void Main(string[] args)
 		{
@@ -485,7 +505,7 @@
 			} {{//try}}
 			catch (Exception e)
 			{
-				Console.WriteLine("Error:" + e.Message);
+				Console.WriteLine("Error: " + e.Message);
 			} {{//catch}}
 		}
 		'''
@@ -511,6 +531,7 @@
 	},
 	{
 		name:'nameInsteadOfComment'
+		instruction: 'Но не спешите удалять все комментарии из вашего кода. Бывают и полезные!'
 		code:'''
 		//format matched: hh:mm:ss, MMM dd, yyyy
 		private Regex timeRegex = new Regex(@"\\d*:\\d*:\\d*, \\w* \\d*, \\d*");
@@ -527,6 +548,7 @@
 	},
 	{
 		name:'ExplainCompare'
+		instruction: 'Хорошие комментарии должны объяснять намерения программиста в тех случаях, когда их сложно выразить непосредственно кодом.'
 		code:'''
 		{{//comparison of this and other object}}
 		public int CompareTo(object o)
@@ -565,6 +587,7 @@
 	},
 	{
 		name:'XMLDoc'
+		instruction: 'А что вы думаете о спец-комментариях — XML-документации и комментариях с историей изменений файла?'
 		code:'''
 		{{/*Changes (from 11-Oct-2011)
 		* --------------------------
@@ -621,7 +644,9 @@
 	},
 	{
 		name:'collision'
+		instruction: 'Время закрепить освоенные знания!'
 		code:'''
+		{{///<summary>Обрабатывает столкновение героя с врагом</summary>}}
 		void {{CollisionHandler}}(GameObject hero, GameObject enemy)
 		{
 			{{//If hero and enemy collided
@@ -629,12 +654,18 @@
 				< (hero.Radius + enemy.Radius)*(hero.Radius + enemy.Radius))}}
 			{
 				hero.Life--;
-				if (!hero.IsAlive) {{//no more life}}
-					HandleHeroDeath(hero);
+				if (!hero.IsAlive && OnHeroDeath != null) {{//нужно оповестить подписчиков}}
+					OnHeroDeath(hero);
 			}
 		}
 		'''
 		bugs:
+			'///<summary>Обрабатывает':
+				type: 'comments'
+				replace: ''
+				description: '''
+				XML-комментарии бессмысленны, если не несут новую информацию.
+				'''
 			CollisionHandler:
 				type: 'naming'
 				replace: 'HandleCollision'
@@ -647,7 +678,7 @@
 				description: '''
 				Не используйте комментарии там, где можно выделить метод с говорящим именем.
 				'''
-			'//no':
+			'//нужно':
 				type: 'comments'
 				replace: ''
 				description: '''
@@ -656,6 +687,7 @@
 	},
 	{
 		name:'LoadMap'
+		instruction: 'Последний уровень! По законам жанра тут должно быть много кода!'
 		code:'''
 		///<param name="path">
 		/// Path to file or directory with map description. 
@@ -663,15 +695,21 @@
 		///</param>
 		GameMap LoadMap(string path)
 		{
-			var filename = Directory.Exists(path) 
+			var {{Filename}} = Directory.Exists(path) 
 				? Path.Combine(path, "default.map") 
 				: path;
-			var lines = File.ReadAllLines(filename);
+			var lines = File.ReadAllLines({{Filename}});
 			var height = lines.Length;
 			var width = lines[0].Length;
-			var map = new GameMap(width, height);
-			for(var y=0; y<lines.Length; y++)
-				for(var x=0; x<lines[0].Length; x++)
+			{{//Initialize map}}
+			var map = new GameMap(width, height{{) 
+						{
+							Score = 0;
+							HeroLifesCount = 3;
+							Time = 0;
+						}; }}
+			for(var y=0; y<height; y++)
+				for(var x=0; x<{{lines[0].Length}}; x++)
 				{
 					{{//============Select object to put in (x, y) cell;
 					GameObject obj = null;
@@ -690,26 +728,39 @@
 					//============Put created object on map}}
 					map.Put(x, y, obj);
 				}
-			{{//================Initialize map
-			map.Score = 0;
-			map.HeroLifesCount = 3;
-			map.Time = 0;}}
 			return map;
 		}
 		'''
 		bugs:
+			Filename:
+				type: 'naming'
+				replace: 'filename'
+				description: '''
+				В C# локальные переменные принято называть с маленькой буквы.
+				'''
+			'lines[0].Length':
+				type: 'duplication'
+				replace: 'width'
+				description: '''
+				Устраняйте дублирование. Это делает код  понятнее и надежнее.
+				'''
+			'//Initialize':
+				type: 'comments'
+				replace: ''
+				description: '''
+				При виде комментария, разделяющего метод на смысловые части, стоит вынести эти смысловые части в отдельные методы.
+				'''
+			')':
+				type: 'methods'
+				replace: ');'
+				description: '''
+				Логику инициализации полей карты лучше переместить в конструктор класса карты.
+				'''
 			'//============Select':
 				type: 'comments'
 				replace: 'var obj = CreateGameObjectFromChar(lines[y][x]);'
 				description: '''
 				Разделительные комментарии вроде такого часто показывают, что программист поленился выделить вспомогательный метод.
-				'''
-			'//================Initialize':
-				type: 'comments'
-				replace: ''
-				description: '''
-				При виде комментария, разделяющего метод на смысловые части, стоит вынести эти смысловые части в отдельные методы.
-				А в данном случае, инициализацию карты можно перенести в конструктор класса GameMap.
 				'''
 	},
 ]

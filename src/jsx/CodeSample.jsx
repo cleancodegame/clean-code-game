@@ -8,6 +8,8 @@ var CodeSample = function(data) {
 	this.name = data.name;
 	this.code = data.code.replace('\r', '');
 	this.bugs = data.bugs;
+	this.instruction = data.instruction;
+	this.learning = data.learning;
 	this.bugsCount = _.keys(this.bugs).length;
 
 	parseCode();
@@ -93,7 +95,9 @@ var CodeSample = function(data) {
 		return new CodeSample({
 			name: this.name,
 			code: code2,
-			bugs: bugs2
+			bugs: bugs2,
+			instruction: this.instruction,
+			learning: this.learning
 		});
 	}
 };

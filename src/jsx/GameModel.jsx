@@ -41,23 +41,38 @@ var GameModel = Backbone.Model.extend({
 		});
 	},
 
-	updatePenalty: function(){
-		var bugs = _.values(this.get('level').bugs);
-		return _.union(_.pluck(bugs, 'type'), this.get('levelPenalty'));
+	fixBug: function(bug){
+		var fixedCode = this.get('level').fix(bug);
+		this.set({
+			prevScore: this.get('score'),
+			score: this.get('score') + 1,
+			level: fixedCode,
+		});
 	},
 
 	useHint: function(){
+		if (~~this.get('level').learning) return;
+		var newScore = Math.max(this.get('score') - 1, 0);
+		this.decreaseScore(newScore);
+	},
+
+	missClick: function(){
+		if (~~this.get('level').learning) return;
+		this.decreaseScore(this.get('score') - 1);
+	},
+
+	decreaseScore: function(newScore){
+		var prevScore = this.get('score');
 		this.set({
-			score: Math.max(this.get('score') - 1, 0),
+			prevScore: prevScore,
+			score: newScore,
 			levelPenalty: this.updatePenalty()
 		});
 	},
 
-	missClick: function(){
-		this.set({
-			score: this.get('score') - 1,
-			levelPenalty: this.updatePenalty()
-		});
+	updatePenalty: function(){
+		var bugs = _.values(this.get('level').bugs);
+		return _.union(_.pluck(bugs, 'type'), this.get('levelPenalty'));
 	},
 })
 

@@ -72,15 +72,9 @@ var LevelView = React.createClass({
 
 	handleFix: function(bug){
 		var explanations = _.union(this.state.explanations, [bug.description]);
-		var fixedCode = this.props.level.fix(bug);
-		var lastHint = this.state.availableHints[0];
 		var newHints = _.filter(this.state.availableHints, function(h) { return h.name != bug.name });
-		this.getModel().set({
-			score: this.props.score + 1,
-			level: fixedCode,
-		});
+		this.getModel().fixBug(bug);
 		this.setState({
-			deltaScore: +1,
 			availableHints: newHints,
 			explanations: explanations
 		});
@@ -88,9 +82,6 @@ var LevelView = React.createClass({
 
 	reduceScore: function(){
 		this.getModel().missClick();
-		this.setState({
-			deltaScore: -1
-		});
 	},
 
 	handleClick: function(line, ch, word){
@@ -115,7 +106,6 @@ var LevelView = React.createClass({
 		this.getModel().useHint();
 		this.setState({
 			availableHints: this.state.availableHints.slice(1),
-			deltaScore: -1
 		});
 	},
 
@@ -141,8 +131,8 @@ var LevelView = React.createClass({
 	renderNextButton: function(){
 		if (!this.finished()) return "";
 		var classes = "btn btn-lg btn-primary btn-styled btn-next";
-		if (this.state.deltaScore > 0) classes += " animated flipInX";
-		return <button ref="nextButton"
+		if (this.props.prevScore < this.props.score) classes += " animated flipInX";
+		return <button ref="nextButton" key={this.props.levelIndex}
 				className={classes}
 				onClick={this.handleNext}>Дальше</button>
 	},
@@ -154,7 +144,7 @@ var LevelView = React.createClass({
 			return undefined;
 	},
 	renderBugsCount: function(){
-		var classes = this.state.deltaScore > 0 ? "animated bounce" : "";
+		var classes = this.props.prevScore < this.props.score ? "animated bounce" : "";
 		var bugsCount = this.props.level.bugsCount;
 		return <div className="score">
 				Осталось найти: <span key={bugsCount} className={classes}>{bugsCount}</span>
@@ -170,8 +160,7 @@ var LevelView = React.createClass({
 			  <div className="row">
 				<div className="col-sm-12">
 					<h2>Уровень {this.props.levelIndex+1}{this.finished() && ". Пройден!"}</h2>
-					<p>Найди и исправь все стилевые ошибки в коде. Кликай мышкой по ошибкам.<br/>
-					Каждая найденная ошибка: +1 балл. Каждый промах или подсказка: &ndash;1 балл.</p>
+					<p>{this.props.level.instruction}</p>
 					<div className="code-container">
 						<span className="code-toolbar">
 							<HoverButton text="сравнить" enabled={hasProgress} onEnter={this.showOriginalCode} onLeave={this.showCurrentCode} />
@@ -191,7 +180,7 @@ var LevelView = React.createClass({
 							Общий счёт: 
 						</div>
 						<div className="pull-left score-value" ref="score">{this.props.score}</div>
-						{ this.state.deltaScore < 0
+						{ this.props.prevScore > this.props.score
 							? <div key={this.props.score} className="pull-left minus-one animated fadeOutDown"> —1</div>
 							: null }
 						<div className="clearfix" />
@@ -211,11 +200,11 @@ var LevelView = React.createClass({
 	},
 
 	showOriginalCode: function() {
-		this.setState({ showOriginal: true, deltaScore: 0 });
+		this.setState({ showOriginal: true });
 	},
 
 	showCurrentCode: function() {
-		this.setState({ showOriginal: false, deltaScore: 0 });
+		this.setState({ showOriginal: false });
 	},
 });
 
