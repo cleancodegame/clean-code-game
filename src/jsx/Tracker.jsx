@@ -19,8 +19,14 @@ module.exports = {
 	},
 	
 	track: function(event, value){
-		var ev = event + "." + value;
-		console.log(['track: ', ev]);
-		_gaq.push(['_trackEvent', event, ev, ev, value]);
+		if (value == undefined){
+			console.log(['track: ', event]);
+			_gaq.push(['_trackEvent', event, event, event]);
+		}
+		else{
+			var ev = event + "." + value;
+			console.log(['track: ', ev]);
+			_gaq.push(['_trackEvent', event, ev, ev]);
+		}
 	}
 };

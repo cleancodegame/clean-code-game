@@ -160,7 +160,7 @@
 			var {{arg}} = args.Length > 0 ? args[0] : defaultFilename;
 			DateTime lastWriteTime = new FileInfo({{arg}}).LastWriteTime;
 			bool {{check}} = lastWriteTime > DateTime.Now - TimeSpan.FromSeconds(1);
-			new {{ConvertManager}}().{{Handle}}({{arg}}, {{check}});
+			{{Handle}}({{arg}}, {{check}});
 			Console.WriteLine(lastWriteTime);
 		}
 		'''
@@ -176,17 +176,30 @@
 				replace: 'recentlyModified'
 				type: 'naming'
 				description: "Имя 'check' почти всегда можно улучшить. Сообщите в имени, что именно проверяется."
-			ConvertManager:
-				type: 'naming'
-				replace: 'XmlFileFormat'
-				description: '''
-				Manager — слово заместитель, не добавляющее смысла. Например, менеджер по продажам — это просто продавец! :-)
-				'''
 			Handle:
 				type: 'methods'
-				replace: 'ConvertToJson'
+				replace: 'ConvertFileToJson'
 				description: '''
 				Handle — слово заместитель, не добавляющее смысла. В чем именно заключается "обработка"? Отразите это в имени вместо слова Handle.
+				'''
+	},
+	{
+		name: 'manager'
+		instruction: 'Продолжаем охоту на слова без смысла.'
+		code: '''
+		public interface {{IPriceManager}}
+		{
+			Json JsonFromXml(XmlDocument prices);
+			XmlDocument XmlFromJson(Json prices);
+		}
+		'''
+		bugs:
+			IPriceManager:
+				type: 'naming'
+				replace: 'IPriceFormatConverter'
+				description: '''
+				Manager — слово заместитель, не добавляющее смысла. Часто его можно заменить на что-то более осмысленное.
+				Например, менеджер по продажам может стать продавцом консультантом.
 				'''
 	},
 	{
@@ -360,10 +373,10 @@
 		code:'''
 		public void {{Initialization}}(int boardSize)
 		{
-			logger.Info("Board initialization...");
+			Log("Board initialization...");
 			this.piecesCount = 0;
 			this.board = {{Board}}(boardSize, boardSize);
-			logger.Info("Board initialization finished");
+			Log("Board initialization finished");
 		}
 		'''
 		bugs:
@@ -498,16 +511,16 @@
 		{
 			try
 			{
-				var lineCount = 0;
-				var charCount = 0;
+				var linesCount = 0;
+				var charsCount = 0;
 				var lines = File.ReadAllLines(args[0]);
 				foreach(var line in lines)
 				{
-					lineCount++;
-					charCount += line.Length;
+					linesCount++;
+					charsCount += line.Length;
 				} {{//foreach}}
-				Console.WriteLine("lineCount = " + lineCount);
-				Console.WriteLine("charCount = " + charCount);
+				Console.WriteLine("linesCount = " + linesCount);
+				Console.WriteLine("charsCount = " + charsCount);
 			} {{//try}}
 			catch (Exception e)
 			{
