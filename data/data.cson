@@ -723,9 +723,9 @@
 			{{//Initialize map}}
 			var map = new GameMap(width, height{{) 
 						{
-							Score = 0;
-							HeroLifesCount = 3;
-							Time = 0;
+							Score = 0,
+							HeroLifesCount = 3,
+							Time = 0,
 						}; }}
 			for(var y=0; y<height; y++)
 				for(var x=0; x<{{lines[0].Length}}; x++)
