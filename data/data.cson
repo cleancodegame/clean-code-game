@@ -243,7 +243,7 @@
 			High,
 			Medium,
 			Low
-		};
+		}
 		
 		'''
 		bugs:
@@ -297,7 +297,7 @@
 		{ 
 			Black, 
 			White
-		};
+		}
 
 		class Chessboard 
 		{
