@@ -1,3 +1,5 @@
+var _gaq;
+
 module.exports = {
 	levelSolved: function(levelIndex){
 		var category = 'level-solved';
@@ -5,9 +7,9 @@ module.exports = {
 	},
 
 	hintUsed: function(level, hint){
-		var category = "hint." + level.name;
-		var hint = hint.description.substring(0, 20);
-		this.track(category, hint);
+		const category = "hint." + level.name;
+		const hintTruncated = hint.description.substring(0, 20);
+		this.track(category, hintTruncated);
 	},
 
 	finished: function(score){
@@ -19,7 +21,7 @@ module.exports = {
 	},
 	
 	track: function(event, value){
-		if (value == undefined){
+		if (value === undefined){
 			console.log(['track: ', event]);
 			_gaq.push(['_trackEvent', event, event, event]);
 		}

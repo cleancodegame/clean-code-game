@@ -1,29 +1,27 @@
-'use strict';
+import _ from "lodash"
 
-var _ = require("lodash");
-var utils = require("./utils");
-
-var CodeSample = function(data) {
+var CodeSample = function (data) {
 	var me = this;
 	this.name = data.name;
 	this.code = data.code.replace('\r', '');
 	this.bugs = data.bugs;
 	this.instruction = data.instruction;
 	this.learning = data.learning;
-	this.bugsCount = _.keys(this.bugs).length;
+
+	this.bugsCount = () => _.keys(this.bugs).length;
 
 	parseCode();
 
-	function parseCode(code) {
-		_.each(_.values(me.bugs), function(bug) {
+	function parseCode() {
+		_.each(_.values(me.bugs), function (bug) {
 			bug.offsets = []
 		});
-		_.each(_.keys(me.bugs), function(bugName) {
+		_.each(_.keys(me.bugs), function (bugName) {
 			me.bugs[bugName].name = bugName
 		});
 		var resultOffset = 0;
 		me.text = me.code
-			.replace(/{{([\s\S]*?)}}/gm, function(sub, p, offset, s) {
+			.replace(/{{([\s\S]*?)}}/gm, function (sub, p, offset, s) {
 				var start = offset - resultOffset;
 				resultOffset += 4;
 				addBugPosition(p, start, p.length);
@@ -35,9 +33,9 @@ var CodeSample = function(data) {
 	function addBugPosition(token, start, len) {
 		var name = token.trim().split(' ', 2)[0];
 		var bug = me.bugs[name];
-		if (bug == undefined) {
+		if (bug === undefined) {
 			console.log(me.bugs);
-			throw new Error("In code " + data.name +" unknown bug " + name);
+			throw new Error("In code " + data.name + " unknown bug " + name);
 		}
 		bug.content = token;
 		bug.offsets.push({
@@ -49,12 +47,12 @@ var CodeSample = function(data) {
 	function addBugLinePositions() {
 		var eols = [-1];
 		for (var i = 0; i < me.text.length; i++) {
-			if (me.text[i] == '\n')
+			if (me.text[i] === '\n')
 				eols.push(i);
 		}
 		eols.push(1000000000);
-		_.each(_.values(me.bugs), function(bug) {
-			bug.offsets.forEach(function(off) {
+		_.each(_.values(me.bugs), function (bug) {
+			bug.offsets.forEach(function (off) {
 				off.start = getPos(off.startIndex, eols);
 				off.end = getPos(off.startIndex + off.len - 1, eols);
 			});
@@ -73,23 +71,27 @@ var CodeSample = function(data) {
 	}
 
 	function containPos(offset, line, ch) {
-		return (offset.start.line < line || (offset.start.line == line && offset.start.ch <= ch + 1)) && (offset.end.line > line || (offset.end.line == line && offset.end.ch >= ch - 1))
+		return (offset.start.line < line || (offset.start.line === line && offset.start.ch <= ch + 1)) && (offset.end.line > line || (offset.end.line === line && offset.end.ch >= ch - 1))
 
 	}
 
-	this.findBug = function(line, ch) { //return Bug
-		for (var bugName in me.bugs) {
+	this.findBug = function (line, ch) { //return Bug
+		for (var bugName of Object.keys(me.bugs)) {
 			var bug = me.bugs[bugName];
-			var offsets = bug.offsets.filter(function(off) {
+			var offsets = bug.offsets.filter(function (off) {
 				return containPos(off, line, ch);
 			});
-			if (offsets.length != 0) return bug;
+			if (offsets.length !== 0) return bug;
 		}
 		return null;
 	};
 
-	this.fix = function(bug) { //return CodeSample
-		var code2 = this.code.replace(new RegExp("\\{\\{" + utils.escapeRe(bug.content) + "\\}\\}", "gm"), bug.replace);
+	function escapeRe(str) {
+		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	}
+
+	this.fix = function (bug) { //return CodeSample
+		var code2 = this.code.replace(new RegExp("\\{\\{" + escapeRe(bug.content) + "\\}\\}", "gm"), bug.replace);
 		var bugs2 = _.cloneDeep(this.bugs);
 		delete bugs2[bug.name];
 		return new CodeSample({

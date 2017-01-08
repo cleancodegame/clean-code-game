@@ -1,23 +1,14 @@
-var BooksView = require("./BooksView");
-var PulsoView = require("./PulsoView");
-var utils = require("./utils");
-var tracker = require("./Tracker");
+import React from 'react';
+import _ from 'lodash';
 
-function removeHash () { 
-	history.pushState("", document.title, window.location.pathname + window.location.search);
-}
+import BooksView from "./BooksView"
+import PulsoView from "./PulsoView";
 
-var ResultsView = React.createClass({
-	mixins: [Backbone.React.Component.mixin],
-
-	componentDidMount: function() {
-		tracker.finished(this.props.score);
-		removeHash();
-	},
+var GameResultsView = React.createClass({
 
 	getScorePercentage: function(){
-		if (this.props.maxScore <= 0) return 0;
-		return Math.round(100 * this.props.score / this.props.maxScore);
+		if (this.props.game.maxPossibleScore <= 0) return 0;
+		return Math.round(100 * this.props.game.totalScore / this.props.game.maxPossibleScore);
 	},
 
 
@@ -27,7 +18,7 @@ var ResultsView = React.createClass({
 			return this.renderVerdict(
 				"Ого! Да перед нами читер!",
 				"Поделись этой игрой с коллегами, докажи, что разбираешься в чужом коде лучше них! :D");
-		else if (rate == 100) 
+		else if (rate === 100) 
 			return this.renderVerdict(
 				"Ого! Да перед нами профи!", 
 				"Раздражает неряшливый код коллег? Поделись с ними этой игрой, и их код станет чуточку лучше! ;-)");
@@ -47,36 +38,19 @@ var ResultsView = React.createClass({
 			<div>
 				<h2>{headerPhrase}</h2>
 				{this.renderScoreInfo()}
+				<p>{sharePhrase}</p>
 
 				<PulsoView title={title} />
 
-				{this.renderMistakeDetails()}
-				
-				<p><BooksView /></p>
+				<BooksView />
 				{this.renderAgainButton()}
 			</div>);
 	},
 
 	renderScoreInfo: function(){
 		return (
-			<p>Ты прошел Clean Code Game с результатом {this.getScorePercentage()}%! ({this.props.score} из {this.props.maxScore} возможных).</p>
+			<p>Ты прошел Clean Code Game с результатом {this.getScorePercentage()}%! ({this.props.game.totalScore} из {this.props.game.maxPossibleScore} возможных).</p>
 			);
-	},
-
-	renderMistakeDetails: function(){
-		var types = _.sortBy(_.keys(this.props.penalty), function(t){return -this.props.penalty[t]}, this);
-		if (types.length == 0) return "";
-		return <div>
-				<h3>Статистика ошибок</h3>
-				<table className="table">
-				{_.map(types, function(t){
-					return <tr key={t}>
-							<th>{t}</th>
-							<td>{this.props.penalty[t]}</td>
-						</tr>
-				}, this)}
-			</table>
-			</div>;
 	},
 
 	renderAgainButton: function(){
@@ -84,8 +58,7 @@ var ResultsView = React.createClass({
 	},
 
 	handlePlayAgain: function(){
-		tracker.track("again_after_success_with", this.props.score);
-		this.getModel().reset();
+		this.props.onPlayAgain();
 	},
 
 	renderShareButtons: function(){
@@ -96,4 +69,4 @@ var ResultsView = React.createClass({
 	},
 });
 
-module.exports = ResultsView;
+module.exports = GameResultsView;

@@ -1,4 +1,4 @@
-'use strict';
+import $ from 'jquery';
 
 module.exports.animate = function(comp, effect){
 	if (!comp) return;
@@ -26,7 +26,7 @@ module.exports.initUpToLike = function(){
 	var s = document.createElement('script');
 	s.id="uptolikescript";
 	s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
-	s.src = ('https:' == window.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
+	s.src = ('https:' === window.location.protocol ? 'https' : 'http')  + '://w.uptolike.com/widgets/v1/uptolike.js';
 	document.getElementsByTagName('body')[0].appendChild(s);
 };
 

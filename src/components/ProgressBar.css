@@ -1,0 +1,12 @@
+.progressbar {
+  width: 100%;
+}
+.progressbar__tile {
+  border-top: 4px solid white;
+  height: 16px;
+  background-color: white;
+}
+.progressbar__tile.progressbar__tile_completed {
+  background-color: #5b9bd5;
+  transition: background 1s ease;
+}

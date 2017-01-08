@@ -1,0 +1,206 @@
+:root{
+  --back: rgb(91, 155, 213);
+  --darkback: rgb(45, 77, 136);
+  --smallWidth: 700px;
+  --textFont: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
+  --headerFont: 'Bookman Old Style', 'Times New Roman';
+  --codeFont: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
+  font-size: 14pt;
+  margin-bottom: 70px;
+  overflow-x: hidden;
+}
+.footer {
+  height: 30px;
+  padding-top: 4px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f5f5f5;
+  z-index: 100;
+}
+.pointer {
+  cursor: pointer;
+}
+.header {
+  background-color: #5b9bd5;
+  text-align: center;
+}
+.header .header-text {
+  display: inline-block;
+}
+.header .header-text.tall {
+  height: 300px;
+}
+.header .header-text.tall h1 {
+  margin-top: 100px;
+}
+@media (max-width: 700px) {
+  .header .header-text.tall {
+    height: 180px;
+  }
+  .header .header-text.tall h1 {
+    margin-top: 50px;
+  }
+}
+.header .header-text h1 {
+  margin-bottom: 0px;
+  font-family: 'Bookman Old Style', 'Times New Roman';
+  font-weight: 100;
+  font-size: 54pt;
+  color: white;
+}
+@media (max-width: 700px) {
+  .header .header-text h1 {
+    font-size: 24pt;
+  }
+}
+.header .header-text h2 {
+  margin-top: 0px;
+  color: white;
+  text-align: right;
+  font-size: 18pt;
+}
+.container {
+  position: relative;
+  max-width: 800px;
+}
+.container.header {
+  max-width: 900px;
+}
+.container.body {
+  max-width: 700px;
+}
+.home-text {
+  margin: 70px 0px 20px 20px;
+  float: left;
+  font-size: 14pt;
+}
+@media (max-width: 700px) {
+  .home-text {
+    margin-right: 0px;
+  }
+}
+.home-text p {
+  margin-top: 30px;
+}
+.btn-styled {
+  width: 280px;
+  height: 70px;
+  font-family: "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", "Tahoma", sans-serif;
+  font-size: 24pt;
+  background-color: #5b9bd5;
+  border-radius: 0px;
+  border: 0px;
+  margin-top: 40px;
+}
+.btn-styled.btn-next {
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+.home-cat {
+  float: right;
+  margin-right: -90px;
+  margin-top: 20px;
+}
+@media (max-width: 700px) {
+  .home-cat {
+    position: absolute;
+    left: 330px;
+  }
+  .home-cat.hide-small {
+    display: none;
+  }
+}
+.score {
+  font-size: 18pt;
+}
+.score-value {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.minus-one {
+  font-weight: bold;
+  color: white;
+  margin-left: 10px;
+  border-radius1: 20px;
+  background-color: #2d4d88;
+  padding: 5px;
+}
+.last-desc {
+  font-weight: bold;
+}
+.share {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.books {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.books .book {
+  margin-right: 10px;
+}
+.CodeMirror {
+  border: 0;
+  margin-top: 10px;
+  height: auto;
+  line-height: 1.3em;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 12pt;
+}
+.CodeMirror .CodeMirror-scroll {
+  height: auto;
+  overflow-y: hidden !important;
+  overflow-x: auto !important;
+}
+.CodeMirror .CodeMirror-lines {
+  cursor: pointer;
+}
+.code-container {
+  position: relative;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.code-toolbar {
+  font-size: 12pt;
+  color: #888;
+  cursor: pointer;
+}
+.code-toolbar .tb-item {
+  cursor: pointer;
+  border-bottom: 1px dashed;
+  margin-right: 10px;
+}
+.code-toolbar .tb-item.disabled {
+  border-bottom: none;
+  cursor: auto;
+  color: #aaa;
+}
+.animated-fast {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+.bootbox-body {
+  margin: 30px;
+}
+.modal-footer .btn-primary {
+  border-radius: 0px;
+  border: 0px;
+  font-family: 'Bookman Old Style', 'Times New Roman';
+  font-size: 18pt;
+  width: 150px;
+  height: 50px;
+}

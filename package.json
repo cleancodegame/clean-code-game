@@ -1,23 +1,28 @@
 {
   "name": "clean-code-game",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "private": true,
   "devDependencies": {
-    "JSV": "^4.0.2",
-    "browserify": "^8.0.3",
-    "del": "^1.1.1",
-    "gulp": "^3.8.10",
-    "gulp-cson": "0.0.1",
-    "gulp-debug": "^2.0.0",
-    "gulp-less": "^2.0.1",
-    "gulp-nodeunit": "0.0.5",
-    "gulp-react": "^2.0.0",
-    "lodash": "^2.4.1",
-    "map-stream": "0.0.5",
-    "vinyl-source-stream": "^1.0.0"
+    "react-scripts": "0.8.4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/xoposhiy/clean-code-game.git"
+  "dependencies": {
+    "animate.css": "^3.5.2",
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.7",
+    "classnames": "^2.2.5",
+    "codemirror": "^5.22.0",
+    "jquery": "^3.1.1",
+    "react": "^15.4.1",
+    "react-bootstrap": "^0.30.7",
+    "react-codemirror": "^0.3.0",
+    "react-dom": "^15.4.1",
+    "react-redux": "^5.0.1",
+    "redux": "^3.6.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
