@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import AppContainer from './components/AppContainer'
+import thunk from 'redux-thunk'
 
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
-import gameApp from './reducers.js'
-
-import levels from './levels.js'
+import { createStore, applyMiddleware, compose } from 'redux'
+import { getFirebase, reactReduxFirebase  } from 'react-redux-firebase'
+import gameReducer from './reducers.js'
 
 const initialState = {
     state: 'HOME'
@@ -21,11 +21,11 @@ const logger = store => next => action => {
   return result
 }
 
-let store = createStore(gameApp, initialState,  applyMiddleware(logger));
+const store = createStore(gameReducer, initialState,  applyMiddleware(logger));
 
 ReactDOM.render(
     <Provider store={store}>
         <AppContainer />
-    </Provider>, 
+    </Provider>,
     document.getElementById("root")
 );

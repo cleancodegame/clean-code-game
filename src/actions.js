@@ -19,5 +19,15 @@ export function bugfix(bug) {
 }
 
 export function next(level) {
-    return { type: "NEXT", level};  
+    return { type: "NEXT", level};
+}
+
+export function signIn() {
+  console.log('sing')
+  return { type: "SIGN_IN" };
+}
+
+export function signOut() {
+  console.log('out')
+  return { type: "SIGN_OUT" };
 }
