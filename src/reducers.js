@@ -2,41 +2,45 @@ import _ from 'lodash'
 import CodeSample from './CodeSample'
 import database from './database'
 import firebase from 'firebase'
+import { SUCCESS_SIGN_IN, SUCCESS_SING_OUT } from './actions'
 
 const game = (state = {}, action) => {
-  // console.log('11')
-    switch (action.type) {
-        case "RESTART_GAME": return _.assign({}, startGame());
-        case "START_LEVEL": return _.assign({}, state, startLevel(state, action.levelIndex, action.level));
-        case "MISS": return _.assign({}, state, miss(state, action.miss));
-        case "USE_HINT": return _.assign({}, state, useHint(state, action.hintId));
-        case "BUGFIX": return _.assign({}, state, bugfix(state, action.bug));
-        case "NEXT": return _.assign({}, state, next(state, action.level));
-        case "SIGN_IN": return { ...state, ...signIn()}
-        case "SIGN_OUT": return { ...state, ...signOut()}
+  // Temp
+  const { type, payload, levelIndex, level, miss, hintId, bug } = action
 
-        default: return state;
+  switch (type) {
+    case "RESTART_GAME":
+      return { ...startGame()}
+    case "START_LEVEL":
+      return {...state, ...startLevel(state, levelIndex, level)}
+    case "MISS":
+      return {...state, ...miss(state, miss)}
+    case "USE_HINT":
+      return {...state, ...useHint(state, hintId)}
+    case "BUGFIX":
+      return {...state, ...bugfix(state, bug)}
+    case "NEXT":
+      return {...state, ...next(state, level)}
+    case SUCCESS_SIGN_IN:
+      return { ...state, userName: payload.user.user.displayName }
+    case SUCCESS_SING_OUT:
+      return signOut(state)
+    default:
+      return state;
+  }
+}
+
+function signOut(state) {
+  const newState = {}
+
+  for (const key in state) {
+    if (key !== 'userName') {
+      newState[key] = state[key]
     }
-}
-function signIn() {
-  firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-    .catch(function(error) {
-      console.log(error)
-      firebase.auth().signInWithPopup(new firebase.auth.GithubAuthProvider())
-  })
-  return {}
-}
+  }
 
-function signOut() {
-  firebase.auth().signOut()
-
-  return {}
+  return newState
 }
-
-// function updateUserView(user) {
-//     console.log(user);
-//     $(".username").html(user ? user.displayName : "anonymous");
-// }
 
 function startGame() {
     return {

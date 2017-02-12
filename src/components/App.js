@@ -7,7 +7,7 @@ import './App.css';
 
 function App({game, onStartGame}) {
     return (
-        <AppPage tallHeader={game.state === 'HOME'}>
+        <AppPage tallHeader={game.state === 'HOME'} userName={game.userName}>
             <ProgressBar max={game.levelsCount} completed={game.currentLevelIndex} />
             <GameView onStartGame={onStartGame} game={game} />
         </AppPage>
