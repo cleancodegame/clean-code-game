@@ -37,7 +37,7 @@ function restartDispatcher(game, dispatch){
       const levels = Object.keys(returnedLevels).map(key => returnedLevels[key])
       console.log(levels[levelIndex])
 
-      // dispatch(restartGame(game.currentLevelIndex, game.score));
+      // TODO dispatch(restartGame(game.currentLevelIndex, game.score));
       dispatch(startLevel(levelIndex, levels[levelIndex]));
     })
 	};

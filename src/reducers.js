@@ -1,7 +1,5 @@
 import _ from 'lodash'
 import CodeSample from './CodeSample'
-import database from './database'
-import firebase from 'firebase'
 import { SUCCESS_SIGN_IN, SUCCESS_SING_OUT } from './actions'
 
 const game = (state = {}, action) => {

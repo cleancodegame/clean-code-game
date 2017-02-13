@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux'
-import {signIn, signOut, requestSignIn, requestSignOut} from '../actions';
-import firebase from 'firebase'
+import { requestSignIn, requestSignOut } from '../actions';
 
 class AppHeader extends Component {
   login = () => this.props.dispatch(requestSignIn())
@@ -14,7 +13,7 @@ class AppHeader extends Component {
         <a className="navbar nav nav-item nav-link float-xs-right" href="#" onClick={this.login}>войти</a>
         <a className="navbar nav nav-item nav-link float-xs-right" href="#" onClick={this.logout}>выйти</a>
         <div className="navbar brand float-xs-right">
-          <img className="userpic d-inline-block align-top" />
+          <img className="userpic d-inline-block align-top" alt={this.props.userName} />
           <span className="username">{ this.props.userName }</span>
         </div>
         <div className={classnames("header-text", { "tall": this.props.tall })}>
@@ -57,18 +56,4 @@ function AppPage(props) {
   );
 }
 
-
-// function mapStateToProps() {
-//   return {}
-// }
-//
-// function mapDispatchToProps(dispatch) {
-//   return {
-//     actions: bindActionCreators(UserActions, dispatch)
-//   }
-// }
-//
-// export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)
-
 export default connect()(AppPage);
-// export default AppPage;
