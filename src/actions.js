@@ -45,3 +45,9 @@ export const failureSignIn = createAction(FAILURE_SIGN_IN)
 export const requestSignOut = createAction(REQUEST_SIGN_OUT)
 export const successSignOut = createAction(SUCCESS_SING_OUT)
 export const failureSignOut = createAction(FAILURE_SIGN_OUT)
+
+export const GET_LEVELS = 'GET_LEVELS'
+export const getLevels = createAction(GET_LEVELS)
+
+export const SUCCESS_GET_LEVELS = 'SUCCESS_GET_LEVELS'
+export const successGetLevels = createAction(SUCCESS_GET_LEVELS)

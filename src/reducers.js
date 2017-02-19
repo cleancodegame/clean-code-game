@@ -1,16 +1,17 @@
 import _ from 'lodash'
 import CodeSample from './CodeSample'
-import { SUCCESS_SIGN_IN, SUCCESS_SING_OUT } from './actions'
+import { SUCCESS_SIGN_IN, SUCCESS_SING_OUT, GET_LEVELS, SUCCESS_GET_LEVELS, getLevels } from './actions'
 
 const game = (state = {}, action) => {
   // Temp
   const { type, payload, levelIndex, level, miss, hintId, bug } = action
 
+  console.log(state, action)
   switch (type) {
     case "RESTART_GAME":
-      return { ...startGame()}
-    case "START_LEVEL":
-      return {...state, ...startLevel(state, levelIndex, level)}
+      return restartGame(state)
+    // case "START_NEXT_LEVEL":
+    //   return {...state, ...startNextLevel(state)}
     case "MISS":
       return {...state, ...miss(state, miss)}
     case "USE_HINT":
@@ -18,13 +19,47 @@ const game = (state = {}, action) => {
     case "BUGFIX":
       return {...state, ...bugfix(state, bug)}
     case "NEXT":
-      return {...state, ...next(state, level)}
+      return {...state, ...next(state)}
     case SUCCESS_SIGN_IN:
       return { ...state, userName: payload.user.user.displayName }
     case SUCCESS_SING_OUT:
       return signOut(state)
+    case SUCCESS_GET_LEVELS:
+      return {...state, ...startNextLevel(state, payload.levels)}
     default:
       return state;
+  }
+}
+
+function restartGame(state) {
+  return {
+    lastAction: 'NO', // 'NONE|WRONG|RIGHT
+    totalScore: 0,
+    maxPossibleScore: 0,
+    availableHints: [],
+    foundBugs: [],
+    misses: [],
+    currentLevelIndex: -1,
+    currentLevel: null, //CodeSample
+    levelsCount: 0,
+  }
+}
+
+function startNextLevel(state, levels) {
+  console.log('startNewLavel')
+  levels = state.levels || levels
+  const nextIndex = state.currentLevelIndex + 1
+  const level = levels[nextIndex]
+
+  return {
+    state: 'IN_PLAY',
+    lastAction: 'NO',
+    levels,
+    maxPossibleScore: state.maxPossibleScore + Object.keys(level.bugs).length,
+    availableHints: Object.keys(level.bugs),
+    foundBugs: [],
+    currentLevelIndex: nextIndex,
+    currentLevel: new CodeSample(level)
   }
 }
 
@@ -38,34 +73,6 @@ function signOut(state) {
   }
 
   return newState
-}
-
-function startGame() {
-    return {
-        state: 'IN_PLAY', // HOME|IN_PLAY|FAILED|FINISHED
-        lastAction: 'NO', // 'NONE|WRONG|RIGHT
-        totalScore: 0,
-        maxPossibleScore: 0,
-        availableHints: [],
-        foundBugs: [],
-        misses: [],
-        currentLevelIndex: 0,
-        currentLevel: null, //CodeSample
-        levelsCount: 0,
-    }
-}
-
-function startLevel(state, levelIndex, level) {
-  console.log('level', level)
-    return {
-        state: 'IN_PLAY',
-        lastAction: 'NO',
-        maxPossibleScore: state.maxPossibleScore + Object.keys(level.bugs).length,
-        availableHints: Object.keys(level.bugs),
-        foundBugs: [],
-        currentLevelIndex: levelIndex,
-        currentLevel: new CodeSample(level)
-    }
 }
 
 function miss(state, miss) {
@@ -102,10 +109,13 @@ function bugfix(state, bug) {
     }
 }
 
-function next(state, level) {
-    if (level === undefined)
-        return finished();
-    return startLevel(state, state.currentLevelIndex+1, level);
+function next(state) {
+  console.log('next', state.levels.length, state.currentLevelIndex)
+  if (state.levels.length - 1 <= state.currentLevelIndex) {
+    return finished()
+  }
+
+  return startNextLevel(state);
 }
 
 function finished() {
