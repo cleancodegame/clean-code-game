@@ -20,19 +20,23 @@ class LevelView extends React.Component {
 	}
 	handleClick = (line, ch, word) => {
 		if (this.isFinished()) return;
+
 		var bug = this.props.game.currentLevel.findBug(line, ch);
+
 		if (bug != null) {
 			this.props.onBugFix(bug);
-		}
-		else {
+		} else {
 			word = word.trim().substring(0, 20);
+
 			if (!this.props.game.misses.includes(word))
 				this.props.onMiss(word);
 		}
 	}
 
 	renderExplanations() {
-		if (this.props.game.foundBugs.length === 0) return "";
+		if (this.props.game.foundBugs.length === 0)
+			return "";
+
 		return <div>
 			<h3>Объяснения:</h3>
 			<ol>
@@ -51,14 +55,14 @@ class LevelView extends React.Component {
 	getHint() {
 		if (this.props.game.availableHints.length > 0) {
 			let bugId = this.props.game.availableHints[0];
+
 			return this.props.game.currentLevel.bugs[bugId].description;
 		}
-		else
-			return undefined;
 	}
 	renderBugsCount() {
 		var classes = this.props.game.lastAction === "RIGHT" ? "animated rubberBand" : "";
 		var bugsCount = this.props.game.currentLevel.bugsCount();
+
 		return <div className="score">
 			Осталось найти: <span style={{display:'inline-block'}} key={bugsCount} className={classes}>{bugsCount}</span>
 		</div>

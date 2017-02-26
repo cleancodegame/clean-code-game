@@ -257,7 +257,7 @@ const levels = [{
 }, {
     "name": "SplitMethod",
     "instruction": "Имена переменных и методов тут в порядке. Но не только это делает код хорошим!",
-    "code": "void Main(string[] args)\n{\n\tstring[] inputLines = File.ReadAllLines(args[0]);\n\tstring outputPath = args[1];\n\tif (Directory.Exists(outputPath))\n\t\toutputPath = Path.Combine(outputPath, Path.GetFileName(args[0]));\n\t{{\n\t//Convert file}}\n\tvar escapedLines = inputLines.Select(s => s.Replace(@\"\", @\"\\\"));\n\tvar outputText = string.Join(\"\\n\", escapedLines);\n\tFile.WriteAllText(outputPath, outputText);\n\tConsole.WriteLine(\"{0} characters\", outputText.Length);\n}",
+    "code": "void Main(string[] args)\n{\n\tstring[] inputLines = File.ReadAllLines(args[0]);\n\tstring outputPath = args[1];\n\tif (Directory.Exists(outputPath))\n\t\toutputPath = Path.Combine(outputPath, Path.GetFileName(args[0]));\n\t{{//Convert file}}\n\tvar escapedLines = inputLines.Select(s => s.Replace(@\"\", @\"\\\"));\n\tvar outputText = string.Join(\"\\n\", escapedLines);\n\tFile.WriteAllText(outputPath, outputText);\n\tConsole.WriteLine(\"{0} characters\", outputText.Length);\n}",
     "bugs": {
         "//Convert": {
             "type": "methods",
@@ -419,4 +419,4 @@ const levels = [{
     }
 }];
 
-export default levels;
+module.exports = levels;
