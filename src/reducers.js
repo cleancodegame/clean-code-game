@@ -42,6 +42,7 @@ function restartGame(state) {
     currentLevelIndex: -1,
     currentLevel: null, //CodeSample
     levelsCount: 0,
+    packageId: 1,
   }
 }
 
@@ -125,5 +126,8 @@ function finished() {
     }
 }
 
+export const getCurentPackage = (state) => {
+  return state.packageId
+}
 
 export default game;

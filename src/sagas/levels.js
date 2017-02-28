@@ -1,12 +1,13 @@
 import { fork, call, put, take, select } from 'redux-saga/effects'
 import firebase from 'firebase'
+import { getCurentPackage } from '../reducers'
 
 import {
   GET_LEVELS, successGetLevels,
 } from '../actions'
 
 
-function getLevels(packageId = 0) {
+function getLevels(packageId) {
   return firebase.database().ref('/levels').orderByChild("packageId").equalTo(packageId).once('value')
     .then(snap => {
       const returnedLevels = snap.val()
@@ -20,7 +21,9 @@ function* handleGetLevels() {
   while (true) {
     yield take(GET_LEVELS)
 
-    const { levels } = yield call(getLevels)
+    const packageId = yield select(getCurentPackage)
+
+    const { levels } = yield call(getLevels, packageId)
 
     if (levels) {
       yield put(successGetLevels({ levels }))
