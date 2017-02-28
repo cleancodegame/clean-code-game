@@ -13,7 +13,7 @@ const game = (state = {}, action) => {
     // case "START_NEXT_LEVEL":
     //   return {...state, ...startNextLevel(state)}
     case "MISS":
-      return {...state, ...miss(state, miss)}
+      return {...state, ...missBug(state, miss)}
     case "USE_HINT":
       return {...state, ...useHint(state, hintId)}
     case "BUGFIX":
@@ -75,7 +75,7 @@ function signOut(state) {
   return newState
 }
 
-function miss(state, miss) {
+function missBug(state, miss) {
     const newScore = state.totalScore - (state.currentLevel.learning ? 0 : 1);
     if (newScore < 0) return gameOver(state);
     return {
@@ -98,13 +98,13 @@ function useHint(state, hintId) {
     }
 }
 
-function bugfix(state, bug) {
-    var fixedLevel = state.currentLevel.fix(bug);
+function bugfix(state, bugKey) {
+    var fixedLevel = state.currentLevel.fix(bugKey);
     return {
         lastAction: "RIGHT",
         totalScore: state.totalScore + 1,
-        availableHints: _.difference(state.availableHints, [bug.name]),
-        foundBugs: _.concat(state.foundBugs, bug),
+        availableHints: _.difference(state.availableHints, [bugKey]),
+        foundBugs: [...state.foundBugs, state.currentLevel.bugs[bugKey]],
         currentLevel: fixedLevel
     }
 }

@@ -6,7 +6,7 @@ const convertedLevels = levels.map(({name, instruction, learning, code, bugs}, i
   const nameBugs = textBugs.map(bug => bug.split(' ')[0])
 
   const convertedCode = textBugs.reduce((newCode, textBug, index) => {
-    return newCode.split(`{{${textBug}}}`).join(`{{${index}::${textBug}}}`)
+    return newCode.split(`{{${textBug}}}`).join(`{{${index}}}`)
   }, code)
 
   const convertedBugs = nameBugs.reduce((bugsToReturn, nameBug, index) => {

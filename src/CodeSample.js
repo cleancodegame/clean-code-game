@@ -2,7 +2,7 @@ import _ from "lodash"
 
 export default class CodeSample {
 	constructor(level) {
-		this.name = level.name;
+		this.name = level.name
 		this.code = level.code
 		this.bugs = level.bugs
 		this.instruction = level.instruction
@@ -15,100 +15,100 @@ export default class CodeSample {
 	}
 
 	parseCode = () => {
-		_.each(_.values(this.bugs), function (bug) {
-			bug.offsets = []
-		});
-		_.each(_.keys(this.bugs), (bugName) => {
-			this.bugs[bugName].name = bugName
-		});
-
-		var resultOffset = 0;
+		let resultOffset = 0
 
     return this.code
-			.replace(/{{([\s\S]*?)}}/gm, function (sub, p, offset, s) {
-				var start = offset - resultOffset;
+			.replace(/({{(\d+)}})/gm, (sub, fullFind, key, offset) => {
+        const bug = this.bugs[key]
 
-				resultOffset += 4;
-				this.addBugPosition(p, start, p.length);
+        if (bug === undefined) {
+    			throw new Error("In code " + this.name + " unknown bug key " + key)
+    		}
 
-				return p;
+        if (!bug.offsets) {
+          bug.offsets = []
+        }
+
+        bug.offsets.push({
+          startIndex: offset - resultOffset,
+          len: bug.code.length,
+        })
+
+        resultOffset += fullFind.length - bug.code.length
+
+				return bug.code
 			})
 	}
 
-	addBugPosition = (token, start, len) => {
-		var name = token.trim().split(' ', 2)[0];
-		var bug = this.bugs[name];
-
-    if (bug === undefined) {
-			console.log(this.bugs);
-			throw new Error("In code " + data.name + " unknown bug " + name);
-		}
-
-		bug.content = token;
-		bug.offsets.push({
-			startIndex: start,
-			len: len
-		});
-	}
-
 	addBugLinePositions = () => {
-		var eols = [-1];
+		const eols = [-1];
 
-		for (var i = 0; i < this.text.length; i++) {
-			if (this.text[i] === '\n')
-				eols.push(i);
+		for (let i = 0; i < this.text.length; i++) {
+			if (this.text[i] === '\n') {
+				eols.push(i)
+      }
 		}
-		eols.push(1000000000);
 
-		_.each(_.values(this.bugs), function (bug) {
-			bug.offsets.forEach(function (offset) {
-				offset.start = getPos(offset.startIndex, eols);
-				offset.end = getPos(offset.startIndex + offset.len - 1, eols);
-			});
-		});
+		eols.push(Infinity)
+
+		Object.keys(this.bugs).forEach(key => {
+			this.bugs[key].offsets.forEach(offset => {
+				offset.start = this.getPos(offset.startIndex, eols);
+				offset.end = this.getPos(offset.startIndex + offset.len - 1, eols);
+			})
+		})
 	}
 
-	function getPos(pos, eols) {
-		for (var line = 0; line < eols.length; line++)
-			if (eols[line] >= pos) {
-				return {
-					line: line - 1,
-					ch: pos - eols[line - 1] - 1
-				};
-			}
-	}
+  getPos(pos, eols) {
+    for (var line = 0; line < eols.length; line++)
+      if (eols[line] >= pos) {
+        return {
+          line: line - 1,
+          ch: pos - eols[line - 1] - 1
+        }
+      }
+  }
 
-	function containPos(offset, line, ch) {
-		return (offset.start.line < line || (offset.start.line === line && offset.start.ch <= ch + 1))
-      && (offset.end.line > line || (offset.end.line === line && offset.end.ch >= ch - 1))
-	}
+	findBugKey = (line, ch) => {
+		for (let key in this.bugs) {
+			const offsets = this.bugs[key]
+        .offsets.filter(offset => containPos(offset, line, ch))
 
-	findBug = (line, ch) => { //return Bug
-		for (let bug of this.bugs)) {
-			var offsets = bug.offsets.filter(offset => containPos(offset, line, ch))
-
-			if (offsets.length !== 0)
-        return bug
+			if (offsets.length !== 0) {
+        return key
+      }
 		}
 	}
 
-	function escapeRe(str) {
-		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-	}
+	fix = (bugKey) => {
+		const code = this.code.split(`{{${bugKey}}}`).join(this.bugs[bugKey].replace)
 
-	fix = (bug) => {
-		var code2 = this.code.replace(new RegExp("\\{\\{" + escapeRe(bug.content) + "\\}\\}", "gm"), bug.replace);
-		var bugs2 = _.cloneDeep(this.bugs);
+    const bugsClone = Object.keys(this.bugs)
+      .reduce((clone, key) => {
+        if (key === bugKey) {
+          return clone
+        }
 
-    delete bugs2[bug.name];
+        return {...clone, [key]: this.bugs[key]}
+      }, {})
 
     return new CodeSample({
 			name: this.name,
-			code: code2,
-			bugs: bugs2,
+			code,
+			bugs: bugsClone,
       packageId: this.packageId,
 			instruction: this.instruction,
 			learning: this.learning
 		})
 	}
+}
+
+
+function containPos(offset, line, ch) {
+  return (offset.start.line < line || (offset.start.line === line && offset.start.ch <= ch + 1))
+    && (offset.end.line > line || (offset.end.line === line && offset.end.ch >= ch - 1))
+}
+
+function escapeRe(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }

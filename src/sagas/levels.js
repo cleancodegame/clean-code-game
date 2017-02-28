@@ -6,8 +6,8 @@ import {
 } from '../actions'
 
 
-function getLevels() {
-  return firebase.database().ref('/levels').once('value')
+function getLevels(packageId = 0) {
+  return firebase.database().ref('/levels').orderByChild("packageId").equalTo(packageId).once('value')
     .then(snap => {
       const returnedLevels = snap.val()
 
