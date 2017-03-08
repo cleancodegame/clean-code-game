@@ -1,0 +1,59 @@
+
+.header {
+  background-color: #5b9bd5;
+  text-align: center;
+}
+.header .header-text {
+  display: inline-block;
+}
+.header .header-text.tall.header-conteiner-text {
+  height: 260px;
+}
+.header .header-text.tall h1.header-name-text {
+  margin-top: 60px;
+}
+@media (max-width: 700px) {
+  .header .header-text.tall {
+    height: 180px;
+  }
+  .header .header-text.tall h1 {
+    margin-top: 50px;
+  }
+}
+.header .header-text h1 {
+  margin-bottom: 0px;
+  font-family: 'Bookman Old Style', 'Times New Roman';
+  font-weight: 100;
+  font-size: 54pt;
+  color: white;
+}
+@media (max-width: 700px) {
+  .header .header-text h1 {
+    font-size: 24pt;
+  }
+}
+.header .header-text h2 {
+  margin-top: 0px;
+  color: white;
+  text-align: right;
+  font-size: 18pt;
+}
+
+.header-login {
+  text-align: right;
+  margin: 10px 10px 0px 0px;
+  font-size: 20px;
+}
+
+.header-login-username {
+  color: #fff;
+  margin-right: 20px;
+  font-size: 22px;
+  vertical-align: baseline;
+}
+
+.header-login-link {
+  color: #fff;
+  line-height: 22px;
+  vertical-align: baseline;
+}

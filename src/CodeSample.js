@@ -70,7 +70,7 @@ export default class CodeSample {
   }
 
 	findBugKey = (line, ch) => {
-		for (let key in this.bugs) {
+		for (let key of Object.keys(this.bugs)) {
 			const offsets = this.bugs[key]
         .offsets.filter(offset => containPos(offset, line, ch))
 
@@ -107,8 +107,4 @@ export default class CodeSample {
 function containPos(offset, line, ch) {
   return (offset.start.line < line || (offset.start.line === line && offset.start.ch <= ch + 1))
     && (offset.end.line > line || (offset.end.line === line && offset.end.ch >= ch - 1))
-}
-
-function escapeRe(str) {
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }

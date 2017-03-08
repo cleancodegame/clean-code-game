@@ -1,6 +1,9 @@
 const levels = require('./levels')
 const fs = require('fs')
 
+let levels0 = 1
+let levels1 = 1
+
 const convertedLevels = levels.map(({name, instruction, learning, code, bugs}, i) => {
   const textBugs = getTextBugs(code)
   const nameBugs = textBugs.map(bug => bug.split(' ')[0])
@@ -22,11 +25,22 @@ const convertedLevels = levels.map(({name, instruction, learning, code, bugs}, i
 
   const packageId = learning ? 0 : 1
 
+  let orderKey
+
+  if (learning) {
+    orderKey = levels0
+    levels0 ++
+  } else {
+    orderKey = levels1
+    levels1 ++
+  }
+
   return {
     name,
     instruction,
     learning,
     packageId,
+    orderKey,
     code: convertedCode,
     bugs: convertedBugs,
   }
@@ -37,7 +51,7 @@ const objectLevels = convertedLevels.reduce((levels, level, index) => {
   return Object.assign({[index]: level}, levels)
 }, {})
 
-const jsonLevels = JSON.stringify({levels: objectLevels})
+const jsonLevels = JSON.stringify(objectLevels)
 
 fs.writeFile('convertedLevels.json', jsonLevels)
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import AppPage from './AppPage';
 import GameView from './GameView';
-import ProgressBar from './ProgressBar';
+import ProgressBar from './View/ProgressBar';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 

@@ -6,7 +6,7 @@ function mapStateToProps(state){
   return {
     max: state.levelsCount,
     completed: state.currentLevelIndex
-  }  
+  }
 }
 
 function mapDispatchToProps(dispatch){
@@ -14,7 +14,7 @@ function mapDispatchToProps(dispatch){
 }
 
 const ProgressBarContainer = connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps
   )(ProgressBar);
 

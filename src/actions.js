@@ -51,3 +51,33 @@ export const getLevels = createAction(GET_LEVELS)
 
 export const SUCCESS_GET_LEVELS = 'SUCCESS_GET_LEVELS'
 export const successGetLevels = createAction(SUCCESS_GET_LEVELS)
+
+export const GET_PACKAGES = 'GET_PACKAGES'
+export const getPackages = createAction(GET_PACKAGES)
+
+export const SUCCESS_GET_PACKAGES = 'SUCCESS_GET_PACKAGES'
+export const successGetPackages = createAction(SUCCESS_GET_PACKAGES)
+
+export const SET_PACKAGE = 'SET_PACKAGE'
+export const setPackage = createAction(SET_PACKAGE)
+
+export const START_PACKAGE = 'START_PACKAGE'
+export const startPackage = createAction(START_PACKAGE)
+
+export const GO_TO_MAIN_PAGE = 'GO_TO_MAIN_PAGE'
+export const goToMainPage = createAction(GO_TO_MAIN_PAGE)
+
+export const NEXT_LEVEL = 'NEXT_LEVEL'
+export const nextLevel = createAction(NEXT_LEVEL)
+
+export const START_NEXT_LEVEL = 'START_NEXT_LEVEL'
+export const startNextLevel = createAction(START_NEXT_LEVEL)
+
+export const FINISHED_PACKAGE = 'FINISHED_PACKAGE'
+export const finishedPackage = createAction(FINISHED_PACKAGE)
+
+export const NEED_AUTHORIZATION_FOR_CONTINUE = 'NEED_AUTHORIZATION_FOR_CONTINUE'
+export const needAuthorizationForContinue = createAction(NEED_AUTHORIZATION_FOR_CONTINUE)
+
+export const AUTHORIZATION_FOR_CONTINUE_SUCCESS = 'AUTHORIZATION_FOR_CONTINUE_SUCCESS'
+export const authorizationForContinueSuccess = createAction(AUTHORIZATION_FOR_CONTINUE_SUCCESS)

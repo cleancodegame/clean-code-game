@@ -1,17 +1,26 @@
 import _ from 'lodash'
 import CodeSample from './CodeSample'
-import { SUCCESS_SIGN_IN, SUCCESS_SING_OUT, GET_LEVELS, SUCCESS_GET_LEVELS, getLevels } from './actions'
+import {
+  SUCCESS_SIGN_IN,
+  SUCCESS_SING_OUT,
+  SUCCESS_GET_LEVELS,
+  SUCCESS_GET_PACKAGES,
+  SET_PACKAGE,
+  GO_TO_MAIN_PAGE,
+  FINISHED_PACKAGE,
+  NEED_AUTHORIZATION_FOR_CONTINUE,
+} from './actions'
 
 const game = (state = {}, action) => {
   // Temp
-  const { type, payload, levelIndex, level, miss, hintId, bug } = action
+  const { type, payload, miss, hintId, bug } = action
 
   console.log(state, action)
   switch (type) {
     case "RESTART_GAME":
       return restartGame(state)
-    // case "START_NEXT_LEVEL":
-    //   return {...state, ...startNextLevel(state)}
+    case "START_NEXT_LEVEL":
+      return {...state, ...startNextLevel(state)}
     case "MISS":
       return {...state, ...missBug(state, miss)}
     case "USE_HINT":
@@ -21,18 +30,48 @@ const game = (state = {}, action) => {
     case "NEXT":
       return {...state, ...next(state)}
     case SUCCESS_SIGN_IN:
-      return { ...state, userName: payload.user.user.displayName }
+      return { ...state, userName: payload.user.user.displayName, state: 'LOAD' }
     case SUCCESS_SING_OUT:
       return signOut(state)
     case SUCCESS_GET_LEVELS:
       return {...state, ...startNextLevel(state, payload.levels)}
+    case SUCCESS_GET_PACKAGES:
+      return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages, state: 'PACKAGE'}
+    case SET_PACKAGE:
+      return {...state, packageId: payload }
+    case GO_TO_MAIN_PAGE:
+      return goToMainPage(state)
+    case FINISHED_PACKAGE:
+      return finishedPackage(state)
+    case NEED_AUTHORIZATION_FOR_CONTINUE:
+      return {...state, state: 'AUTHORIZATION', inProgress: true}
     default:
       return state;
   }
 }
 
+function finishedPackage(store) {
+  const finishedPackages = [...store.finishedPackages, store.packageId]
+
+  return {
+    ...store,
+    state: 'PACKAGE',
+    finishedPackages,
+  }
+}
+
+function goToMainPage(store) {
+  const state = store.userName ? 'PACKAGE' : 'HOME'
+
+  return {
+    ...store,
+    state
+  }
+}
+
 function restartGame(state) {
   return {
+    ...state,
     lastAction: 'NO', // 'NONE|WRONG|RIGHT
     totalScore: 0,
     maxPossibleScore: 0,
@@ -42,12 +81,12 @@ function restartGame(state) {
     currentLevelIndex: -1,
     currentLevel: null, //CodeSample
     levelsCount: 0,
-    packageId: 1,
+    packageId: 0,
   }
 }
 
 function startNextLevel(state, levels) {
-  console.log('startNewLavel')
+  console.log('startNewLevel', levels)
   levels = state.levels || levels
   const nextIndex = state.currentLevelIndex + 1
   const level = levels[nextIndex]
@@ -72,6 +111,8 @@ function signOut(state) {
       newState[key] = state[key]
     }
   }
+
+  newState.state = 'HOME'
 
   return newState
 }

@@ -3,7 +3,6 @@ import MessageButton from './MessageButton'
 import CodeView from './CodeView'
 import _ from 'lodash';
 import "animate.css";
-import classes from 'classnames'
 
 class LevelView extends React.Component {
 	static propTypes = {

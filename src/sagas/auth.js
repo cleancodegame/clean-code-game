@@ -3,7 +3,9 @@ import firebase from 'firebase'
 
 import {
   REQUEST_SIGN_IN, successSignIn, failureSignIn,
-  REQUEST_SIGN_OUT, successSignOut, failureSignOut
+  REQUEST_SIGN_OUT, successSignOut, failureSignOut,
+  getPackages,
+  authorizationForContinueSuccess,
 } from '../actions'
 
 function signIn() {
@@ -20,6 +22,14 @@ function* handleRequestSignIn() {
 
     if (user && !error) {
       yield put(successSignIn({ user }))
+
+      const inProgress = yield select(state => state.inProgress)
+
+      if (inProgress) {
+        yield put(authorizationForContinueSuccess())
+      } else {
+        yield put(getPackages())
+      }
     } else {
       yield put(failureSignIn({ error }))
     }

@@ -32,45 +32,7 @@ body {
 .pointer {
   cursor: pointer;
 }
-.header {
-  background-color: #5b9bd5;
-  text-align: center;
-}
-.header .header-text {
-  display: inline-block;
-}
-.header .header-text.tall {
-  height: 300px;
-}
-.header .header-text.tall h1 {
-  margin-top: 100px;
-}
-@media (max-width: 700px) {
-  .header .header-text.tall {
-    height: 180px;
-  }
-  .header .header-text.tall h1 {
-    margin-top: 50px;
-  }
-}
-.header .header-text h1 {
-  margin-bottom: 0px;
-  font-family: 'Bookman Old Style', 'Times New Roman';
-  font-weight: 100;
-  font-size: 54pt;
-  color: white;
-}
-@media (max-width: 700px) {
-  .header .header-text h1 {
-    font-size: 24pt;
-  }
-}
-.header .header-text h2 {
-  margin-top: 0px;
-  color: white;
-  text-align: right;
-  font-size: 18pt;
-}
+
 .container {
   position: relative;
   max-width: 800px;
@@ -79,12 +41,15 @@ body {
   max-width: 900px;
 }
 .container.body {
-  max-width: 700px;
+  margin: 10px 20px 40px 20px;
+  display: flex;
+  align-items: center;
+  height: 420px;
 }
 .home-text {
-  margin: 70px 0px 20px 20px;
-  float: left;
+  display: inline-block;
   font-size: 14pt;
+  align-self: flex-end;
 }
 @media (max-width: 700px) {
   .home-text {
@@ -109,9 +74,10 @@ body {
   margin-bottom: 40px;
 }
 .home-cat {
-  float: right;
-  margin-right: -90px;
-  margin-top: 20px;
+  display: inline-block;
+  vertical-align: bottom;
+  align-self: flex-end;
+  margin-left: 60px
 }
 @media (max-width: 700px) {
   .home-cat {
@@ -203,4 +169,21 @@ body {
   font-size: 18pt;
   width: 150px;
   height: 50px;
+}
+
+.IntroView-button-continue {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.PackageView-package-buttons {
+  align-self: center;
+}
+
+.PackageView-button-disable[disabled]:disabled,
+.PackageView-button-disable[disabled]:hover,
+.PackageView-button-disable[disabled]:active {
+  background-color: #b5cde2;
+  cursor: inherit;
+
 }

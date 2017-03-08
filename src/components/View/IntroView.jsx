@@ -1,5 +1,5 @@
 import React from 'react'
-import cat from '../img/cat.png'
+import cat from '../../img/cat.png'
 
 export default class IntroView extends React.Component {
 	render() {
@@ -21,7 +21,12 @@ export default class IntroView extends React.Component {
   					onClick={this.props.onStartGame}>
   					Начать игру
   				</button>
-  			</p >
+				</p>
+				<button
+					className="btn btn-lg btn-primary btn-styled IntroView-button-continue"
+					onClick={this.props.onContinueGame}>
+					Продолжить
+				</button>
   		</div>
   		<img className="home-cat" src={cat} alt="clean code cat" />
   		<div className="clearfix"></div>
