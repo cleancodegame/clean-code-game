@@ -81,3 +81,28 @@ export const needAuthorizationForContinue = createAction(NEED_AUTHORIZATION_FOR_
 
 export const AUTHORIZATION_FOR_CONTINUE_SUCCESS = 'AUTHORIZATION_FOR_CONTINUE_SUCCESS'
 export const authorizationForContinueSuccess = createAction(AUTHORIZATION_FOR_CONTINUE_SUCCESS)
+
+export const SET_MISS_CLICK = 'SET_MISS_CLICK'
+export const setMissClick = createAction(SET_MISS_CLICK)
+export const SEND_MISS_CLICK = 'SEND_MISS_CLICK'
+export const sendMissClick = createAction(SEND_MISS_CLICK)
+
+export const SET_BUG_FIX = 'SET_BUG_FIX'
+export const setBugFix = createAction(SET_BUG_FIX)
+export const SEND_BUG_FIX = 'SEND_BUG_FIX'
+export const sendBugFix = createAction(SEND_BUG_FIX)
+
+export const SET_USE_HINT = 'SET_USE_HINT'
+export const setUseHint = createAction(SET_USE_HINT)
+export const SEND_USE_HINT = 'SEND_USE_HINT'
+export const sendUseHint = createAction(SEND_USE_HINT)
+
+// export const SET_FINISH_LEVEL = 'SET_FINISH_LEVEL'
+// export const setFinishLevel = createAction(SET_FINISH_LEVEL)
+export const SEND_FINISH_LEVEL = 'SEND_FINISH_LEVEL'
+export const sendFinishLevel = createAction(SEND_FINISH_LEVEL)
+
+// export const SET_USE_HINT = 'SET_USE_HINT'
+// export const setUseHint = createAction(SET_USE_HINT)
+export const SEND_START_LEVEL = 'SEND_START_LEVEL'
+export const sendStartLevel = createAction(SEND_START_LEVEL)

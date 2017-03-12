@@ -9,6 +9,9 @@ import {
   GO_TO_MAIN_PAGE,
   FINISHED_PACKAGE,
   NEED_AUTHORIZATION_FOR_CONTINUE,
+  SET_MISS_CLICK,
+  SET_BUG_FIX,
+  SET_USE_HINT,
 } from './actions'
 
 const game = (state = {}, action) => {
@@ -30,7 +33,7 @@ const game = (state = {}, action) => {
     case "NEXT":
       return {...state, ...next(state)}
     case SUCCESS_SIGN_IN:
-      return { ...state, userName: payload.user.user.displayName, state: 'LOAD' }
+      return { ...state, uid: payload.user.user.uid, userName: payload.user.user.displayName, state: 'LOAD' }
     case SUCCESS_SING_OUT:
       return signOut(state)
     case SUCCESS_GET_LEVELS:
@@ -45,6 +48,12 @@ const game = (state = {}, action) => {
       return finishedPackage(state)
     case NEED_AUTHORIZATION_FOR_CONTINUE:
       return {...state, state: 'AUTHORIZATION', inProgress: true}
+    case SET_MISS_CLICK:
+      return {...state, missClickLocation: payload.missClickLocation }
+    case SET_BUG_FIX:
+      return {...state, bugId: payload}
+    case SET_USE_HINT:
+      return {...state, hintId: payload}
     default:
       return state;
   }
@@ -87,7 +96,7 @@ function restartGame(state) {
 
 function startNextLevel(state, levels) {
   console.log('startNewLevel', levels)
-  levels = state.levels || levels
+  levels = levels || state.levels
   const nextIndex = state.currentLevelIndex + 1
   const level = levels[nextIndex]
 
@@ -95,6 +104,7 @@ function startNextLevel(state, levels) {
     state: 'IN_PLAY',
     lastAction: 'NO',
     levels,
+    levelId: level.id,
     maxPossibleScore: state.maxPossibleScore + Object.keys(level.bugs).length,
     availableHints: Object.keys(level.bugs),
     foundBugs: [],
@@ -107,7 +117,7 @@ function signOut(state) {
   const newState = {}
 
   for (const key in state) {
-    if (key !== 'userName') {
+    if (key !== 'userName' && key !== 'uid') {
       newState[key] = state[key]
     }
   }
@@ -152,19 +162,7 @@ function bugfix(state, bugKey) {
 }
 
 function next(state) {
-  console.log('next', state.levels.length, state.currentLevelIndex)
-  if (state.levels.length - 1 <= state.currentLevelIndex) {
-    return finished()
-  }
-
   return startNextLevel(state);
-}
-
-function finished() {
-    return {
-        state: 'FINISHED',
-        lastAction: 'RIGHT',
-    }
 }
 
 export const getCurentPackage = (state) => {

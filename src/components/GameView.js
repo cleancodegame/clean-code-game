@@ -15,6 +15,12 @@ import {
   setPackage,
   startPackage,
   nextLevel,
+  setMissClick,
+  sendMissClick,
+  setBugFix,
+  sendBugFix,
+  setUseHint,
+  sendUseHint,
 } from '../actions'
 
 class GameView extends Component {
@@ -43,6 +49,28 @@ class GameView extends Component {
     }
   }
 
+  onMiss = (line, ch, word) => {
+    this.props.dispatch(miss(word))
+    if (this.props.game.uid) {
+      this.props.dispatch(setMissClick({ missClickLocation: { line, ch, word }}))
+      this.props.dispatch(sendMissClick())
+    }
+  }
+  onBugFix = (bugId) => {
+    if (this.props.game.uid) {
+      this.props.dispatch(setBugFix(bugId))
+      this.props.dispatch(sendBugFix())
+    }
+    this.props.dispatch(bugfix(bugId))
+  }
+  onUseHint = (hintId) => {
+    if (this.props.game.uid) {
+      this.props.dispatch(setUseHint(hintId))
+      this.props.dispatch(sendUseHint())
+    }
+    this.props.dispatch(useHint(hintId))
+  }
+
   render() {
     const { game, dispatch} = this.props
 
@@ -57,10 +85,10 @@ class GameView extends Component {
            />
   		case 'IN_PLAY':
   			return <LevelView
-  				game={game}s
-  				onBugFix={b =>{dispatch(bugfix(b))}}
-  				onMiss={word =>{dispatch(miss(word))}}
-  				onUseHint={hintId => {dispatch(useHint(hintId))}}
+  				game={game}
+  				onBugFix={this.onBugFix}
+  				onMiss={this.onMiss}
+  				onUseHint={this.onUseHint}
   				onNext={() => dispatch(nextLevel())}
   				/>
       case 'AUTHORIZATION':

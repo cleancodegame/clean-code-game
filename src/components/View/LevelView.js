@@ -14,7 +14,6 @@ class LevelView extends React.Component {
 	}
 
 	isFinished() {
-		console.log(this.props.game)
 		return this.props.game.currentLevel.bugsCount === 0;
 	}
 	handleClick = (line, ch, word) => {
@@ -28,7 +27,7 @@ class LevelView extends React.Component {
 			word = word.trim().substring(0, 20);
 
 			if (!this.props.game.misses.includes(word))
-				this.props.onMiss(word);
+				this.props.onMiss(line, ch, word);
 		}
 	}
 

@@ -10,6 +10,7 @@ import {
   NEXT_LEVEL, startNextLevel,
   needAuthorizationForContinue,
   AUTHORIZATION_FOR_CONTINUE_SUCCESS,
+  sendStartLevel,
 } from '../actions'
 
 
@@ -18,7 +19,7 @@ function getLevels(packageId) {
     .then(snap => {
       const returnedLevels = snap.val()
 
-      return { levels: Object.keys(returnedLevels).map(key => returnedLevels[key]) }
+      return { levels: Object.keys(returnedLevels).map(id => { return {...returnedLevels[id], id } }) }
     })
     .catch((e) => console.log(e))
 }
@@ -40,13 +41,14 @@ function* handleStartPackage() {
 function getPackagesFromBase() {
   return firebase.database().ref('/packages').orderByChild("orderKey").once('value')
     .then(snap => {
-      return { packages: snap.val() }
+      console.log(snap.val())
+      return { packages: snap.val()}
     })
     .catch((e) => console.log(e))
 }
 
-function getFinishedPackages(userName) {
-  return firebase.database().ref('/perPackageScores').orderByChild("userId").equalTo(userName).once('value')
+function getFinishedPackages(uid) {
+  return firebase.database().ref('/perPackageScores').orderByChild("uid").equalTo(uid).once('value')
     .then(snap => {
       const finishedPackages = ['initial']
       const allFinished = snap.val() || {}
@@ -68,10 +70,10 @@ function* handleGetPackages() {
 
     const { packages } = yield call(getPackagesFromBase)
 
-    const { userName } = yield select(state => state)
+    const { uid } = yield select(state => state)
 
-    let finishedPackages = userName
-      ? yield call(getFinishedPackages, userName)
+    let finishedPackages = uid
+      ? yield call(getFinishedPackages, uid)
       : ['initial']
 
     if (!finishedPackages) {
@@ -84,14 +86,15 @@ function* handleGetPackages() {
   }
 }
 
-function isFinishedLevel(state) {
+function isFinishedPackage(state) {
   return state.levels.length - 1 <= state.currentLevelIndex
 }
 
-function writeResultPackage(id, userName, score, maxScore) {
+function writeResultPackage(id, uid, userName, score, maxScore) {
   firebase.database().ref('perPackageScores').push().set({
     packageId: id,
-    userId: userName,
+    userName,
+    uid,
     score,
     maxScore,
   })
@@ -101,19 +104,25 @@ function* handleNextLevel() {
   while (true) {
     yield take(NEXT_LEVEL)
 
-    const isFinished = yield select(isFinishedLevel)
+    const isFinishedPackage = yield select(isFinishedPackage)
 
-    if (isFinished) {
-      let { packageId, userName, totalScore, maxPossibleScore} = yield select(state => state)
+    if (isFinishedPackage) {
+      let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state)
 
-      if (userName) {
-        yield call(writeResultPackage, packageId, userName, totalScore, maxPossibleScore)
+      if (uid) {
+        yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore)
         yield put(getPackages())
       } else {
         yield put(needAuthorizationForContinue())
       }
     } else {
       yield put(startNextLevel())
+
+      // let { uid } = yield select(state => state)
+      //
+      // if (uid) {
+      //   yield put(sendStartLevel())
+      // }
     }
   }
 }
@@ -122,9 +131,9 @@ function* handleContinueAfterAuthorization() {
   while (true) {
     yield take(AUTHORIZATION_FOR_CONTINUE_SUCCESS)
 
-    let { packageId, userName, totalScore, maxPossibleScore} = yield select(state => state)
+    let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state)
 
-    yield call(writeResultPackage, packageId, userName, totalScore, maxPossibleScore)
+    yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore)
     yield put(getPackages())
   }
 }

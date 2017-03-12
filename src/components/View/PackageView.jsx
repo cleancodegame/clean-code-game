@@ -3,10 +3,12 @@ import cat from '../../img/cat.png'
 
 export default class PackageView extends React.Component {
 	render() {
+		const packagesIds = Object.keys(this.props.packages)
+			.sort((idA, idB) => this.props.packages[idA].orderKey - this.props.packages[idB].orderKey)
   	return (
       <div className="container body">
     		<div className="home-text PackageView-package-buttons">
-          {Object.keys(this.props.packages).map(id => {
+          {packagesIds.map(id => {
               if (this.props.finishedPackages.includes(this.props.packages[id].beforePackage)) {
                 return <button
                     className="btn btn-lg btn-primary btn-styled"
