@@ -1,8 +1,13 @@
 import _ from 'lodash'
 import CodeSample from './CodeSample'
 import {
-  SUCCESS_SIGN_IN,
-  SUCCESS_SING_OUT,
+  RESTART_GAME,
+  USE_HINT,
+  MISS,
+  BUGFIX,
+  NEXT,
+} from './constants/game.js'
+import {
   SUCCESS_GET_LEVELS,
   SUCCESS_GET_PACKAGES,
   SET_PACKAGE,
@@ -12,32 +17,35 @@ import {
   SET_MISS_CLICK,
   SET_BUG_FIX,
   SET_USE_HINT,
-} from './actions'
+  START_NEXT_LEVEL
+} from './constants/server.js'
+import {
+  SUCCESS_SIGN_IN,
+  SUCCESS_SING_OUT,
+} from './constants/auth.js'
 
 const game = (state = {}, action) => {
   // Temp
-  const { type, payload, miss, hintId, bug } = action
+  const { type, payload } = action
 
   console.log(state, action)
   switch (type) {
-    case "RESTART_GAME":
+    case RESTART_GAME:
       return restartGame(state)
-    case "START_NEXT_LEVEL":
+    case START_NEXT_LEVEL:
       return {...state, ...startNextLevel(state)}
-    case "MISS":
-      return {...state, ...missBug(state, miss)}
-    case "USE_HINT":
-      return {...state, ...useHint(state, hintId)}
-    case "BUGFIX":
-      return {...state, ...bugfix(state, bug)}
-    case "NEXT":
-      return {...state, ...next(state)}
+    case MISS:
+      return {...state, ...missBug(state, payload)}
+    case USE_HINT:
+      return {...state, ...useHint(state, payload)}
+    case BUGFIX:
+      return {...state, ...bugfix(state, payload)}
     case SUCCESS_SIGN_IN:
-      return { ...state, uid: payload.user.user.uid, userName: payload.user.user.displayName, state: 'LOAD' }
+      return { ...state, uid: payload.user.uid, userName: payload.user.displayName, state: 'LOAD' }
     case SUCCESS_SING_OUT:
       return signOut(state)
     case SUCCESS_GET_LEVELS:
-      return {...state, ...startNextLevel(state, payload.levels)}
+      return {...state, levels: payload.levels}
     case SUCCESS_GET_PACKAGES:
       return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages, state: 'PACKAGE'}
     case SET_PACKAGE:
@@ -94,9 +102,8 @@ function restartGame(state) {
   }
 }
 
-function startNextLevel(state, levels) {
-  console.log('startNewLevel', levels)
-  levels = levels || state.levels
+function startNextLevel(state) {
+  const levels = state.levels
   const nextIndex = state.currentLevelIndex + 1
   const level = levels[nextIndex]
 
@@ -159,10 +166,6 @@ function bugfix(state, bugKey) {
         foundBugs: [...state.foundBugs, state.currentLevel.bugs[bugKey]],
         currentLevel: fixedLevel
     }
-}
-
-function next(state) {
-  return startNextLevel(state);
 }
 
 export const getCurentPackage = (state) => {

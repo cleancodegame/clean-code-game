@@ -5,13 +5,15 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import gameReducer from './reducers'
+import firebase from 'firebase'
 import './database'
-
 import saga from './sagas'
+import { initAuth } from './actions/authActions'
+
 
 const initialState = {
     state: 'HOME'
-};
+}
 
 const logger = store => next => action => {
   console.group(action.type)
@@ -24,7 +26,7 @@ const logger = store => next => action => {
 }
 
 const sagaMiddleware = createSagaMiddleware()
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   gameReducer,
   initialState,
@@ -33,9 +35,16 @@ const store = createStore(
 
 sagaMiddleware.run(saga)
 
-ReactDOM.render(
+function render() {
+  ReactDOM.render(
     <Provider store={store}>
         <AppContainer />
     </Provider>,
-    document.getElementById("root")
-);
+  document.getElementById("root")
+  )
+}
+
+
+initAuth(store.dispatch)
+  .then(() => render())
+  .catch(error => console.error(error))

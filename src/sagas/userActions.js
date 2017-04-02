@@ -8,14 +8,14 @@ import {
   SEND_USE_HINT,
   SEND_START_LEVEL,
   SEND_FINISH_LEVEL,
-} from '../actions'
+} from '../constants/server.js'
 
-function writeUserAction(uid, levelId, action, info = {}) {
+function writeUserAction(uid, levelId, action, timeStamp, info = {}) {
   firebase.database().ref('userActions').push().set({
     uid,
     levelId,
     action,
-    timeStamp: Date.now(),
+    timeStamp,
     ...info,
   })
 }
@@ -25,8 +25,9 @@ function* handleMissClick() {
     yield take(SEND_MISS_CLICK)
 
     let { uid, levelId, missClickLocation} = yield select(state => state)
+    const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
-    yield call(writeUserAction, uid, levelId, 'missclick', { missClickLocation })
+    yield call(writeUserAction, uid, levelId, 'missclick', timeStamp, { missClickLocation })
   }
 }
 
@@ -35,8 +36,9 @@ function* handleBugFix() {
     yield take(SEND_BUG_FIX)
 
     let { uid, levelId, bugId} = yield select(state => state)
+    const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
-    yield call(writeUserAction, uid, levelId, 'bugfix', { bugId })
+    yield call(writeUserAction, uid, levelId, 'bugfix', timeStamp, { bugId })
   }
 }
 
@@ -45,8 +47,9 @@ function* handleUseHint() {
     yield take(SEND_USE_HINT)
 
     let { uid, levelId, hintId} = yield select(state => state)
+    const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
-    yield call(writeUserAction, uid, levelId, 'useHint', { hintId })
+    yield call(writeUserAction, uid, levelId, 'useHint', timeStamp, { hintId })
   }
 }
 
@@ -55,8 +58,9 @@ function* handleStartLevel() {
     yield take(SEND_START_LEVEL)
 
     let { uid, levelId, hintId} = yield select(state => state)
+    const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
-    yield call(writeUserAction, uid, levelId, 'finish')
+    yield call(writeUserAction, uid, levelId, timeStamp, 'start')
   }
 }
 
@@ -65,8 +69,9 @@ function* handleFinishLevel() {
     yield take(SEND_FINISH_LEVEL)
 
     let { uid, levelId, hintId} = yield select(state => state)
+    const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
-    yield call(writeUserAction, uid, levelId, 'finish')
+    yield call(writeUserAction, uid, levelId, timeStamp, 'finish')
   }
 }
 

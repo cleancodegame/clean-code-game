@@ -3,15 +3,28 @@ import firebase from 'firebase'
 import { getCurentPackage } from '../reducers'
 
 import {
+  GET_PACKAGES,
+  START_PACKAGE,
+  AUTHORIZATION_FOR_CONTINUE_SUCCESS,
+  FIND_BUG,
+} from '../constants/server.js'
+import { NEXT_LEVEL } from '../constants/game'
+
+import {
   successGetLevels,
   getPackages,
-  GET_PACKAGES, successGetPackages,
-  START_PACKAGE,
-  NEXT_LEVEL, startNextLevel,
+  successGetPackages,
+  startNextLevel,
   needAuthorizationForContinue,
-  AUTHORIZATION_FOR_CONTINUE_SUCCESS,
+  sendBugFix,
   sendStartLevel,
-} from '../actions'
+  sendFinishLevel,
+  nextLevel,
+} from '../actions/serverActions'
+
+import {
+  bugfix,
+} from '../actions/gameActions'
 
 
 function getLevels(packageId) {
@@ -34,6 +47,7 @@ function* handleStartPackage() {
 
     if (levels) {
       yield put(successGetLevels({ levels }))
+      yield put(nextLevel())
     }
   }
 }
@@ -104,9 +118,9 @@ function* handleNextLevel() {
   while (true) {
     yield take(NEXT_LEVEL)
 
-    const isFinishedPackage = yield select(isFinishedPackage)
+    const isFinished = yield select(isFinishedPackage)
 
-    if (isFinishedPackage) {
+    if (isFinished) {
       let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state)
 
       if (uid) {
@@ -117,15 +131,29 @@ function* handleNextLevel() {
       }
     } else {
       yield put(startNextLevel())
-
-      // let { uid } = yield select(state => state)
-      //
-      // if (uid) {
-      //   yield put(sendStartLevel())
-      // }
+      yield put(sendStartLevel())
     }
   }
 }
+
+function* handleFindBug() {
+  while (true) {
+    yield take(FIND_BUG)
+
+    let { packageId, uid, userName, bugId, currentLevel} = yield select(state => state)
+
+    yield put(bugfix(bugId))
+
+    if (uid) {
+      yield put(sendBugFix())
+
+      if (currentLevel.bugsCount === 1) {
+        yield put(sendFinishLevel())
+      }
+    }
+  }
+}
+
 
 function* handleContinueAfterAuthorization() {
   while (true) {
@@ -142,5 +170,6 @@ export default function* saga() {
   yield fork(handleStartPackage)
   yield fork(handleGetPackages)
   yield fork(handleNextLevel)
+  yield fork(handleFindBug)
   yield fork(handleContinueAfterAuthorization)
 }

@@ -11,17 +11,21 @@ import {
   bugfix,
   miss,
   useHint,
-  requestSignIn,
+  nextLevel,
+} from '../actions/gameActions'
+
+import {
   setPackage,
   startPackage,
-  nextLevel,
   setMissClick,
   sendMissClick,
   setBugFix,
   sendBugFix,
   setUseHint,
   sendUseHint,
-} from '../actions'
+  findBug,
+} from '../actions/serverActions'
+import { requestSignIn } from '../actions/authActions'
 
 class GameView extends Component {
   restartGame = () => {
@@ -57,11 +61,8 @@ class GameView extends Component {
     }
   }
   onBugFix = (bugId) => {
-    if (this.props.game.uid) {
-      this.props.dispatch(setBugFix(bugId))
-      this.props.dispatch(sendBugFix())
-    }
-    this.props.dispatch(bugfix(bugId))
+    this.props.dispatch(setBugFix(bugId))
+    this.props.dispatch(findBug())
   }
   onUseHint = (hintId) => {
     if (this.props.game.uid) {

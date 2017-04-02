@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import { requestSignIn, requestSignOut, goToMainPage } from '../../../actions';
+import { requestSignIn, requestSignOut } from '../../../actions/authActions.js';
+import { goToMainPage } from '../../../actions/gameActions.js';
+
 import './AppHeader.css';
 
 export default class AppHeader extends Component {

@@ -1,12 +1,13 @@
 import { fork, call, put, take, select } from 'redux-saga/effects'
 import firebase from 'firebase'
 
+import { REQUEST_SIGN_IN, REQUEST_SIGN_OUT, INIT_AUTH } from '../constants/auth.js'
+
 import {
-  REQUEST_SIGN_IN, successSignIn, failureSignIn,
-  REQUEST_SIGN_OUT, successSignOut, failureSignOut,
-  getPackages,
-  authorizationForContinueSuccess,
-} from '../actions'
+  successSignIn, failureSignIn,
+  successSignOut, failureSignOut,
+} from '../actions/authActions.js'
+import { getPackages, authorizationForContinueSuccess } from '../actions/serverActions.js'
 
 function signIn() {
   return firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
@@ -21,7 +22,7 @@ function* handleRequestSignIn() {
     const { user, error } = yield call(signIn)
 
     if (user && !error) {
-      yield put(successSignIn({ user }))
+      yield put(successSignIn({ user: user.user }))
 
       const inProgress = yield select(state => state.inProgress)
 
