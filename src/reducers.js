@@ -169,7 +169,7 @@ function bugfix(state, bugKey) {
 }
 
 export const getCurentPackage = (state) => {
-  return state.packageId
+  return state.select.packageId
 }
 
 export default game;

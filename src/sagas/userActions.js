@@ -24,7 +24,7 @@ function* handleMissClick() {
   while (true) {
     yield take(SEND_MISS_CLICK)
 
-    let { uid, levelId, missClickLocation} = yield select(state => state)
+    let { uid, levelId, missClickLocation} = yield select(state => state.game)
     const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, 'missclick', timeStamp, { missClickLocation })
@@ -35,7 +35,7 @@ function* handleBugFix() {
   while (true) {
     yield take(SEND_BUG_FIX)
 
-    let { uid, levelId, bugId} = yield select(state => state)
+    let { uid, levelId, bugId} = yield select(state => state.game)
     const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, 'bugfix', timeStamp, { bugId })
@@ -46,7 +46,7 @@ function* handleUseHint() {
   while (true) {
     yield take(SEND_USE_HINT)
 
-    let { uid, levelId, hintId} = yield select(state => state)
+    let { uid, levelId, hintId} = yield select(state => state.game)
     const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, 'useHint', timeStamp, { hintId })
@@ -57,7 +57,7 @@ function* handleStartLevel() {
   while (true) {
     yield take(SEND_START_LEVEL)
 
-    let { uid, levelId, hintId} = yield select(state => state)
+    let { uid, levelId, hintId} = yield select(state => state.game)
     const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, timeStamp, 'start')
@@ -68,7 +68,7 @@ function* handleFinishLevel() {
   while (true) {
     yield take(SEND_FINISH_LEVEL)
 
-    let { uid, levelId, hintId} = yield select(state => state)
+    let { uid, levelId, hintId} = yield select(state => state.game)
     const timeStamp = firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, timeStamp, 'finish')

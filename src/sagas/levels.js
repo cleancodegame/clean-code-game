@@ -84,7 +84,7 @@ function* handleGetPackages() {
 
     const { packages } = yield call(getPackagesFromBase)
 
-    const { uid } = yield select(state => state)
+    const { uid } = yield select(state => state.game)
 
     let finishedPackages = uid
       ? yield call(getFinishedPackages, uid)
@@ -121,7 +121,7 @@ function* handleNextLevel() {
     const isFinished = yield select(isFinishedPackage)
 
     if (isFinished) {
-      let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state)
+      let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state.game)
 
       if (uid) {
         yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore)
@@ -140,7 +140,7 @@ function* handleFindBug() {
   while (true) {
     yield take(FIND_BUG)
 
-    let { packageId, uid, userName, bugId, currentLevel} = yield select(state => state)
+    let { packageId, uid, userName, bugId, currentLevel} = yield select(state => state.game)
 
     yield put(bugfix(bugId))
 
@@ -159,7 +159,7 @@ function* handleContinueAfterAuthorization() {
   while (true) {
     yield take(AUTHORIZATION_FOR_CONTINUE_SUCCESS)
 
-    let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state)
+    let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state.game)
 
     yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore)
     yield put(getPackages())

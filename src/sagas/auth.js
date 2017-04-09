@@ -24,7 +24,7 @@ function* handleRequestSignIn() {
     if (user && !error) {
       yield put(successSignIn({ user: user.user }))
 
-      const inProgress = yield select(state => state.inProgress)
+      const inProgress = yield select(state => state.game.inProgress)
 
       if (inProgress) {
         yield put(authorizationForContinueSuccess())

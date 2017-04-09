@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import App from './App'
 
 const mapStateToProps = (state) => {
-    return { game: state }
+    return { game: state.game }
 }
 
 const mapDispatchToProps = (dispatch) => {
