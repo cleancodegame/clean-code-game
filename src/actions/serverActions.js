@@ -23,6 +23,7 @@ import {
   NEXT_LEVEL,
   END_LEVEL,
   FIND_BUG,
+  SET_START_LEVEL_TIME,
 } from '../constants/server.js'
 
 export const getLevels = createAction(GET_LEVELS)
@@ -53,3 +54,5 @@ export const sendStartLevel = createAction(SEND_START_LEVEL)
 export const nextLevel = createAction(NEXT_LEVEL)
 export const endLevel = createAction(END_LEVEL)
 export const findBug = createAction(FIND_BUG)
+
+export const setStartLevelTime = createAction(SET_START_LEVEL_TIME)

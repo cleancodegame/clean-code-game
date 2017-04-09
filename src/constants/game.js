@@ -6,3 +6,5 @@ export const NEXT = 'NEXT'
 
 export const GO_TO_MAIN_PAGE = 'GO_TO_MAIN_PAGE'
 export const NEXT_LEVEL = 'NEXT_LEVEL'
+
+export const SET_LEVEL_TIME = 'SET_LEVEL_TIME'

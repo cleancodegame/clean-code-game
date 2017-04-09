@@ -6,6 +6,7 @@ import {
   MISS,
   BUGFIX,
   NEXT,
+  SET_LEVEL_TIME,
 } from './constants/game.js'
 import {
   SUCCESS_GET_LEVELS,
@@ -17,7 +18,8 @@ import {
   SET_MISS_CLICK,
   SET_BUG_FIX,
   SET_USE_HINT,
-  START_NEXT_LEVEL
+  START_NEXT_LEVEL,
+  SET_START_LEVEL_TIME,
 } from './constants/server.js'
 import {
   SUCCESS_SIGN_IN,
@@ -39,7 +41,7 @@ const game = (state = {}, action) => {
     case USE_HINT:
       return {...state, ...useHint(state, payload)}
     case BUGFIX:
-      return {...state, ...bugfix(state, payload)}
+      return {...state, ...bugfix(state, payload.bugId, payload.bugTime)}
     case SUCCESS_SIGN_IN:
       return { ...state, uid: payload.user.uid, userName: payload.user.displayName, state: 'LOAD' }
     case SUCCESS_SING_OUT:
@@ -62,6 +64,10 @@ const game = (state = {}, action) => {
       return {...state, bugId: payload}
     case SET_USE_HINT:
       return {...state, hintId: payload}
+    case SET_START_LEVEL_TIME:
+      return { ...state, startLevelTime: payload }
+    case SET_LEVEL_TIME:
+      return { ...state, packageTime: state.packageTime +  state.bugTime - state.startLevelTime }
     default:
       return state;
   }
@@ -99,6 +105,7 @@ function restartGame(state) {
     currentLevel: null, //CodeSample
     levelsCount: 0,
     packageId: 0,
+    packageTime: 0,
   }
 }
 
@@ -157,19 +164,16 @@ function useHint(state, hintId) {
     }
 }
 
-function bugfix(state, bugKey) {
+function bugfix(state, bugKey, bugTime) {
     var fixedLevel = state.currentLevel.fix(bugKey);
     return {
         lastAction: "RIGHT",
         totalScore: state.totalScore + 1,
         availableHints: _.difference(state.availableHints, [bugKey]),
         foundBugs: [...state.foundBugs, state.currentLevel.bugs[bugKey]],
-        currentLevel: fixedLevel
+        currentLevel: fixedLevel,
+        bugTime,
     }
-}
-
-export const getCurentPackage = (state) => {
-  return state.select.packageId
 }
 
 export default game;

@@ -9,6 +9,7 @@ import {
   SEND_START_LEVEL,
   SEND_FINISH_LEVEL,
 } from '../constants/server.js'
+import { setStartLevelTime } from '../actions/serverActions'
 
 function writeUserAction(uid, levelId, action, timeStamp, info = {}) {
   firebase.database().ref('userActions').push().set({
@@ -25,7 +26,7 @@ function* handleMissClick() {
     yield take(SEND_MISS_CLICK)
 
     let { uid, levelId, missClickLocation} = yield select(state => state.game)
-    const timeStamp = firebase.database.ServerValue.TIMESTAMP
+    const timeStamp = Date.now() //firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, 'missclick', timeStamp, { missClickLocation })
   }
@@ -35,10 +36,9 @@ function* handleBugFix() {
   while (true) {
     yield take(SEND_BUG_FIX)
 
-    let { uid, levelId, bugId} = yield select(state => state.game)
-    const timeStamp = firebase.database.ServerValue.TIMESTAMP
+    let { uid, levelId, bugId, bugTime} = yield select(state => state.game)
 
-    yield call(writeUserAction, uid, levelId, 'bugfix', timeStamp, { bugId })
+    yield call(writeUserAction, uid, levelId, 'bugfix', bugTime, { bugId })
   }
 }
 
@@ -47,7 +47,7 @@ function* handleUseHint() {
     yield take(SEND_USE_HINT)
 
     let { uid, levelId, hintId} = yield select(state => state.game)
-    const timeStamp = firebase.database.ServerValue.TIMESTAMP
+    const timeStamp = Date.now() //firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, 'useHint', timeStamp, { hintId })
   }
@@ -58,9 +58,11 @@ function* handleStartLevel() {
     yield take(SEND_START_LEVEL)
 
     let { uid, levelId, hintId} = yield select(state => state.game)
-    const timeStamp = firebase.database.ServerValue.TIMESTAMP
+    const timeStamp = Date.now() //firebase.database.ServerValue.TIMESTAMP
 
     yield call(writeUserAction, uid, levelId, timeStamp, 'start')
+
+    yield put(setStartLevelTime(timeStamp))
   }
 }
 
@@ -68,10 +70,9 @@ function* handleFinishLevel() {
   while (true) {
     yield take(SEND_FINISH_LEVEL)
 
-    let { uid, levelId, hintId} = yield select(state => state.game)
-    const timeStamp = firebase.database.ServerValue.TIMESTAMP
+    let { uid, levelId, hintId, bugTime} = yield select(state => state.game)
 
-    yield call(writeUserAction, uid, levelId, timeStamp, 'finish')
+    yield call(writeUserAction, uid, levelId, bugTime, 'finish')
   }
 }
 

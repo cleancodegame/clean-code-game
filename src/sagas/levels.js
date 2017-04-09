@@ -1,6 +1,5 @@
 import { fork, call, put, take, select } from 'redux-saga/effects'
 import firebase from 'firebase'
-import { getCurentPackage } from '../reducers'
 
 import {
   GET_PACKAGES,
@@ -24,6 +23,7 @@ import {
 
 import {
   bugfix,
+  setLevelTime,
 } from '../actions/gameActions'
 
 
@@ -41,7 +41,7 @@ function* handleStartPackage() {
   while (true) {
     yield take(START_PACKAGE)
 
-    const packageId = yield select(getCurentPackage)
+    const { packageId } = yield select(state => state.game)
 
     const { levels } = yield call(getLevels, packageId)
 
@@ -100,17 +100,18 @@ function* handleGetPackages() {
   }
 }
 
-function isFinishedPackage(state) {
-  return state.levels.length - 1 <= state.currentLevelIndex
+function isFinishedPackage({game}) {
+  return game.levels.length - 1 <= game.currentLevelIndex
 }
 
-function writeResultPackage(id, uid, userName, score, maxScore) {
+function writeResultPackage(id, uid, userName, score, maxScore, time) {
   firebase.database().ref('perPackageScores').push().set({
     packageId: id,
     userName,
     uid,
     score,
     maxScore,
+    time,
   })
 }
 
@@ -121,10 +122,10 @@ function* handleNextLevel() {
     const isFinished = yield select(isFinishedPackage)
 
     if (isFinished) {
-      let { packageId, uid, userName, totalScore, maxPossibleScore} = yield select(state => state.game)
+      let { packageId, uid, userName, totalScore, maxPossibleScore, packageTime} = yield select(state => state.game)
 
       if (uid) {
-        yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore)
+        yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore, packageTime)
         yield put(getPackages())
       } else {
         yield put(needAuthorizationForContinue())
@@ -140,20 +141,22 @@ function* handleFindBug() {
   while (true) {
     yield take(FIND_BUG)
 
-    let { packageId, uid, userName, bugId, currentLevel} = yield select(state => state.game)
+    let { packageId, uid, userName, bugId, currentLevel, startLevelTime} = yield select(state => state.game)
 
-    yield put(bugfix(bugId))
+    const bugTime = Date.now() //firebase.database.ServerValue.TIMESTAMP
+
+    yield put(bugfix({bugId, bugTime}))
 
     if (uid) {
       yield put(sendBugFix())
 
       if (currentLevel.bugsCount === 1) {
+        yield put(setLevelTime())
         yield put(sendFinishLevel())
       }
     }
   }
 }
-
 
 function* handleContinueAfterAuthorization() {
   while (true) {
