@@ -5,11 +5,11 @@ import Scoreboard from './components/Scoreboard'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import gameReducer from './reducers'
-import firebase from 'firebase'
-import './database'
-import saga from './sagas'
-import { initAuth } from './actions/authActions'
+import authReducer from './core/auth/reducers'
+import gameReducer from './core/game/reducers'
+import './core/database'
+import saga from './core/sagas'
+import initAuth from './core/auth/init'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
@@ -31,6 +31,7 @@ const sagaMiddleware = createSagaMiddleware()
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   combineReducers({
+    auth: authReducer,
     game: gameReducer,
     routing: routerReducer,
   }),

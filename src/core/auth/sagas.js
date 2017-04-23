@@ -1,13 +1,8 @@
-import { fork, call, put, take, select } from 'redux-saga/effects'
+import { fork, call, put, take } from 'redux-saga/effects'
 import firebase from 'firebase'
 
-import { REQUEST_SIGN_IN, REQUEST_SIGN_OUT, INIT_AUTH } from '../constants/auth.js'
-
-import {
-  successSignIn, failureSignIn,
-  successSignOut, failureSignOut,
-} from '../actions/authActions.js'
-import { getPackages, authorizationForContinueSuccess } from '../actions/serverActions.js'
+import { REQUEST_SIGN_IN, REQUEST_SIGN_OUT } from './constants.js'
+import * as actions from './actions.js'
 
 function signIn() {
   return firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
@@ -22,17 +17,10 @@ function* handleRequestSignIn() {
     const { user, error } = yield call(signIn)
 
     if (user && !error) {
-      yield put(successSignIn({ user: user.user }))
-
-      const inProgress = yield select(state => state.game.inProgress)
-
-      if (inProgress) {
-        yield put(authorizationForContinueSuccess())
-      } else {
-        yield put(getPackages())
-      }
+      yield put(actions.signIn({ user: user.user }))
+      yield put(actions.successSignIn())
     } else {
-      yield put(failureSignIn({ error }))
+      yield put(actions.failureSignIn({ error }))
     }
   }
 }
@@ -42,7 +30,6 @@ function signOut() {
     .catch(error => error )
 }
 
-
 function* handleSignOut() {
   while (true) {
     yield take(REQUEST_SIGN_OUT)
@@ -50,9 +37,10 @@ function* handleSignOut() {
     const error = yield call(signOut)
 
     if (error) {
-      yield put(failureSignOut({ error }))
+      yield put(actions.failureSignOut({ error }))
     } else {
-      yield put(successSignOut())
+      yield put(actions.signOut())
+      yield put(actions.successSignOut())
     }
   }
 }

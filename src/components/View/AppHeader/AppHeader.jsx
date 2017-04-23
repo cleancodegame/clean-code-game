@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import { requestSignIn, requestSignOut } from '../../../actions/authActions.js';
-import { goToMainPage } from '../../../actions/gameActions.js';
+import actions from '../../../core/actions';
 
 import './AppHeader.css';
 
 export default class AppHeader extends Component {
   login = () => {
-    this.props.dispatch(requestSignIn())
+    this.props.dispatch(actions.requestSignIn())
   }
-  logout = () => this.props.dispatch(requestSignOut())
+  logout = () => this.props.dispatch(actions.requestSignOut())
 
   render() {
     const isUserLogin = Boolean(this.props.userName)
@@ -22,7 +21,7 @@ export default class AppHeader extends Component {
             {isUserLogin && <a className="header-login-link" href="#" onClick={this.logout}>Выйти</a>}
             {isUserLogin || <a className="header-login-link" href="#" onClick={this.login}>Войти</a>}
           </div>
-          <h1 className="header-name-text pointer" onClick={() => this.props.dispatch(goToMainPage())}>
+          <h1 className="header-name-text pointer" onClick={() => this.props.dispatch(actions.goToMainPage())}>
             The Clean Code Game
           </h1>
           <h2>

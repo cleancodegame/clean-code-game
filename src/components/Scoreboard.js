@@ -4,19 +4,20 @@ import React from 'react';
 import AppPage from './AppPage';
 import GameView from './GameView';
 import ProgressBar from './View/ProgressBar';
-import 'bootstrap/dist/css/bootstrap.css';
-import './App.css';
 
 function Scoreboard({game, onStartGame}) {
   return (
-    <AppPage tallHeader={game.state === 'HOME'} userName={game.userName}>
+    <AppPage tallHeader={false} userName={game.userName}>
       Scoreboard
     </AppPage>
   )
 }
 
 const mapStateToProps = (state) => {
-    return { game: state.game }
+    return {
+      userName: state.auth.userName,
+      scores: state.scoreboard.scores,
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {

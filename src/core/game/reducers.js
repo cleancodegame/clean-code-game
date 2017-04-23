@@ -1,30 +1,6 @@
 import _ from 'lodash'
-import CodeSample from './CodeSample'
-import {
-  RESTART_GAME,
-  USE_HINT,
-  MISS,
-  BUGFIX,
-  NEXT,
-  SET_LEVEL_TIME,
-} from './constants/game.js'
-import {
-  SUCCESS_GET_LEVELS,
-  SUCCESS_GET_PACKAGES,
-  SET_PACKAGE,
-  GO_TO_MAIN_PAGE,
-  FINISHED_PACKAGE,
-  NEED_AUTHORIZATION_FOR_CONTINUE,
-  SET_MISS_CLICK,
-  SET_BUG_FIX,
-  SET_USE_HINT,
-  START_NEXT_LEVEL,
-  SET_START_LEVEL_TIME,
-} from './constants/server.js'
-import {
-  SUCCESS_SIGN_IN,
-  SUCCESS_SING_OUT,
-} from './constants/auth.js'
+import CodeSample from '../CodeSample'
+import * as constants from './constants'
 
 const game = (state = {}, action) => {
   // Temp
@@ -32,41 +8,37 @@ const game = (state = {}, action) => {
 
   console.log(state, action)
   switch (type) {
-    case RESTART_GAME:
+    case constants.RESTART_GAME:
       return restartGame(state)
-    case START_NEXT_LEVEL:
+    case constants.START_NEXT_LEVEL:
       return {...state, ...startNextLevel(state)}
-    case MISS:
+    case constants.MISS:
       return {...state, ...missBug(state, payload)}
-    case USE_HINT:
+    case constants.USE_HINT:
       return {...state, ...useHint(state, payload)}
-    case BUGFIX:
+    case constants.BUGFIX:
       return {...state, ...bugfix(state, payload.bugId, payload.bugTime)}
-    case SUCCESS_SIGN_IN:
-      return { ...state, uid: payload.user.uid, userName: payload.user.displayName, state: 'LOAD' }
-    case SUCCESS_SING_OUT:
-      return signOut(state)
-    case SUCCESS_GET_LEVELS:
+    case constants.SUCCESS_GET_LEVELS:
       return {...state, levels: payload.levels}
-    case SUCCESS_GET_PACKAGES:
+    case constants.SUCCESS_GET_PACKAGES:
       return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages, state: 'PACKAGE'}
-    case SET_PACKAGE:
+    case constants.SET_PACKAGE:
       return {...state, packageId: payload }
-    case GO_TO_MAIN_PAGE:
+    case constants.GO_TO_MAIN_PAGE:
       return goToMainPage(state)
-    case FINISHED_PACKAGE:
+    case constants.FINISHED_PACKAGE:
       return finishedPackage(state)
-    case NEED_AUTHORIZATION_FOR_CONTINUE:
+    case constants.NEED_AUTHORIZATION_FOR_CONTINUE:
       return {...state, state: 'AUTHORIZATION', inProgress: true}
-    case SET_MISS_CLICK:
+    case constants.SET_MISS_CLICK:
       return {...state, missClickLocation: payload.missClickLocation }
-    case SET_BUG_FIX:
+    case constants.SET_BUG_FIX:
       return {...state, bugId: payload}
-    case SET_USE_HINT:
+    case constants.SET_USE_HINT:
       return {...state, hintId: payload}
-    case SET_START_LEVEL_TIME:
+    case constants.SET_START_LEVEL_TIME:
       return { ...state, startLevelTime: payload }
-    case SET_LEVEL_TIME:
+    case constants.SET_LEVEL_TIME:
       return { ...state, packageTime: state.packageTime +  state.bugTime - state.startLevelTime }
     default:
       return state;
@@ -125,20 +97,6 @@ function startNextLevel(state) {
     currentLevelIndex: nextIndex,
     currentLevel: new CodeSample(level)
   }
-}
-
-function signOut(state) {
-  const newState = {}
-
-  for (const key in state) {
-    if (key !== 'userName' && key !== 'uid') {
-      newState[key] = state[key]
-    }
-  }
-
-  newState.state = 'HOME'
-
-  return newState
 }
 
 function missBug(state, miss) {

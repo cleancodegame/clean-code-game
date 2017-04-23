@@ -6,70 +6,52 @@ import GameOverView from './View/GameOverView'
 import IntroView from './View/IntroView'
 import PackageView from './View/PackageView'
 import RequestAuthorizationView from './View/RequestAuthorizationView'
-import {
-  restartGame,
-  bugfix,
-  miss,
-  useHint,
-  nextLevel,
-} from '../actions/gameActions'
+import actions from '../core/actions'
 
-import {
-  setPackage,
-  startPackage,
-  setMissClick,
-  sendMissClick,
-  setBugFix,
-  sendBugFix,
-  setUseHint,
-  sendUseHint,
-  findBug,
-} from '../actions/serverActions'
-import { requestSignIn } from '../actions/authActions'
 
 class GameView extends Component {
   restartGame = () => {
-    this.props.dispatch(restartGame())
+    this.props.dispatch(actions.restartGame())
     // this.props.dispatch(getLevels())
     // this.props.dispatch(next())
   }
 
   handleStartGame = () => {
-    this.props.dispatch(restartGame())
-    this.props.dispatch(setPackage('0'))
-    this.props.dispatch(startPackage())
+    this.props.dispatch(actions.restartGame())
+    this.props.dispatch(actions.setPackage('0'))
+    this.props.dispatch(actions.startPackage())
   }
 
   handleContinueGame = () => {
-    this.props.dispatch(requestSignIn())
+    this.props.dispatch(actions.requestSignIn())
     // this.props.dispatch(getPackages())
   }
 
   handleStartPackage = (packageId) => {
     return () => {
-      this.props.dispatch(restartGame())
-      this.props.dispatch(setPackage(packageId))
-      this.props.dispatch(startPackage())
+      this.props.dispatch(actions.restartGame())
+      this.props.dispatch(actions.setPackage(packageId))
+      this.props.dispatch(actions.actionsstartPackage())
     }
   }
 
   onMiss = (line, ch, word) => {
-    this.props.dispatch(miss(word))
+    this.props.dispatch(actions.miss(word))
     if (this.props.game.uid) {
-      this.props.dispatch(setMissClick({ missClickLocation: { line, ch, word }}))
-      this.props.dispatch(sendMissClick())
+      this.props.dispatch(actions.setMissClick({ missClickLocation: { line, ch, word }}))
+      this.props.dispatch(actions.sendMissClick())
     }
   }
   onBugFix = (bugId) => {
-    this.props.dispatch(setBugFix(bugId))
-    this.props.dispatch(findBug())
+    this.props.dispatch(actions.setBugFix(bugId))
+    this.props.dispatch(actions.findBug())
   }
   onUseHint = (hintId) => {
     if (this.props.game.uid) {
-      this.props.dispatch(setUseHint(hintId))
-      this.props.dispatch(sendUseHint())
+      this.props.dispatch(actions.setUseHint(hintId))
+      this.props.dispatch(actions.sendUseHint())
     }
-    this.props.dispatch(useHint(hintId))
+    this.props.dispatch(actions.useHint(hintId))
   }
 
   render() {
@@ -90,7 +72,7 @@ class GameView extends Component {
   				onBugFix={this.onBugFix}
   				onMiss={this.onMiss}
   				onUseHint={this.onUseHint}
-  				onNext={() => dispatch(nextLevel())}
+  				onNext={() => dispatch(actions.nextLevel())}
   				/>
       case 'AUTHORIZATION':
         return <RequestAuthorizationView
