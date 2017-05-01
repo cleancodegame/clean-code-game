@@ -5,9 +5,9 @@ import AppPage from './AppPage';
 import GameView from './GameView';
 import ProgressBar from './View/ProgressBar';
 
-function Scoreboard({game, onStartGame}) {
+function Scoreboard({auth, scoreboard}) {
   return (
-    <AppPage tallHeader={false} userName={game.userName}>
+    <AppPage tallHeader={false} userName={auth.userName}>
       Scoreboard
     </AppPage>
   )
@@ -15,8 +15,8 @@ function Scoreboard({game, onStartGame}) {
 
 const mapStateToProps = (state) => {
     return {
-      userName: state.auth.userName,
-      scores: state.scoreboard.scores,
+      auth: state.auth,
+      scoreboard: state.scoreboard,
     }
 }
 

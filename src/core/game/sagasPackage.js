@@ -2,7 +2,6 @@ import { fork, call, put, take, select } from 'redux-saga/effects'
 import firebase from 'firebase'
 
 import * as constants from './constants'
-import * as authConstants from '../auth/constants'
 import * as actions from './actions'
 
 function getPackageLevels(packageId) {
@@ -24,8 +23,9 @@ function* handleStartPackage() {
     const { levels } = yield call(getPackageLevels, packageId)
 
     if (levels) {
-      yield put(actions.successGetLevels({ levels }))
-      yield put(actions.nextLevel())
+      yield put(actions.setLevels({ levels }))
+
+      yield put(actions.startNextLevel())
     }
   }
 }
@@ -89,52 +89,24 @@ function writeResultPackage(packageId, uid, userName, score, maxScore, time) {
   })
 }
 
-function* handleNextLevel() {
-  while (true) {
-    yield take(constants.NEXT_LEVEL)
-
-    const isFinishedPackage = ({ game }) =>
-      game.levels.length - 1 <= game.currentLevelIndex
-    const isFinished = yield select(isFinishedPackage)
-
-    if (isFinished) {
-      yield put(actions.finishPackage())
-    } else {
-      yield put(actions.startNextLevel())
-      yield put(actions.sendStartLevel())
-    }
-  }
-}
-
-function* handleFinishPackage() {
-  while (true) {
-    yield take(constants.FINISH_PACKAGE)
+function* handleWriteResultPackage() {
+  while(true) {
+    yield take(constants.WRITE_RESULT_PACKAGE)
 
     const { packageId, totalScore, maxPossibleScore, packageTime } = yield select(state => state.game)
     const { uid, userName } = yield select(state => state.auth)
 
-    if (uid) {
-      yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore, packageTime)
-      yield put(actions.goToPackagePage())
-    } else {
-      yield put(actions.goToAuthorizationPage())
-      yield take(authConstants.SUCCESS_SIGN_IN)
-
-      const { packageId, totalScore, maxPossibleScore, levels, currentLevelIndex } = yield select(state => state.game)
-      const { uid, userName } = yield select(state => state.auth)
-      const isFinishedPackage = levels.length - 1 <= currentLevelIndex
-
-      if (isFinishedPackage) {
-        yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore)
-        yield put(actions.goToPackagePage())
-      }
+    if (!uid) {
+      return
     }
+    
+    yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore, packageTime)
   }
 }
+
 
 export default function* saga() {
   yield fork(handleStartPackage)
   yield fork(handleGetPackages)
-  yield fork(handleNextLevel)
-  yield fork(handleFinishPackage)
+  yield fork(handleWriteResultPackage)
 }

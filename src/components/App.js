@@ -5,11 +5,11 @@ import ProgressBar from './View/ProgressBar';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
-function App({game, onStartGame, auth}) {
+function App({game, onStartGame, auth, user}) {
     return (
-        <AppPage tallHeader={game.state === 'HOME'} userName={auth.userName}>
+        <AppPage tallHeader={user.state === 'HOME'} userName={auth.userName}>
             <ProgressBar max={game.levelsCount} completed={game.currentLevelIndex} />
-            <GameView onStartGame={onStartGame} auth={auth} game={game}/>
+            <GameView onStartGame={onStartGame} auth={auth} game={game} user={user}/>
         </AppPage>
     );
 }

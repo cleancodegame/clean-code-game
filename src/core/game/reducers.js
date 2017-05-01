@@ -18,7 +18,7 @@ const game = (state = {}, action) => {
       return {...state, ...useHint(state, payload)}
     case constants.BUG_FIX:
       return {...state, ...bugfix(state, payload.bugId, payload.bugTime)}
-    case constants.SUCCESS_GET_LEVELS:
+    case constants.SET_LEVELS:
       return {...state, levels: payload.levels}
     case constants.SET_PACKAGES:
       return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages }
@@ -26,8 +26,6 @@ const game = (state = {}, action) => {
       return {...state, packageId: payload }
     case constants.FINISHED_PACKAGE:
       return finishedPackage(state)
-    case constants.NEED_AUTHORIZATION_FOR_CONTINUE:
-      return {...state, state: 'AUTHORIZATION', inProgress: true}
     case constants.SET_MISS_CLICK:
       return {...state, missClickLocation: payload.missClickLocation }
     case constants.SET_BUG_FIX:
@@ -37,13 +35,8 @@ const game = (state = {}, action) => {
     case constants.SET_START_LEVEL_TIME:
       return { ...state, startLevelTime: payload }
     case constants.SET_LEVEL_TIME:
+    console.log('SET_LEVEL_TIME', state.packageTime, state.bugTime, state.startLevelTime)
       return { ...state, packageTime: state.packageTime +  state.bugTime - state.startLevelTime }
-    case constants.TO_MAIN_PAGE:
-      return { ...state, state: 'HOME' }
-    case constants.TO_PACKAGE_PAGE:
-      return { ...state, state: 'PACKAGE' }
-    case constants.TO_LOAD_PAGE:
-      return { ...state, state: 'LOAD' }
     default:
       return state;
   }
@@ -54,7 +47,6 @@ function finishedPackage(store) {
 
   return {
     ...store,
-    state: 'PACKAGE',
     finishedPackages,
   }
 }
@@ -82,7 +74,6 @@ function startNextLevel(state) {
   const level = levels[nextIndex]
 
   return {
-    state: 'IN_PLAY',
     lastAction: 'NO',
     levels,
     levelId: level.id,

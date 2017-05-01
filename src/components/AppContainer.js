@@ -5,6 +5,7 @@ const mapStateToProps = (state) => {
     return {
       game: state.game,
       auth: state.auth,
+      user: state.user,
       scoreboard: state.scoreboard,
    }
 }

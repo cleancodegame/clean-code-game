@@ -54,9 +54,8 @@ class GameView extends Component {
 
   render() {
     const { game, dispatch} = this.props
-    console.log('GameView', game)
 
-  	switch (game.state) {
+  	switch (this.props.user.state) {
   		case 'HOME':
         return <IntroView onContinueGame={this.handleContinueGame} onStartGame={this.handleStartGame} />
       case 'PACKAGE':
@@ -71,7 +70,7 @@ class GameView extends Component {
   				onBugFix={this.onBugFix}
   				onMiss={this.onMiss}
   				onUseHint={this.onUseHint}
-  				onNext={() => dispatch(actions.nextLevel())}
+  				onNext={() => dispatch(actions.nextLevelEvent())}
   				/>
       case 'AUTHORIZATION':
         return <RequestAuthorizationView
@@ -84,7 +83,7 @@ class GameView extends Component {
       case 'LOAD':
         return <div />
   		default:
-        return <div>Unknown game state: {game.state}</div>
+        return <div>Unknown game state: {this.props.user.state}</div>
   	}
   }
 }

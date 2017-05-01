@@ -7,6 +7,8 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import authReducer from './core/auth/reducers'
 import gameReducer from './core/game/reducers'
+import userReducer from './core/user/reducers'
+import scoreboardReducer from './core/scoreboard/reducers'
 import './core/database'
 import saga from './core/sagas'
 import initAuth from './core/auth/init'
@@ -14,7 +16,7 @@ import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 const initialState = {
-  game: { state: 'HOME' }
+  user: { state: 'HOME' }
 }
 
 const logger = store => next => action => {
@@ -33,6 +35,8 @@ const store = createStore(
   combineReducers({
     auth: authReducer,
     game: gameReducer,
+    user: userReducer,
+    scoreboard: scoreboardReducer,
     routing: routerReducer,
   }),
   initialState,

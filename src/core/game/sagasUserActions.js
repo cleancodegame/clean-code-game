@@ -3,8 +3,6 @@ import firebase from 'firebase'
 
 import * as constants from './constants'
 import * as actions from './actions'
-import { requestSignIn, requestSignOut } from '../auth/actions'
-import { SUCCESS_SIGN_IN, INIT_SUCCESS_SIGN_IN } from '../auth/constants'
 
 function writeUserAction(uid, levelId, action, timeStamp, info = {}) {
   if (!uid) {
@@ -102,47 +100,6 @@ function* handleFinishLevel() {
   }
 }
 
-function* handleContinueGameEvent() {
-  while(true) {
-    yield take(constants.CONTINUE_GAME_EVENT)
-
-    yield put(requestSignIn())
-
-    yield take(SUCCESS_SIGN_IN)
-    yield put(actions.goToPackagePage())
-  }
-}
-
-function* handleGoToPackagePage() {
-  while(true) {
-    yield take(constants.GO_TO_PACKAGE_PAGE)
-
-    yield put(actions.toLoadPage())
-
-    yield put(actions.getPackages())
-
-    yield take(constants.SUCCESS_GET_PACKAGES)
-    yield put(actions.toPackagePage())
-  }
-}
-
-function* handleSingOutEvent() {
-  while(true) {
-    yield take(constants.SING_OUT_EVENT)
-
-    yield put(requestSignOut())
-    yield put(actions.toMainPage())
-  }
-}
-
-function* handleInitSignIn() {
-  while(true) {
-    yield take(INIT_SUCCESS_SIGN_IN)
-
-    yield put(actions.goToPackagePage())
-  }
-}
-
 export default function* saga() {
   yield fork(handleMissClick)
   yield fork(handleFindBug)
@@ -150,8 +107,4 @@ export default function* saga() {
   yield fork(handleUseHint)
   yield fork(handleStartLevel)
   yield fork(handleFinishLevel)
-  yield fork(handleContinueGameEvent)
-  yield fork(handleGoToPackagePage)
-  yield fork(handleSingOutEvent)
-  yield fork(handleInitSignIn)
 }
