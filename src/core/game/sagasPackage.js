@@ -61,8 +61,7 @@ function* handleGetPackages() {
     yield take(constants.GET_PACKAGES)
 
     const { packages } = yield call(getPackagesFromBase)
-
-    const { uid } = yield select(state => state.game)
+    const { uid } = yield select(state => state.auth)
 
     let finishedPackages = uid
       ? yield call(getFinishedPackages, uid)
@@ -73,7 +72,8 @@ function* handleGetPackages() {
     }
 
     if (packages) {
-      yield put(actions.successGetPackages({ packages, finishedPackages }))
+      yield put(actions.setPackages({ packages, finishedPackages }))
+      yield put(actions.successGetPackages())
     }
   }
 }
@@ -110,7 +110,8 @@ function* handleFinishPackage() {
   while (true) {
     yield take(constants.FINISH_PACKAGE)
 
-    const { packageId, uid, userName, totalScore, maxPossibleScore, packageTime } = yield select(state => state.game)
+    const { packageId, totalScore, maxPossibleScore, packageTime } = yield select(state => state.game)
+    const { uid, userName } = yield select(state => state.auth)
 
     if (uid) {
       yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore, packageTime)
@@ -119,7 +120,8 @@ function* handleFinishPackage() {
       yield put(actions.goToAuthorizationPage())
       yield take(authConstants.SUCCESS_SIGN_IN)
 
-      const { packageId, uid, userName, totalScore, maxPossibleScore, levels, currentLevelIndex } = yield select(state => state.game)
+      const { packageId, totalScore, maxPossibleScore, levels, currentLevelIndex } = yield select(state => state.game)
+      const { uid, userName } = yield select(state => state.auth)
       const isFinishedPackage = levels.length - 1 <= currentLevelIndex
 
       if (isFinishedPackage) {

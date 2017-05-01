@@ -16,16 +16,14 @@ const game = (state = {}, action) => {
       return {...state, ...missBug(state, payload)}
     case constants.USE_HINT:
       return {...state, ...useHint(state, payload)}
-    case constants.BUGFIX:
+    case constants.BUG_FIX:
       return {...state, ...bugfix(state, payload.bugId, payload.bugTime)}
     case constants.SUCCESS_GET_LEVELS:
       return {...state, levels: payload.levels}
-    case constants.SUCCESS_GET_PACKAGES:
-      return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages, state: 'PACKAGE'}
+    case constants.SET_PACKAGES:
+      return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages }
     case constants.SET_PACKAGE:
       return {...state, packageId: payload }
-    case constants.GO_TO_MAIN_PAGE:
-      return goToMainPage(state)
     case constants.FINISHED_PACKAGE:
       return finishedPackage(state)
     case constants.NEED_AUTHORIZATION_FOR_CONTINUE:
@@ -35,11 +33,17 @@ const game = (state = {}, action) => {
     case constants.SET_BUG_FIX:
       return {...state, bugId: payload}
     case constants.SET_USE_HINT:
-      return {...state, hintId: payload}
+      return { ...state, hintId: payload }
     case constants.SET_START_LEVEL_TIME:
       return { ...state, startLevelTime: payload }
     case constants.SET_LEVEL_TIME:
       return { ...state, packageTime: state.packageTime +  state.bugTime - state.startLevelTime }
+    case constants.TO_MAIN_PAGE:
+      return { ...state, state: 'HOME' }
+    case constants.TO_PACKAGE_PAGE:
+      return { ...state, state: 'PACKAGE' }
+    case constants.TO_LOAD_PAGE:
+      return { ...state, state: 'LOAD' }
     default:
       return state;
   }
@@ -52,15 +56,6 @@ function finishedPackage(store) {
     ...store,
     state: 'PACKAGE',
     finishedPackages,
-  }
-}
-
-function goToMainPage(store) {
-  const state = store.userName ? 'PACKAGE' : 'HOME'
-
-  return {
-    ...store,
-    state
   }
 }
 

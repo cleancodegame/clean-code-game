@@ -8,7 +8,6 @@ import PackageView from './View/PackageView'
 import RequestAuthorizationView from './View/RequestAuthorizationView'
 import actions from '../core/actions'
 
-
 class GameView extends Component {
   restartGame = () => {
     this.props.dispatch(actions.restartGame())
@@ -23,21 +22,20 @@ class GameView extends Component {
   }
 
   handleContinueGame = () => {
-    this.props.dispatch(actions.requestSignIn())
-    // this.props.dispatch(getPackages())
+    this.props.dispatch(actions.continueGameEvent())
   }
 
   handleStartPackage = (packageId) => {
     return () => {
       this.props.dispatch(actions.restartGame())
       this.props.dispatch(actions.setPackage(packageId))
-      this.props.dispatch(actions.actionsstartPackage())
+      this.props.dispatch(actions.startPackage())
     }
   }
 
   onMiss = (line, ch, word) => {
     this.props.dispatch(actions.miss(word))
-    if (this.props.game.uid) {
+    if (this.props.auth.uid) {
       this.props.dispatch(actions.setMissClick({ missClickLocation: { line, ch, word }}))
       this.props.dispatch(actions.sendMissClick())
     }
@@ -47,7 +45,7 @@ class GameView extends Component {
     this.props.dispatch(actions.findBug())
   }
   onUseHint = (hintId) => {
-    if (this.props.game.uid) {
+    if (this.props.auth.uid) {
       this.props.dispatch(actions.setUseHint(hintId))
       this.props.dispatch(actions.sendUseHint())
     }
@@ -56,6 +54,7 @@ class GameView extends Component {
 
   render() {
     const { game, dispatch} = this.props
+    console.log('GameView', game)
 
   	switch (game.state) {
   		case 'HOME':

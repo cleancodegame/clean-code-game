@@ -4,6 +4,7 @@ import * as constants from './constants.js'
 export const requestSignIn = createAction(constants.REQUEST_SIGN_IN)
 export const signIn = createAction(constants.SIGN_IN)
 export const successSignIn = createAction(constants.SUCCESS_SIGN_IN)
+export const initSuccessSignIn = createAction(constants.INIT_SUCCESS_SIGN_IN)
 export const failureSignIn = createAction(constants.FAILURE_SIGN_IN)
 export const requestSignOut = createAction(constants.REQUEST_SIGN_OUT)
 export const signOut = createAction(constants.SIGN_OUT)

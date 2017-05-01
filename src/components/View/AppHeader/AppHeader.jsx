@@ -6,9 +6,9 @@ import './AppHeader.css';
 
 export default class AppHeader extends Component {
   login = () => {
-    this.props.dispatch(actions.requestSignIn())
+    this.props.dispatch(actions.continueGameEvent())
   }
-  logout = () => this.props.dispatch(actions.requestSignOut())
+  logout = () => this.props.dispatch(actions.singOutEvent())
 
   render() {
     const isUserLogin = Boolean(this.props.userName)
