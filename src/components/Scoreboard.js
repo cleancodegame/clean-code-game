@@ -9,6 +9,9 @@ function Scoreboard({auth, scoreboard}) {
   return (
     <AppPage tallHeader={false} userName={auth.userName}>
       Scoreboard
+      { scoreboard.scores.map(score => {
+        return <div>{score}</div>
+      }) }
     </AppPage>
   )
 }

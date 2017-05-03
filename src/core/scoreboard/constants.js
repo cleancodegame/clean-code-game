@@ -1,2 +1,7 @@
+export const INIT_SCOREBOARD = 'INIT_SCOREBOARD'
+
 export const GET_SCORES = 'GET_SCORES'
+export const SET_SCORES = 'SET_SCORES'
 export const SUCCESS_GET_SCORES = 'SUCCESS_GET_SCORES'
+
+export const UPDATE_SCORE = 'UPDATE_SCORE'
