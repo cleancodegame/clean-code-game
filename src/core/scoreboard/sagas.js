@@ -27,7 +27,7 @@ function* handleGetScores() {
   }
 }
 
-function updateScore(uid, userName, packageId totalScore, maxPossibleScore, packageTime) {
+function updateScore(uid, userName, packageId, totalScore, maxPossibleScore, packageTime) {
   // Спросить есть ли старый
   // если есть обновить
   // иначе записать

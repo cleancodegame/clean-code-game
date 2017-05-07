@@ -98,14 +98,6 @@ function* handleStartNextLevel() {
   }
 }
 
-function* handleInitScoreboard() {
-  while (true) {
-    yield take(INIT_SCOREBOARD)
-
-    yield put(getScores())
-  }
-}
-
 
 export default function* saga() {
   yield fork(handleContinueGameEvent)

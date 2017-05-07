@@ -78,7 +78,45 @@ function* handleGetPackages() {
   }
 }
 
-function writeResultPackage(packageId, uid, userName, score, maxScore, time) {
+function setPackageScore(uid, packageId, userName, score, maxScore, time) {
+  return firebase.database().ref('/perPackageScores')
+    .orderByChild("uid").equalTo(uid)
+    .once('value', snapshot => {
+      let key
+      let scoreData
+
+      snapshot.forEach(childSnapshot => {
+        const childData = childSnapshot.val()
+
+        if (childData.packageId === `${packageId}`) {
+          key = childSnapshot.key
+          scoreData = childData
+        }
+      })
+
+      if (!key) {
+        writeResultPackage(uid, packageId, userName, score, maxScore, time)
+
+        return true
+      }
+
+      if (scoreData.score < score || (scoreData.score === score && scoreData.time > time)) {
+        updateResultPackage(key, uid, userName, score, time)
+
+        return true
+      }
+    })
+}
+
+function updateResultPackage(key, uid, userName, score, time) {
+  firebase.database().ref(`perPackageScores/${key}`).update({
+    score,
+    time
+  })
+  .then(() => updateScore(uid, userName))
+}
+
+function writeResultPackage(uid, packageId, userName, score, maxScore, time) {
   firebase.database().ref('perPackageScores').push().set({
     packageId,
     userName,
@@ -87,6 +125,54 @@ function writeResultPackage(packageId, uid, userName, score, maxScore, time) {
     maxScore,
     time,
   })
+  .then(() => updateScore(uid, userName))
+}
+
+function updateScore(uid, userName) {
+  firebase.database().ref('/perPackageScores').orderByChild("uid").equalTo(uid).once('value')
+    .then(snapshot => {
+      let score = 0
+      let time = 0
+
+      snapshot.forEach(childSnapshot => {
+        const childData = childSnapshot.val()
+
+        score += childData.score
+        time += childData.time
+      })
+
+      setNewScore(uid, userName, score, time)
+    })
+}
+
+function setNewScore(uid, userName, score, time) {
+  const fbScores = firebase.database().ref('/scores')
+
+  fbScores.orderByChild("uid").equalTo(uid).once('value')
+    .then(snapshot => {
+      let key
+      snapshot.forEach(childSnapshot => {
+        key = childSnapshot.key
+      })
+
+      console.log('keyChildsnapshot', key)
+
+      if (key) {
+        firebase.database().ref(`scores/${key}`).update({
+          score,
+          time,
+        })
+
+        return
+      }
+
+      fbScores.push().set({
+        userName,
+        uid,
+        score,
+        time,
+      })
+    })
 }
 
 function* handleWriteResultPackage() {
@@ -99,8 +185,8 @@ function* handleWriteResultPackage() {
     if (!uid) {
       return
     }
-    
-    yield call(writeResultPackage, packageId, uid, userName, totalScore, maxPossibleScore, packageTime)
+
+    yield call(setPackageScore, uid, packageId, userName, totalScore, maxPossibleScore, packageTime)
   }
 }
 
