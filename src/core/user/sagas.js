@@ -6,6 +6,7 @@ import { SUCCESS_GET_PACKAGES, SUCCESS_GET_LEVELS, START_NEXT_LEVEL } from '../g
 import * as actions from './actions.js'
 import { getPackages, sendStartLevel, writeResultPackage, startNextLevel } from '../game/actions'
 import { requestSignIn, requestSignOut } from '../auth/actions'
+import { getScores } from '../scoreboard/actions'
 
 function* handleContinueGameEvent() {
   while(true) {
@@ -42,9 +43,21 @@ function* handleSingOutEvent() {
 
 function* handleInitSignIn() {
   while(true) {
-    yield take(INIT_SUCCESS_SIGN_IN)
+    yield take(constants.INIT_GAME)
 
-    yield put(actions.goToPackagePage())
+    const pathName = yield select(state => state.routing.locationBeforeTransitions.pathname)
+
+    if (pathName === '/') {
+      const { uid } = yield select(state => state.auth)
+
+      if (uid) {
+        yield put(actions.goToPackagePage())
+      }
+    }
+
+    if (pathName === '/scoreboard') {
+      yield put(getScores())
+    }
   }
 }
 

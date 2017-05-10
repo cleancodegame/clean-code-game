@@ -1,6 +1,8 @@
 import { createAction } from 'redux-actions'
 import * as constants from './constants.js'
 
+export const initGame = createAction(constants.INIT_GAME)
+
 export const goToAuthorizationPage = createAction(constants.NEED_AUTHORIZATION_FOR_CONTINUE)
 export const goToPackagePage = createAction(constants.GO_TO_PACKAGE_PAGE)
 export const toPackagePage = createAction(constants.TO_PACKAGE_PAGE)

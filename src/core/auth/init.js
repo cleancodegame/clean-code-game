@@ -9,7 +9,7 @@ export default function initAuth(dispatch) {
         dispatch(initSuccessSignIn())
       }
 
-      resolve()
+      resolve(dispatch)
     }, error => reject(error))
   })
 }

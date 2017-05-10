@@ -155,8 +155,6 @@ function setNewScore(uid, userName, score, time) {
         key = childSnapshot.key
       })
 
-      console.log('keyChildsnapshot', key)
-
       if (key) {
         firebase.database().ref(`scores/${key}`).update({
           score,

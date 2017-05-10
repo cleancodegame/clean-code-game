@@ -1,7 +1,7 @@
 import * as constants from './constants'
 
 export default function (state = {}, action) {
-  const { type, payload } = action
+  const { type } = action
 
   switch (type) {
     case constants.NEED_AUTHORIZATION_FOR_CONTINUE:

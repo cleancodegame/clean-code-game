@@ -12,11 +12,13 @@ import scoreboardReducer from './core/scoreboard/reducers'
 import './core/database'
 import saga from './core/sagas'
 import initAuth from './core/auth/init'
+import initGame from './core/user/init'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 const initialState = {
-  user: { state: 'HOME' }
+  user: { state: 'HOME' },
+  scoreboard: { scores: [], userScores: [] },
 }
 
 const logger = store => next => action => {
@@ -59,5 +61,6 @@ function render() {
 }
 
 initAuth(store.dispatch)
+  .then(initGame)
   .then(() => render())
   .catch(error => console.error(error))
