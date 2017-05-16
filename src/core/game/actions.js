@@ -6,7 +6,6 @@ export const useHint = createAction(constants.USE_HINT)
 export const miss = createAction(constants.MISS)
 export const findBug = createAction(constants.FIND_BUG)
 export const bugfix = createAction(constants.BUG_FIX)
-export const goToMainPage = createAction(constants.GO_TO_MAIN_PAGE)
 export const setLevelTime = createAction(constants.SET_LEVEL_TIME)
 
 export const setPackage = createAction(constants.SET_PACKAGE)

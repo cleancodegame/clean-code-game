@@ -1,4 +1,3 @@
-import firebase from 'firebase'
 import { initGame } from './actions'
 
 export default function init(dispatch) {

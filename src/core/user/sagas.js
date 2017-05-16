@@ -1,8 +1,8 @@
-import { fork, call, put, take, select } from 'redux-saga/effects'
+import { fork, put, take, select } from 'redux-saga/effects'
 
 import * as constants from './constants'
-import { SUCCESS_SIGN_IN, INIT_SUCCESS_SIGN_IN } from '../auth/constants'
-import { SUCCESS_GET_PACKAGES, SUCCESS_GET_LEVELS, START_NEXT_LEVEL } from '../game/constants'
+import { SUCCESS_SIGN_IN } from '../auth/constants'
+import { SUCCESS_GET_PACKAGES, START_NEXT_LEVEL } from '../game/constants'
 import * as actions from './actions.js'
 import { getPackages, sendStartLevel, writeResultPackage, startNextLevel } from '../game/actions'
 import { requestSignIn, requestSignOut } from '../auth/actions'

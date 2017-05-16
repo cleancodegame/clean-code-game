@@ -7,7 +7,7 @@ import './Scoreboard.css'
 
 function Scoreboard({auth, scoreboard}) {
   return (
-    <AppPage tallHeader={false} userName={auth.userName}>
+    <AppPage tallHeader={false}>
       <h1 className="scoreboard-title">Scoreboard</h1>
       <div className="scoreboard-header">
         <h2 className="scoreboard-rank">RANK</h2>
@@ -41,14 +41,10 @@ function Scoreboard({auth, scoreboard}) {
 }
 
 const mapStateToProps = (state) => {
-    return {
-      auth: state.auth,
-      scoreboard: state.scoreboard,
-    }
+  return {
+    auth: state.auth,
+    scoreboard: state.scoreboard,
+  }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return { }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Scoreboard)
+export default connect(mapStateToProps)(Scoreboard)

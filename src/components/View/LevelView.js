@@ -27,7 +27,7 @@ class LevelView extends React.Component {
 			word = word.trim().substring(0, 20);
 
 			if (!this.props.game.misses.includes(word))
-				this.props.onMiss(line, ch, word);
+				this.props.onMiss(this.props.uid ,line, ch, word);
 		}
 	}
 
@@ -85,7 +85,7 @@ class LevelView extends React.Component {
 									enabled={this.getHint() !== undefined}
 									text={this.getHint()}
 									modalTitle="Подсказка"
-									onClick={e => this.props.onUseHint(this.props.game.availableHints[0])} />
+									onClick={e => this.props.onUseHint(this.props.uid, this.props.game.availableHints[0])} />
 							</span>
 							<CodeView code={code.text} onClick={this.handleClick} />
 						</div>

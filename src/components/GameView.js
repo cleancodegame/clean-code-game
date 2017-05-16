@@ -9,83 +9,93 @@ import RequestAuthorizationView from './View/RequestAuthorizationView'
 import actions from '../core/actions'
 
 class GameView extends Component {
-  restartGame = () => {
-    this.props.dispatch(actions.restartGame())
-    // this.props.dispatch(getLevels())
-    // this.props.dispatch(next())
-  }
-
-  handleStartGame = () => {
-    this.props.dispatch(actions.restartGame())
-    this.props.dispatch(actions.setPackage('0'))
-    this.props.dispatch(actions.startPackage())
-  }
-
-  handleContinueGame = () => {
-    this.props.dispatch(actions.continueGameEvent())
-  }
-
-  handleStartPackage = (packageId) => {
-    return () => {
-      this.props.dispatch(actions.restartGame())
-      this.props.dispatch(actions.setPackage(packageId))
-      this.props.dispatch(actions.startPackage())
-    }
-  }
-
-  onMiss = (line, ch, word) => {
-    this.props.dispatch(actions.miss(word))
-    if (this.props.auth.uid) {
-      this.props.dispatch(actions.setMissClick({ missClickLocation: { line, ch, word }}))
-      this.props.dispatch(actions.sendMissClick())
-    }
-  }
-  onBugFix = (bugId) => {
-    this.props.dispatch(actions.setBugFix(bugId))
-    this.props.dispatch(actions.findBug())
-  }
-  onUseHint = (hintId) => {
-    if (this.props.auth.uid) {
-      this.props.dispatch(actions.setUseHint(hintId))
-      this.props.dispatch(actions.sendUseHint())
-    }
-    this.props.dispatch(actions.useHint(hintId))
-  }
-
   render() {
-    const { game, dispatch} = this.props
-
-  	switch (this.props.user.state) {
+    switch (this.props.state) {
   		case 'HOME':
-        return <IntroView onContinueGame={this.handleContinueGame} onStartGame={this.handleStartGame} />
+        return <IntroView onContinueGame={this.props.handleContinueGame} onStartGame={this.props.handleStartGame} />
       case 'PACKAGE':
         return <PackageView
-          packages={game.packages}
-          finishedPackages={game.finishedPackages}
-          startPackage={this.handleStartPackage}
-           />
+          packages={this.props.packages}
+          finishedPackages={this.props.finishedPackages}
+          startPackage={this.props.handleStartPackage}
+        />
   		case 'IN_PLAY':
   			return <LevelView
-  				game={game}
-  				onBugFix={this.onBugFix}
-  				onMiss={this.onMiss}
-  				onUseHint={this.onUseHint}
-  				onNext={() => dispatch(actions.nextLevelEvent())}
-  				/>
+          uid={this.props.uid}
+  				game={this.props.game}
+  				onBugFix={this.props.onBugFix}
+  				onMiss={this.props.onMiss}
+  				onUseHint={this.props.onUseHint}
+  				onNext={this.props.handleNextLevel}
+  			/>
       case 'AUTHORIZATION':
         return <RequestAuthorizationView
-          onContinueGame={this.handleContinueGame}
-         />
+          onContinueGame={this.props.handleContinueGame}
+        />
   		case 'FAILED':
-        return <GameOverView onPlayAgain={this.restartGame} />
+        return <GameOverView handlePlayAgain={this.props.restartGame} />
   		case 'FINISHED':
-        return <GameResultsView  onPlayAgain={this.restartGame} game={game} />
+        return <GameResultsView
+          handlePlayAgain={this.props.restartGame}
+          maxPossibleScore={this.props.maxPossibleScore}
+          totalScore={this.props.maxPossibleScore}
+        />
       case 'LOAD':
         return <div />
   		default:
-        return <div>Unknown game state: {this.props.user.state}</div>
+        return <div>Unknown game state: {this.props.state}</div>
   	}
   }
 }
 
-export default connect()(GameView);
+const mapStateToProps = state => {
+  return {
+    state: state.user.state,
+    packages: state.game.packages,
+    finishedPackages: state.game.finishedPackages,
+    game: state.game,
+    maxPossibleScore: state.game.maxPossibleScore,
+    totalScore: state.game.totalScore,
+    uid: state.auth.uid,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    restartGame: () => dispatch(actions.restartGame()),
+    handleStartGame: () => {
+      dispatch(actions.restartGame())
+      dispatch(actions.setPackage('0'))
+      dispatch(actions.startPackage())
+    },
+    handleContinueGame: () => dispatch(actions.continueGameEvent()),
+    handleStartPackage: packageId => {
+      dispatch(actions.restartGame())
+      dispatch(actions.setPackage(packageId))
+      dispatch(actions.startPackage())
+    },
+    onMiss: (uid, line, ch, word) => {
+      dispatch(actions.miss(word))
+
+      if (uid) {
+        dispatch(actions.setMissClick({ missClickLocation: { line, ch, word }}))
+        dispatch(actions.sendMissClick())
+      }
+    },
+    onBugFix: bugId => {
+      dispatch(actions.setBugFix(bugId))
+      dispatch(actions.findBug())
+    },
+    onUseHint: (uid, hintId) => {
+      if (uid) {
+        dispatch(actions.setUseHint(hintId))
+        dispatch(actions.sendUseHint())
+      }
+
+      dispatch(actions.useHint(hintId))
+    },
+    handleNextLevel: () => dispatch(actions.nextLevelEvent()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GameView)

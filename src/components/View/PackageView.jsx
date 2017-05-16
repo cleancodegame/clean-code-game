@@ -13,7 +13,7 @@ export default class PackageView extends React.Component {
                 return <button
                     className="btn btn-lg btn-primary btn-styled"
                     key={id}
-                    onClick={this.props.startPackage(id)}
+                    onClick={() => this.props.startPackage(id)}
                   >
                     {this.props.packages[id].name}
                 </button>

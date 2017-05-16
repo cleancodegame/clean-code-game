@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AppContainer from './components/AppContainer'
+import AppContainer from './components/App'
 import Scoreboard from './components/Scoreboard'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
@@ -33,6 +33,7 @@ const logger = store => next => action => {
 
 const sagaMiddleware = createSagaMiddleware()
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
 const store = createStore(
   combineReducers({
     auth: authReducer,

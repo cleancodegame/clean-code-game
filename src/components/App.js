@@ -1,17 +1,26 @@
-import React from 'react';
-import AppPage from './AppPage';
-import GameView from './GameView';
-import ProgressBar from './View/ProgressBar';
-import 'bootstrap/dist/css/bootstrap.css';
-import './App.css';
+import React from 'react'
+import GameView from './GameView'
+import AppPage from './AppPage'
+import { connect } from 'react-redux'
+import ProgressBar from './View/ProgressBar'
+import 'bootstrap/dist/css/bootstrap.css'
+import './App.css'
 
-function App({game, onStartGame, auth, user}) {
-    return (
-        <AppPage tallHeader={user.state === 'HOME'} userName={auth.userName}>
-            <ProgressBar max={game.levelsCount} completed={game.currentLevelIndex} />
-            <GameView onStartGame={onStartGame} auth={auth} game={game} user={user}/>
-        </AppPage>
-    );
+function App(props) {
+  return (
+    <AppPage tallHeader={props.state === 'HOME'}>
+      <ProgressBar max={props.levelsCount} completed={props.currentLevelIndex} />
+      <GameView />
+    </AppPage>
+  )
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    state: state.user.state,
+    levelsCount: state.game.levelsCount,
+    currentLevelIndex: state.game.currentLevelIndex,
+ }
+}
+
+export default connect(mapStateToProps)(App)
