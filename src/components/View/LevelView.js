@@ -27,25 +27,15 @@ class LevelView extends React.Component {
 		} else {
 			const word = token.string.trim().substring(0, 20)
 
-
-			// let missClickLine = line
-			//
-			//  = this.props.game.positionsOffset.reduce((tempLine, { positionLine, offsetLine }) => {
-			// 	if (line > ) {
-			//
-			// 	}
-			// }, line)
-
 			const offset = this.findOffset(line, token.start)
 
-
+			// debugger
 			const start = offset ? token.start + offset.characterDifference : token.start
 			const end = offset ? token.end + offset.characterDifference : token.end
-			// Пересчитывать относительно найденых ошибок
+			const missLine = offset ? line + offset.lineDifference : line
 
-			// Word or positions?
 			if (!this.props.game.misses.includes(word))
-				this.props.onMiss(this.props.uid, line, start, end, word);
+				this.props.onMiss(this.props.uid, missLine, start, end, word);
 		}
 	}
 
@@ -56,17 +46,21 @@ class LevelView extends React.Component {
 			return
 		}
 
-		console.log('offset', line, start, bugOffsets)
-
 		let offsetMiss
 
 		for (let offset of bugOffsets) {
-			debugger
-			if (line !== offset.startLine) {
+			if (line !== offset.endLine - offset.lineDifference) {
 				continue
 			}
 
-			if (start > offset.endCharacter - offset.characterDifference) {
+			if (line > offset.endLine - offset.lineDifference) {
+				break
+			}
+
+			// debugger
+
+			if (start > offset.endCharacter - offset.characterDifference
+					|| (line === offset.endLine - offset.lineDifference && offset.lineDifference)) {
 				offsetMiss = offset
 				continue
 			}

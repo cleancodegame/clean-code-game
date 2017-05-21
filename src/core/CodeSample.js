@@ -95,10 +95,13 @@ export default class CodeSample {
 			}
 		}
 
+		const type = bugLines.length === 1 ? 'increase' : 'reduce'
+
 		return {
 			lineDifference: bugLines.length - replaceLines.length,
-			characterDifference: bugLines[bugLines.length - 1] - replaceLines[replaceLines.length - 1],
-			startLineCharacter: 0,
+			characterDifference:
+				bugLines[bugLines.length - 1].length - replaceLines[replaceLines.length - 1].length,
+			type,
 		}
 	}
 
@@ -107,15 +110,19 @@ export default class CodeSample {
 
 		const bugDifference = this.getBugDifference(bugKey)
 		const curentBugOffsets = this.bugs[bugKey].offsets.map(({ start, end }) => {
-			const startLineCharacter = startLineCharacter === 0 ? startLineCharacter + start.ch : 0
+			let startLineCharacter = 0
+
+			if (bugDifference.type) {
+				startLineCharacter = bugDifference.type === 'increase' ? -start.ch : start.ch
+			}
 
 			 return {
 				 startLine: start.line,
 				 startCharacter: start.ch,
 				 endLine: end.line,
 				 endCharacter: end.ch,
-				 ...bugDifference,
-				 startLineCharacter,
+				 lineDifference: bugDifference.lineDifference,
+				 characterDifference: bugDifference.characterDifference - startLineCharacter,
 			 }
 		})
 
