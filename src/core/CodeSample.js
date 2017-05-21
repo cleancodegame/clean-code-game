@@ -8,9 +8,20 @@ export default class CodeSample {
 		this.instruction = level.instruction
 		this.learning = level.learning
 		this.packageId = level.packageId
+		this.bugOffsets = level.bugOffsets || []
 		this.bugsCount = Object.keys(this.bugs).length
 
     this.text = this.parseCode()
+
+		this.eols = [-1]
+
+		for (let i = 0; i < this.text.length; i++) {
+			if (this.text[i] === '\n') {
+				this.eols.push(i)
+      }
+		}
+
+		this.eols.push(Infinity)
     this.addBugLinePositions()
 	}
 
@@ -41,30 +52,20 @@ export default class CodeSample {
 	}
 
 	addBugLinePositions = () => {
-		const eols = [-1];
-
-		for (let i = 0; i < this.text.length; i++) {
-			if (this.text[i] === '\n') {
-				eols.push(i)
-      }
-		}
-
-		eols.push(Infinity)
-
 		Object.keys(this.bugs).forEach(key => {
 			this.bugs[key].offsets.forEach(offset => {
-				offset.start = this.getPos(offset.startIndex, eols);
-				offset.end = this.getPos(offset.startIndex + offset.len - 1, eols);
+				offset.start = this.getPos(offset.startIndex)
+				offset.end = this.getPos(offset.startIndex + offset.len - 1)
 			})
 		})
 	}
 
-  getPos(pos, eols) {
-    for (var line = 0; line < eols.length; line++)
-      if (eols[line] >= pos) {
+  getPos(pos) {
+    for (var line = 0; line < this.eols.length; line++)
+      if (this.eols[line] >= pos) {
         return {
           line: line - 1,
-          ch: pos - eols[line - 1] - 1
+          ch: pos - this.eols[line - 1] - 1
         }
       }
   }
@@ -80,17 +81,45 @@ export default class CodeSample {
 		}
 	}
 
+	getBugDifference = bugKey => {
+		const { code: bugCode, replace: replaceCode } = this.bugs[bugKey]
+
+		const bugLines = bugCode.split('\n')
+		const replaceLines = replaceCode.split('\n')
+
+		if ((bugLines.length === 1 && replaceLines.length === 1) ||
+				(bugLines.length > 1 && replaceLines.length > 1)) {
+			return {
+				lineDifference: bugLines.length - replaceLines.length,
+				characterDifference: bugCode.length - replaceCode.length,
+			}
+		}
+
+		return {
+			lineDifference: bugLines.length - replaceLines.length,
+			characterDifference: bugLines[bugLines.length - 1] - replaceLines[replaceLines.length - 1],
+			startLineCharacter: 0,
+		}
+	}
+
 	fix = (bugKey) => {
 		const code = this.code.split(`{{${bugKey}}}`).join(this.bugs[bugKey].replace)
 
-    const bugsClone = Object.keys(this.bugs)
-      .reduce((clone, key) => {
-        if (key === bugKey) {
-          return clone
-        }
+		const bugDifference = this.getBugDifference(bugKey)
+		const curentBugOffsets = this.bugs[bugKey].offsets.map(({ start, end }) => {
+			const startLineCharacter = startLineCharacter === 0 ? startLineCharacter + start.ch : 0
 
-        return {...clone, [key]: this.bugs[key]}
-      }, {})
+			 return {
+				 startLine: start.line,
+				 startCharacter: start.ch,
+				 endLine: end.line,
+				 endCharacter: end.ch,
+				 ...bugDifference,
+				 startLineCharacter,
+			 }
+		})
+
+    const bugsClone = _.omit(this.bugs, bugKey)
 
     return new CodeSample({
 			name: this.name,
@@ -98,9 +127,14 @@ export default class CodeSample {
 			bugs: bugsClone,
       packageId: this.packageId,
 			instruction: this.instruction,
-			learning: this.learning
+			learning: this.learning,
+			bugOffsets: mergeBugOffsets(this.bugOffsets, curentBugOffsets)
 		})
 	}
+}
+
+function mergeBugOffsets(oldOffsets, newOffsets) {
+	return [...oldOffsets, ...newOffsets]
 }
 
 function containPos(offset, line, ch) {
