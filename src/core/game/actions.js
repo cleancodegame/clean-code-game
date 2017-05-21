@@ -30,3 +30,4 @@ export const sendUseHint = createAction(constants.SEND_USE_HINT)
 export const sendFinishLevel = createAction(constants.SEND_FINISH_LEVEL)
 
 export const writeResultPackage = createAction(constants.WRITE_RESULT_PACKAGE)
+export const setLevelStatistic = createAction(constants.SET_LEVEL_STATISTIC)

@@ -15,3 +15,5 @@ export const singOutEvent = createAction(constants.SING_OUT_EVENT)
 
 export const finishPackageEvent = createAction(constants.FINISH_PACKAGE_EVENT)
 export const nextLevelEvent = createAction(constants.NEXT_LEVEL_EVENT)
+
+export const getLevelStatistic = createAction(constants.GET_LEVEL_STATISTIC)

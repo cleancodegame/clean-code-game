@@ -27,6 +27,8 @@ class GameView extends Component {
   				onMiss={this.props.onMiss}
   				onUseHint={this.props.onUseHint}
   				onNext={this.props.handleNextLevel}
+          isAdmin={this.props.isAdmin}
+          heatMap={this.props.heatMap}
   			/>
       case 'AUTHORIZATION':
         return <RequestAuthorizationView
@@ -57,6 +59,8 @@ const mapStateToProps = state => {
     maxPossibleScore: state.game.maxPossibleScore,
     totalScore: state.game.totalScore,
     uid: state.auth.uid,
+    isAdmin: state.routing.locationBeforeTransitions.query.admin,
+    heatMap: state.game.heatMap,
   }
 }
 
@@ -74,11 +78,11 @@ const mapDispatchToProps = dispatch => {
       dispatch(actions.setPackage(packageId))
       dispatch(actions.startPackage())
     },
-    onMiss: (uid, line, ch, word) => {
+    onMiss: (uid, line, start, end, word) => {
       dispatch(actions.miss(word))
 
       if (uid) {
-        dispatch(actions.setMissClick({ missClickLocation: { line, ch, word }}))
+        dispatch(actions.setMissClick({ missClickLocation: { line, start, end, word }}))
         dispatch(actions.sendMissClick())
       }
     },

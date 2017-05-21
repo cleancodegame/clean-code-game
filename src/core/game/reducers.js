@@ -26,6 +26,8 @@ const game = (state = {}, action) => {
       return {...state, packageId: payload }
     case constants.FINISHED_PACKAGE:
       return finishedPackage(state)
+    case constants.SET_LEVEL_STATISTIC:
+      return {...state, ...setLevelStatistic(payload)}
     case constants.SET_MISS_CLICK:
       return {...state, missClickLocation: payload.missClickLocation }
     case constants.SET_BUG_FIX:
@@ -35,7 +37,6 @@ const game = (state = {}, action) => {
     case constants.SET_START_LEVEL_TIME:
       return { ...state, startLevelTime: payload }
     case constants.SET_LEVEL_TIME:
-    console.log('SET_LEVEL_TIME', state.packageTime, state.bugTime, state.startLevelTime)
       return { ...state, packageTime: state.packageTime +  state.bugTime - state.startLevelTime }
     default:
       return state;
@@ -81,7 +82,8 @@ function startNextLevel(state) {
     availableHints: Object.keys(level.bugs),
     foundBugs: [],
     currentLevelIndex: nextIndex,
-    currentLevel: new CodeSample(level)
+    currentLevel: new CodeSample(level),
+    heatMap: undefined,
   }
 }
 
@@ -118,6 +120,37 @@ function bugfix(state, bugKey, bugTime) {
         currentLevel: fixedLevel,
         bugTime,
     }
+}
+
+function setLevelStatistic({ missclicks }) {
+  const heatMap = {
+    missclicks: {},
+    maxMissClick: 1
+  }
+
+  missclicks.forEach(missclick => {
+    if (!missclick.missClickLocation) {
+      return
+    }
+
+    const key = missclick.missClickLocation.line + '_' + missclick.missClickLocation.start
+
+    if (heatMap.missclicks[key]) {
+      heatMap.missclicks[key].count++
+      heatMap.maxMissClick = Math.max(heatMap.maxMissClick, heatMap.missclicks[key].count)
+
+      return
+    }
+
+    heatMap.missclicks[key] = {
+      count: 1,
+      line: missclick.missClickLocation.line,
+      start: missclick.missClickLocation.start,
+      end: missclick.missClickLocation.end,
+    }
+  })
+
+  return { heatMap }
 }
 
 export default game;

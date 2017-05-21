@@ -43,7 +43,7 @@ export default class GameResultsView extends Component {
 		]
 	}
 
-	renderAgainButton(){
+	renderAgainButton() {
 		return <p><a className="btn btn-lg btn-primary btn-styled" href="#" onClick={this.props.handlePlayAgain}>Ещё разик?</a></p>
 	}
 

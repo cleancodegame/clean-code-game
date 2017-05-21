@@ -1,10 +1,17 @@
-import { fork, put, take, select } from 'redux-saga/effects'
+import firebase from 'firebase'
+import { fork, put, take, select, call } from 'redux-saga/effects'
 
 import * as constants from './constants'
 import { SUCCESS_SIGN_IN } from '../auth/constants'
 import { SUCCESS_GET_PACKAGES, START_NEXT_LEVEL } from '../game/constants'
 import * as actions from './actions.js'
-import { getPackages, sendStartLevel, writeResultPackage, startNextLevel } from '../game/actions'
+import {
+  getPackages,
+  sendStartLevel,
+  writeResultPackage,
+  startNextLevel,
+  setLevelStatistic,
+} from '../game/actions'
 import { requestSignIn, requestSignOut } from '../auth/actions'
 import { getScores } from '../scoreboard/actions'
 
@@ -106,11 +113,47 @@ function* handleStartNextLevel() {
   while (true) {
     yield take(START_NEXT_LEVEL)
     yield put(sendStartLevel())
+    yield put(actions.getLevelStatistic())
 
     yield put(actions.toPlayPage())
   }
 }
 
+function getLevelStatistic(levelId) {
+  return firebase.database().ref('/userActions')
+    .orderByChild('levelId')
+    .equalTo(levelId)
+    .once('value')
+    .then(snapshot => {
+      console.log('getLevelStatistic', levelId, snapshot)
+      const missclicks = []
+
+      snapshot.forEach(childSnapshot => {
+        const value = childSnapshot.val()
+
+        if (value.action === 'missclick') {
+          missclicks.push(value)
+        }
+      })
+
+      return { missclicks }
+    })
+    .catch((e) => console.log(e))
+}
+
+function* handleGetLevelStatistic() {
+  while (true) {
+    yield take(constants.GET_LEVEL_STATISTIC)
+
+    const { levelId } = yield select(state => state.game)
+
+    const { missclicks } = yield call(getLevelStatistic, levelId)
+
+    if (missclicks) {
+      yield put(setLevelStatistic({ missclicks }))
+    }
+  }
+}
 
 export default function* saga() {
   yield fork(handleContinueGameEvent)
@@ -120,4 +163,5 @@ export default function* saga() {
   yield fork(handleFinishPackageEvent)
   yield fork(handleNextLevelEvent)
   yield fork(handleStartNextLevel)
+  yield fork(handleGetLevelStatistic)
 }

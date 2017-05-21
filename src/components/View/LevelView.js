@@ -16,18 +16,30 @@ class LevelView extends React.Component {
 	isFinished() {
 		return this.props.game.currentLevel.bugsCount === 0;
 	}
-	handleClick = (line, ch, word) => {
+
+	handleClick = (line, ch, token) => {
 		if (this.isFinished()) return;
 
-		var bug = this.props.game.currentLevel.findBugKey(line, ch);
+		var bugKey = this.props.game.currentLevel.findBugKey(line, ch);
 
-		if (bug != null) {
-			this.props.onBugFix(bug);
+		if (bugKey != null) {
+			this.props.onBugFix(bugKey);
 		} else {
-			word = word.trim().substring(0, 20);
+			const word = token.string.trim().substring(0, 20)
+			let missClickLine = line
 
+			 = this.props.game.positionsOffset.reduce((tempLine, { positionLine, offsetLine }) => {
+				if (line > ) {
+
+				}
+			}, line)
+
+			const start = this.props.game.positionOffset.pos
+			// Пересчитывать относительно найденых ошибок
+
+			// Word or positions?
 			if (!this.props.game.misses.includes(word))
-				this.props.onMiss(this.props.uid ,line, ch, word);
+				this.props.onMiss(this.props.uid, line, token.start, token.end, word);
 		}
 	}
 
@@ -87,7 +99,11 @@ class LevelView extends React.Component {
 									modalTitle="Подсказка"
 									onClick={e => this.props.onUseHint(this.props.uid, this.props.game.availableHints[0])} />
 							</span>
-							<CodeView code={code.text} onClick={this.handleClick} />
+							<CodeView
+								code={code.text}
+								onClick={this.handleClick}
+								heatMap={this.props.heatMap}
+							/>
 						</div>
 					</div>
 				</div>
