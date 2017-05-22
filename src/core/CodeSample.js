@@ -87,15 +87,12 @@ export default class CodeSample {
 		const bugLines = bugCode.split('\n')
 		const replaceLines = replaceCode.split('\n')
 
+		let type = bugLines.length === 1 ? 'increase' : 'reduce'
+
 		if ((bugLines.length === 1 && replaceLines.length === 1) ||
 				(bugLines.length > 1 && replaceLines.length > 1)) {
-			return {
-				lineDifference: bugLines.length - replaceLines.length,
-				characterDifference: bugCode.length - replaceCode.length,
-			}
+			type = 'multiple'
 		}
-
-		const type = bugLines.length === 1 ? 'increase' : 'reduce'
 
 		return {
 			lineDifference: bugLines.length - replaceLines.length,
@@ -110,11 +107,7 @@ export default class CodeSample {
 
 		const bugDifference = this.getBugDifference(bugKey)
 		const curentBugOffsets = this.bugs[bugKey].offsets.map(({ start, end }) => {
-			let startLineCharacter = 0
-
-			if (bugDifference.type) {
-				startLineCharacter = bugDifference.type === 'increase' ? -start.ch : start.ch
-			}
+			const startLineCharacter = countCharacter(bugDifference.type, start.ch)
 
 			 return {
 				 startLine: start.line,
@@ -137,6 +130,17 @@ export default class CodeSample {
 			learning: this.learning,
 			bugOffsets: mergeBugOffsets(this.bugOffsets, curentBugOffsets)
 		})
+	}
+}
+
+function countCharacter(type, count) {
+	switch(type) {
+		case 'increase':
+			return -count
+		case 'reduce':
+			return count
+		default:
+			return 0
 	}
 }
 
