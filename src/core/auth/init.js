@@ -1,13 +1,22 @@
 import firebase from 'firebase'
-import { signIn, initSuccessSignIn } from './actions'
+import { signIn, successSignIn, initSuccessSignIn } from './actions'
+
+let init = true
 
 export default function initAuth(dispatch) {
   return new Promise((resolve, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         dispatch(signIn({ user }))
-        dispatch(initSuccessSignIn())
+
+        if (init) {
+          dispatch(initSuccessSignIn())
+        } else {
+          dispatch(successSignIn())
+        }
       }
+
+      init = false
 
       resolve(dispatch)
     }, error => reject(error))

@@ -1,13 +1,19 @@
-import { fork, call, put, take } from 'redux-saga/effects'
+import { fork, call, put, take, select } from 'redux-saga/effects'
 import firebase from 'firebase'
 
-import { REQUEST_SIGN_IN, REQUEST_SIGN_OUT } from './constants.js'
+import { REQUEST_SIGN_IN, REQUEST_SIGN_OUT, INIT_SUCCESS_SIGN_IN } from './constants.js'
 import * as actions from './actions.js'
 
 function signIn() {
   return firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
     .then(user => ({ user }))
     .catch(error => ({ error }))
+}
+
+function checkAdmin(uid) {
+  return firebase.database().ref('/admins').orderByChild("uid").equalTo(uid).once('value')
+    .then(snap => snap.val() !== null)
+    .catch((e) => console.log(e))
 }
 
 function* handleRequestSignIn() {
@@ -17,8 +23,11 @@ function* handleRequestSignIn() {
     const { user, error } = yield call(signIn)
 
     if (user && !error) {
-      yield put(actions.signIn({ user: user.user }))
-      yield put(actions.successSignIn())
+      const isAdmin = yield call(checkAdmin, user.user.uid)
+
+      if (isAdmin) {
+        yield put(actions.turnOnAdmin())
+      }
     } else {
       yield put(actions.failureSignIn({ error }))
     }
@@ -45,7 +54,22 @@ function* handleSignOut() {
   }
 }
 
+function* initSuccessSignIn() {
+  while(true) {
+    yield take(INIT_SUCCESS_SIGN_IN)
+
+    const { uid } = yield select(state => state.auth)
+
+    const isAdmin = yield call(checkAdmin, uid)
+
+    if (isAdmin) {
+      yield put(actions.turnOnAdmin())
+    }
+  }
+}
+
 export default function* saga() {
   yield fork(handleRequestSignIn)
   yield fork(handleSignOut)
+  yield fork(initSuccessSignIn)
 }

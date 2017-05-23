@@ -72,7 +72,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(actions.setPackage('0'))
       dispatch(actions.startPackage())
     },
-    handleContinueGame: () => dispatch(actions.continueGameEvent()),
+    handleContinueGame: () => dispatch(actions.loginEvent()),
     handleStartPackage: packageId => {
       dispatch(actions.restartGame())
       dispatch(actions.setPackage(packageId))

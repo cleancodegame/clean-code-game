@@ -17,12 +17,16 @@ import { getScores } from '../scoreboard/actions'
 
 function* handleContinueGameEvent() {
   while(true) {
-    yield take(constants.CONTINUE_GAME_EVENT)
+    yield take(constants.LOGIN_EVENT)
 
     yield put(requestSignIn())
 
-    yield take(SUCCESS_SIGN_IN)
-    yield put(actions.goToPackagePage())
+    const pathName = yield select(state => state.routing.locationBeforeTransitions.pathname)
+
+    if (pathName === '/') {
+      yield take(SUCCESS_SIGN_IN)
+      yield put(actions.goToPackagePage())
+    }
   }
 }
 
@@ -44,7 +48,16 @@ function* handleSingOutEvent() {
     yield take(constants.SING_OUT_EVENT)
 
     yield put(requestSignOut())
-    yield put(actions.toMainPage())
+
+    const pathName = yield select(state => state.routing.locationBeforeTransitions.pathname)
+
+    if (pathName === '/') {
+      yield put(actions.toMainPage())
+    }
+
+    if (pathName === '/scoreboard') {
+      yield put(getScores())
+    }
   }
 }
 
@@ -113,7 +126,14 @@ function* handleStartNextLevel() {
   while (true) {
     yield take(START_NEXT_LEVEL)
     yield put(sendStartLevel())
-    yield put(actions.getLevelStatistic())
+
+    const needStatistic = yield select(state =>
+      state.auth.isAdmin && state.routing.locationBeforeTransitions.query.admin === 'true'
+    )
+
+    if (needStatistic) {
+      yield put(actions.getLevelStatistic())
+    }
 
     yield put(actions.toPlayPage())
   }
@@ -125,7 +145,6 @@ function getLevelStatistic(levelId) {
     .equalTo(levelId)
     .once('value')
     .then(snapshot => {
-      console.log('getLevelStatistic', levelId, snapshot)
       const missclicks = []
 
       snapshot.forEach(childSnapshot => {

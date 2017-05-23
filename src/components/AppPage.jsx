@@ -31,7 +31,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    handleLogin: () => dispatch(actions.continueGameEvent()),
+    handleLogin: () => dispatch(actions.loginEvent()),
     handleLogout: () => dispatch(actions.singOutEvent()),
     handleToMainPage: () => dispatch(actions.toMainPage()),
   }
