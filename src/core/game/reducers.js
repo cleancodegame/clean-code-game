@@ -78,7 +78,7 @@ function startNextLevel(state) {
     lastAction: 'NO',
     levels,
     levelId: level.id,
-    maxPossibleScore: state.maxPossibleScore + Object.keys(level.bugs).length,
+    maxPossibleScore: state.maxPossibleScore + 1000 * Object.keys(level.bugs).length,
     availableHints: Object.keys(level.bugs),
     foundBugs: [],
     currentLevelIndex: nextIndex,
@@ -88,7 +88,7 @@ function startNextLevel(state) {
 }
 
 function missBug(state, miss) {
-    const newScore = state.totalScore - (state.currentLevel.learning ? 0 : 1);
+    const newScore = state.totalScore - (state.currentLevel.learning ? 0 : 100);
     if (newScore < 0) return gameOver(state);
     return {
         lastAction: "WRONG",
@@ -112,9 +112,12 @@ function useHint(state, hintId) {
 
 function bugfix(state, bugKey, bugTime) {
     var fixedLevel = state.currentLevel.fix(bugKey);
+    const lastTime = state.bugTime || state.startLevelTime
+    const totalScore = state.totalScore + 1000 - Math.floor((bugTime - lastTime) / 1000)
+
     return {
         lastAction: "RIGHT",
-        totalScore: state.totalScore + 1,
+        totalScore,
         availableHints: _.difference(state.availableHints, [bugKey]),
         foundBugs: [...state.foundBugs, state.currentLevel.bugs[bugKey]],
         currentLevel: fixedLevel,

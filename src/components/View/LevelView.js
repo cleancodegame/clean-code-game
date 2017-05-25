@@ -49,12 +49,16 @@ class LevelView extends React.Component {
 		let offsetMiss
 
 		for (let offset of bugOffsets) {
-			if (line !== offset.endLine - offset.lineDifference) {
+			if (line > offset.endLine - offset.lineDifference) {
+				if (offset.lineDifference > 0) {
+					offsetMiss = { ...offset, characterDifference: 0 }
+				}
+
 				continue
 			}
 
-			if (line > offset.endLine - offset.lineDifference) {
-				break
+			if (line !== offset.endLine - offset.lineDifference) {
+				continue
 			}
 
 			// debugger

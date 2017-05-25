@@ -10,10 +10,17 @@ export default class AppHeader extends Component {
     return <div className="header">
       <div className="container header">
         <div className={classnames("header-text", "header-conteiner-text", { "tall": this.props.tall })}>
-          <div className="header-login">
-            <span className="header-login-username">{ isUserLogin ? this.props.userName : '' }</span>
-            {isUserLogin && <a className="header-login-link" href="#" onClick={this.props.handleLogout}>Выйти</a>}
-            {isUserLogin || <a className="header-login-link" href="#" onClick={this.props.handleLogin}>Войти</a>}
+          <div className="header-controls">
+            <div onClick={this.props.handleToScoreboard}>
+              <div className="header-scoreboard-link">
+                Рейтинг
+              </div>
+            </div>
+            <div className="header-login">
+              <span className="header-login-username">{ isUserLogin ? this.props.userName : '' }</span>
+              {isUserLogin && <div className="header-login-link" onClick={this.props.handleLogout}>Выйти</div>}
+              {isUserLogin || <div className="header-login-link" onClick={this.props.handleLogin}>Войти</div>}
+            </div>
           </div>
           <h1 className="header-name-text pointer" onClick={this.props.handleToMainPage}>
             The Clean Code Game

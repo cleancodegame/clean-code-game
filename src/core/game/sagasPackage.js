@@ -42,14 +42,14 @@ function getPackagesFromBase() {
 function getFinishedPackages(uid) {
   return firebase.database().ref('/perPackageScores').orderByChild("uid").equalTo(uid).once('value')
     .then(snap => {
-      const finishedPackages = ['initial']
+      const finishedPackages = {
+        initial: true,
+      }
       const allFinished = snap.val() || {}
 
-      Object.keys(allFinished).forEach(id => {
-        if (!finishedPackages.includes(allFinished[id].packageId)) {
-          finishedPackages.push(allFinished[id].packageId)
-        }
-      })
+      Object.keys(allFinished).forEach(id =>
+        finishedPackages[allFinished[id].packageId] = allFinished[id]
+      )
 
       return finishedPackages
     })
@@ -65,10 +65,10 @@ function* handleGetPackages() {
 
     let finishedPackages = uid
       ? yield call(getFinishedPackages, uid)
-      : ['initial']
+      : []
 
     if (!finishedPackages) {
-      finishedPackages = ['initial']
+      finishedPackages = []
     }
 
     if (packages) {

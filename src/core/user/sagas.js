@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import { browserHistory } from 'react-router'
 import { fork, put, take, select, call } from 'redux-saga/effects'
 
 import * as constants from './constants'
@@ -174,6 +175,17 @@ function* handleGetLevelStatistic() {
   }
 }
 
+function* handleRouting() {
+  while (true) {
+    const action = yield take(constants.ROUTING)
+
+    browserHistory[action.payload.method](action.payload.nextUrl)
+
+    // TODO Make it another way
+    yield put(actions.initGame())
+  }
+}
+
 export default function* saga() {
   yield fork(handleContinueGameEvent)
   yield fork(handleGoToPackagePage)
@@ -183,4 +195,5 @@ export default function* saga() {
   yield fork(handleNextLevelEvent)
   yield fork(handleStartNextLevel)
   yield fork(handleGetLevelStatistic)
+  yield fork(handleRouting)
 }

@@ -12,3 +12,4 @@ export const NEXT_LEVEL_EVENT = 'NEXT_LEVEL_EVENT'
 
 export const INIT_GAME = 'INIT_GAME'
 export const GET_LEVEL_STATISTIC = 'GET_LEVEL_STATISTIC'
+export const ROUTING = 'ROUTING'

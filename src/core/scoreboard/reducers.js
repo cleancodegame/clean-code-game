@@ -14,18 +14,7 @@ export default function (state = {}, action) {
 function setScores(state, scores, uid) {
   let userPosition = 0
 
-  const sortedScores = scores.sort((a, b) => {
-    if (a.score > b.score) {
-      return -1
-    }
-
-    if (a.score < b.score) {
-      return 1
-    }
-
-    return a.time > b.time ? 1 : -1
-  })
-  .map((score, index) => {
+  const sortedScores = scores.map((score, index) => {
     if (score.uid === uid) {
       userPosition = index
     }

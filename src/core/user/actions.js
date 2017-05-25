@@ -17,3 +17,12 @@ export const finishPackageEvent = createAction(constants.FINISH_PACKAGE_EVENT)
 export const nextLevelEvent = createAction(constants.NEXT_LEVEL_EVENT)
 
 export const getLevelStatistic = createAction(constants.GET_LEVEL_STATISTIC)
+export function routing(url) {
+  return {
+    type: constants.ROUTING,
+    payload: {
+      method: 'replace',
+      nextUrl: '/' + url,
+    }
+  }
+}

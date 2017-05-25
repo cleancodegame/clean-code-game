@@ -39,6 +39,20 @@
   font-size: 18pt;
 }
 
+.header-controls {
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-scoreboard-link {
+  margin-top: 10px;
+  font-size: 22px;
+  cursor: pointer;
+}
+.header-scoreboard-link:hover {
+  color: #337ab7;
+}
 .header-login {
   text-align: right;
   margin: 10px 10px 0px 0px;
@@ -46,14 +60,17 @@
 }
 
 .header-login-username {
-  color: #fff;
   margin-right: 20px;
   font-size: 22px;
   vertical-align: baseline;
 }
 
 .header-login-link {
-  color: #fff;
+  display: inline-block;
   line-height: 22px;
   vertical-align: baseline;
+  cursor: pointer;
+}
+.header-login-link:hover {
+  color: #337ab7;
 }

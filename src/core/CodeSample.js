@@ -119,6 +119,8 @@ export default class CodeSample {
 			 }
 		})
 
+		const dependentBugOffset = mergeBugOffsets(curentBugOffsets)
+
     const bugsClone = _.omit(this.bugs, bugKey)
 
     return new CodeSample({
@@ -128,7 +130,7 @@ export default class CodeSample {
       packageId: this.packageId,
 			instruction: this.instruction,
 			learning: this.learning,
-			bugOffsets: mergeBugOffsets(this.bugOffsets, curentBugOffsets)
+			bugOffsets: mergeWithOldBugOffsets(this.bugOffsets, curentBugOffsets)
 		})
 	}
 }
@@ -144,8 +146,92 @@ function countCharacter(type, count) {
 	}
 }
 
-function mergeBugOffsets(oldOffsets, newOffsets) {
-	return [...oldOffsets, ...newOffsets]
+function mergeBugOffsets(offsets) {
+	let previous
+
+	for (let offset of offsets) {
+		if (!previous) {
+			previous = offset
+			continue
+		}
+		if (previous.lineDifference > 0) {
+			offset.lineDifference += previous.lineDifference
+		}
+
+		if (offset.startLine === previous.startLine
+			&& offset.endCharacter > previous.startCharacter) {
+				offset.characterDifference += previous.characterDifference
+		}
+	}
+}
+
+
+// TODO Refactor this
+function mergeWithOldBugOffsets(oldOffsets, newOffsets) {
+	if (oldOffsets.length === 0) {
+		return newOffsets
+	}
+	const offsets = []
+
+	const oldOffset = {
+		line: 0,
+		ch: 0,
+	}
+
+	const newOffset = {
+		line: 0,
+		ch: 0,
+	}
+
+	let oldKey = 0
+	let newKey = 0
+// debugger
+	while (oldKey !== oldOffsets.length || newKey !== newOffsets.length) {
+		const old = oldOffsets[oldKey]
+		const curent = newOffsets[newKey]
+
+		if (oldKey === oldOffsets.length) {
+			offsets.push({
+				...curent,
+				lineDifference: curent.lineDifference + newOffset.line,
+			})
+			newKey++
+			continue
+		}
+
+		if (newKey === newOffsets.length) {
+			offsets.push({
+				...old,
+				lineDifference: old.lineDifference + oldOffset.line,
+			})
+			oldKey++
+			continue
+		}
+
+		if (old.startLine + old.lineDifference < curent.startLine) {
+			offsets.push(old)
+			oldKey++
+			continue
+		}
+
+		if (old.startLine + old.lineDifference > curent.startLine) {
+			offsets.push(curent)
+			newKey++
+			continue
+		}
+
+		if (old.startCharacter + old.characterDifference < curent.characterDifference) {
+			offsets.push(old)
+			oldKey++
+			continue
+		} else {
+			offsets.push(curent)
+			newKey++
+			continue
+		}
+	}
+
+	return offsets
 }
 
 function containPos(offset, line, ch) {

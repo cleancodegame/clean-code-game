@@ -13,6 +13,7 @@ function AppPage(props) {
         handleLogin={props.handleLogin}
         handleLogout={props.handleLogout}
         handleToMainPage={props.handleToMainPage}
+        handleToScoreboard={props.handleToScoreboard}
       />
       <div className="container">
         {props.children}
@@ -33,7 +34,11 @@ const mapDispatchToProps = dispatch => {
   return {
     handleLogin: () => dispatch(actions.loginEvent()),
     handleLogout: () => dispatch(actions.singOutEvent()),
-    handleToMainPage: () => dispatch(actions.toMainPage()),
+    handleToMainPage: () => {
+      dispatch(actions.routing(''))
+      dispatch(actions.toMainPage())
+    },
+    handleToScoreboard: () => dispatch(actions.routing('scoreboard'))
   }
 }
 

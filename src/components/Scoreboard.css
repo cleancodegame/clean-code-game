@@ -18,16 +18,11 @@
 }
 
 .scoreboard-name {
-  width: 45%;
+  width: 60%;
 }
 
 .scoreboard-points {
   width: 15%;
-  text-align: center;
-}
-
-.scoreboard-time {
-  width: 20%;
   text-align: center;
 }
 

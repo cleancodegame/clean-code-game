@@ -13,7 +13,7 @@ function getScores() {
 
       snapshot.forEach(childSnapshot => { scores.push(childSnapshot.val()) })
 
-      return scores
+      return scores.sort((a, b) => a.score < b.score ? 1 : -1)
     })
     .catch((e) => console.log(e))
 }
