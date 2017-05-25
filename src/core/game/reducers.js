@@ -3,10 +3,8 @@ import CodeSample from '../CodeSample'
 import * as constants from './constants'
 
 const game = (state = {}, action) => {
-  // Temp
   const { type, payload } = action
 
-  console.log(state, action)
   switch (type) {
     case constants.RESTART_GAME:
       return restartGame(state)
