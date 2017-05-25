@@ -185,5 +185,9 @@ body {
 .PackageView-button-disable[disabled]:active {
   background-color: #b5cde2;
   cursor: inherit;
+}
 
+.PackageView-button-score {
+  margin-top: -2px;
+  font-size: 14px;
 }

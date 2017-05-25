@@ -21,11 +21,16 @@ const game = (state = {}, action) => {
     case constants.SET_LEVELS:
       return {...state, levels: payload.levels}
     case constants.SET_PACKAGES:
-      return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages }
+      const finishedPackages = state.packageId
+        ? { ...payload.finishedPackages, [state.packageId]: {
+            score: state.totalScore,
+            maxScore: state.maxPossibleScore,
+          }}
+        : payload.finishedPackages
+
+      return {...state, packages: payload.packages, finishedPackages }
     case constants.SET_PACKAGE:
       return {...state, packageId: payload }
-    case constants.FINISHED_PACKAGE:
-      return finishedPackage(state)
     case constants.SET_LEVEL_STATISTIC:
       return {...state, ...setLevelStatistic(payload)}
     case constants.SET_MISS_CLICK:
@@ -43,15 +48,6 @@ const game = (state = {}, action) => {
   }
 }
 
-function finishedPackage(store) {
-  const finishedPackages = [...store.finishedPackages, store.packageId]
-
-  return {
-    ...store,
-    finishedPackages,
-  }
-}
-
 function restartGame(state) {
   return {
     ...state,
@@ -64,7 +60,7 @@ function restartGame(state) {
     currentLevelIndex: -1,
     currentLevel: null, //CodeSample
     levelsCount: 0,
-    packageId: 0,
+    packageId: null,
     packageTime: 0,
   }
 }

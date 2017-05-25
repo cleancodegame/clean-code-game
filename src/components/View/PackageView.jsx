@@ -12,12 +12,17 @@ export default class PackageView extends React.Component {
           {packagesIds.map(id => {
               if (this.props.finishedPackages[this.props.packages[id].beforePackage]) {
                 return <button
-                    className="btn btn-lg btn-primary btn-styled"
-                    key={id}
-                    onClick={() => this.props.startPackage(id)}
-                  >
-                    {this.props.packages[id].name}
-                </button>
+	                    className="btn btn-lg btn-primary btn-styled"
+	                    key={id}
+	                    onClick={() => this.props.startPackage(id)}
+	                  >
+	                    {this.props.packages[id].name}
+									    {this.props.finishedPackages[id] && (
+										    <div className="PackageView-button-score">
+											    {this.props.finishedPackages[id].score}/{this.props.finishedPackages[id].maxScore}
+										    </div>
+									    )}
+								</button>
               }
 
               return <button

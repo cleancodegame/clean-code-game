@@ -7,7 +7,6 @@ export const SUCCESS_GET_PACKAGES = 'SUCCESS_GET_PACKAGES'
 export const SET_PACKAGE = 'SET_PACKAGE'
 export const SET_PACKAGES = 'SET_PACKAGES'
 export const START_PACKAGE = 'START_PACKAGE'
-export const FINISHED_PACKAGE = 'FINISHED_PACKAGE'
 
 export const USE_HINT = 'USE_HINT'
 export const BUG_FIX = 'BUG_FIX'
