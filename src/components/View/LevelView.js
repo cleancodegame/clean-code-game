@@ -25,31 +25,34 @@ class LevelView extends React.Component {
 		if (bugKey != null) {
 			this.props.onBugFix(bugKey);
 		} else {
-			const word = token.string.trim().substring(0, 20)
+      const word = token.string.trim().substring(0, 20)
 
-			const offset = this.findOffset(line, token.start)
+      if (this.props.game.misses.includes(word)) {
+        return
+      }
 
-			// debugger
-			const start = offset ? token.start + offset.characterDifference : token.start
-			const end = offset ? token.end + offset.characterDifference : token.end
-			const missLine = offset ? line + offset.lineDifference : line
+      const { start, end, missLine } = this.props.game.bugOffsets.reduce(({ start, end, missLine }, offsets) => {
+        const offset = this.findOffset(offsets, missLine, start)
 
-			if (!this.props.game.misses.includes(word))
-				this.props.onMiss(this.props.uid, missLine, start, end, word);
+        return {
+          start: start + offset.characterDifference,
+          end: end + offset.characterDifference,
+          missLine: missLine + offset.lineDifference
+        }
+			}, { start: token.start, end: token.end, missLine: line })
+
+			this.props.onMiss(this.props.uid, missLine, start, end, word);
 		}
 	}
 
-	findOffset(line, start, end) {
-		const bugOffsets = this.props.game.currentLevel.bugOffsets
-
-		if (!bugOffsets.length) {
-			return
-		}
-
-		let offsetMiss
+	findOffset(bugOffsets, line, start, end) {
+		let offsetMiss = {
+      characterDifference: 0,
+      lineDifference: 0,
+    }
 
 		for (let offset of bugOffsets) {
-			if (line > offset.endLine - offset.lineDifference) {
+      if (line > offset.endLine - offset.lineDifference) {
 				if (offset.lineDifference > 0) {
 					offsetMiss = { ...offset, characterDifference: 0 }
 				}

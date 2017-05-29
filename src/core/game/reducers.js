@@ -78,6 +78,7 @@ function startNextLevel(state) {
     currentLevelIndex: nextIndex,
     currentLevel: new CodeSample(level),
     heatMap: undefined,
+    bugOffsets: [],
   }
 }
 
@@ -110,12 +111,13 @@ function bugfix(state, bugKey, bugTime) {
     const totalScore = state.totalScore + 1000 - Math.floor((bugTime - lastTime) / 1000)
 
     return {
-        lastAction: "RIGHT",
-        totalScore,
-        availableHints: _.difference(state.availableHints, [bugKey]),
-        foundBugs: [...state.foundBugs, state.currentLevel.bugs[bugKey]],
-        currentLevel: fixedLevel,
-        bugTime,
+      lastAction: "RIGHT",
+      totalScore,
+      availableHints: _.difference(state.availableHints, [bugKey]),
+      foundBugs: [...state.foundBugs, state.currentLevel.bugs[bugKey]],
+      currentLevel: fixedLevel,
+      bugTime,
+      bugOffsets: [fixedLevel.bugOffsets, ...state.bugOffsets],
     }
 }
 
