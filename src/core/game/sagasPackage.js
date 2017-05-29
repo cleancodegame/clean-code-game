@@ -33,7 +33,6 @@ function* handleStartPackage() {
 function getPackagesFromBase() {
   return firebase.database().ref('/packages').orderByChild("orderKey").once('value')
     .then(snap => {
-      console.log(snap.val())
       return { packages: snap.val()}
     })
     .catch((e) => console.log(e))

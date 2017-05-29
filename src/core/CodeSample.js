@@ -125,8 +125,6 @@ export default class CodeSample {
 
     const bugsClone = _.omit(this.bugs, bugKey)
 
-    console.log('buggOffsets', bugsClone)
-
     return new CodeSample({
 			name: this.name,
 			code,
