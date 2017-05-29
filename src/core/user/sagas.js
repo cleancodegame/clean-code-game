@@ -181,8 +181,17 @@ function* handleRouting() {
 
     browserHistory[action.payload.method](action.payload.nextUrl)
 
-    // TODO Make it another way
-    yield put(actions.initGame())
+    if (action.payload.nextUrl === '/scoreboard') {
+      yield put(getScores())
+    } else {
+      const { uid } = yield select(state => state.auth)
+
+      if (uid) {
+        yield put(actions.goToPackagePage())
+      } else {
+        yield put(actions.toMainPage())
+      }
+    }
   }
 }
 

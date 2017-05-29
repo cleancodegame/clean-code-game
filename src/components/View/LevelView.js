@@ -64,8 +64,6 @@ class LevelView extends React.Component {
 				continue
 			}
 
-			// debugger
-
 			if (start > offset.endCharacter - offset.characterDifference
 					|| (line === offset.endLine - offset.lineDifference && offset.lineDifference)) {
 				offsetMiss = offset

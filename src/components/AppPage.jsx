@@ -34,10 +34,7 @@ const mapDispatchToProps = dispatch => {
   return {
     handleLogin: () => dispatch(actions.loginEvent()),
     handleLogout: () => dispatch(actions.singOutEvent()),
-    handleToMainPage: () => {
-      dispatch(actions.routing(''))
-      dispatch(actions.toMainPage())
-    },
+    handleToMainPage: () => dispatch(actions.routing('')),
     handleToScoreboard: () => dispatch(actions.routing('scoreboard'))
   }
 }
