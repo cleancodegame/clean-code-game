@@ -26,7 +26,13 @@ function* handleContinueGameEvent() {
 
     if (pathName === '/') {
       yield take(SUCCESS_SIGN_IN)
-      yield put(actions.goToPackagePage())
+
+      const { state } = yield select(state => state.app)
+      const needRedirect = state !== 'PACKAGE_FINISHED' && state !== 'FINISHED' && state !== 'AUTHORIZATION'
+
+      if (needRedirect) {
+        yield put(actions.goToPackagePage())
+      }
     }
   }
 }
@@ -88,9 +94,23 @@ function* handleFinishPackageEvent() {
 
     const { uid } = yield select(state => state.auth)
 
+    const { packageId, packages } = yield select(state => state.game)
+
+    let isLastPackage = false
+
+    if (packages) {
+      const packageIds = Object.keys(packages)
+      isLastPackage = packageIds.indexOf(packageId) === packageIds.length - 1
+    }
+
     if (uid) {
       yield put(writeResultPackage())
-      yield put(actions.goToPackagePage())
+
+      if (isLastPackage) {
+        yield put(actions.toGameFinishedPage())
+      } else {
+        yield put(actions.toPackageFinishedPage())
+      }
     } else {
       yield put(actions.goToAuthorizationPage())
       yield take(SUCCESS_SIGN_IN)
@@ -100,7 +120,12 @@ function* handleFinishPackageEvent() {
 
       if (isFinishedPackage) {
         yield put(writeResultPackage())
-        yield put(actions.goToPackagePage())
+
+        if (isLastPackage) {
+          yield put(actions.toGameFinishedPage())
+        } else {
+          yield put(actions.toPackageFinishedPage())
+        }
       }
     }
   }

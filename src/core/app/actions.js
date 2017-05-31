@@ -9,6 +9,8 @@ export const toPackagePage = createAction(constants.TO_PACKAGE_PAGE)
 export const toMainPage = createAction(constants.TO_MAIN_PAGE)
 export const toPlayPage = createAction(constants.TO_PLAY_PAGE)
 export const toLoadPage = createAction(constants.TO_LOAD_PAGE)
+export const toGameFinishedPage = createAction(constants.TO_GAME_FINISHED_PAGE)
+export const toPackageFinishedPage = createAction(constants.TO_PACKAGE_FINISHED_PAGE)
 
 export const loginEvent = createAction(constants.LOGIN_EVENT)
 export const singOutEvent = createAction(constants.SING_OUT_EVENT)

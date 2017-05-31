@@ -47,6 +47,10 @@ export default class GameResultsView extends Component {
 		return <p><a className="btn btn-lg btn-primary btn-styled" href="#" onClick={this.props.handlePlayAgain}>Ещё разик?</a></p>
 	}
 
+	renderScoreboardButton() {
+		return <p><a className="btn btn-lg btn-primary btn-styled" href="#" onClick={this.props.handleToScoreboard}>К рейтингу!</a></p>
+	}
+
 	renderShareButtons() {
 		return (
 			<div className="share">
@@ -66,6 +70,7 @@ export default class GameResultsView extends Component {
 				<PulsoView title={title} />
 				<BooksView />
 				{this.renderAgainButton()}
+				{this.renderScoreboardButton()}
 			</div>
 		)
 	}

@@ -14,6 +14,10 @@ export default function (state = {}, action) {
       return { ...state, state: 'IN_PLAY' }
     case constants.TO_LOAD_PAGE:
       return { ...state, state: 'LOAD' }
+    case constants.TO_PACKAGE_FINISHED_PAGE:
+      return { ...state, state: 'PACKAGE_FINISHED' }
+    case constants.TO_GAME_FINISHED_PAGE:
+      return { ...state, state: 'FINISHED' }
     default:
       return state;
   }

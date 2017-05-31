@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import LevelView from './components/LevelView'
 import GameResultsView from './components/GameResultsView'
+import PackageResult from './components/PackageResult'
 import GameOverView from './components/GameOverView'
 import IntroView from './components/IntroView'
 import PackageView from './components/PackageView'
@@ -36,11 +37,40 @@ class GameView extends Component {
         />
   		case 'FAILED':
         return <GameOverView handlePlayAgain={this.props.restartGame} />
-  		case 'FINISHED':
-        return <GameResultsView
-          handlePlayAgain={this.props.restartGame}
+      case 'PACKAGE_FINISHED':
+        const packagesIds = Object.keys(this.props.packages)
+        const nextPackageId = packagesIds[packagesIds.indexOf(this.props.packageId) + 1]
+
+        return <PackageResult
+          handleStartPackage={this.props.handleStartPackage}
           maxPossibleScore={this.props.maxPossibleScore}
-          totalScore={this.props.maxPossibleScore}
+          totalScore={this.props.totalScore}
+          packageId={this.props.packageId}
+          nextPackageId={nextPackageId}
+        />
+      case 'FINISHED':
+        let maxScore = 0
+        let score = 0
+
+        Object.keys(this.props.finishedPackages)
+          .forEach((packageId) => {
+             const { score: packageScore, maxScore: maxPackageScore }
+              = this.props.finishedPackages[packageId]
+
+            if (packageId === this.props.packageId) {
+              maxScore += this.props.maxPossibleScore
+              score += this.props.totalScore
+            } else {
+              maxScore += maxPackageScore || 0
+              score += packageScore || 0
+            }
+          })
+
+        return <GameResultsView
+          handleToScoreboard={this.props.handleToScoreboard}
+          handlePlayAgain={() => this.props.handleRestartPackage(this.props.packageId)}
+          maxPossibleScore={maxScore}
+          totalScore={score}
         />
       case 'LOAD':
         return <div />
@@ -59,6 +89,7 @@ const mapStateToProps = state => {
     maxPossibleScore: state.game.maxPossibleScore,
     totalScore: state.game.totalScore,
     uid: state.auth.uid,
+    packageId: state.game.packageId,
     isAdmin: state.routing.locationBeforeTransitions.query.admin,
     heatMap: state.game.heatMap,
   }
@@ -99,6 +130,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(actions.useHint(hintId))
     },
     handleNextLevel: () => dispatch(actions.nextLevelEvent()),
+    handleNextPackage: () => dispatch(actions.nextLevelEvent()),
+    handleToScoreboard: () => dispatch(actions.routing('scoreboard'))
   }
 }
 
