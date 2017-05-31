@@ -2,7 +2,7 @@ import React from 'react'
 import GameView from './GameView'
 import AppPage from './AppPage'
 import { connect } from 'react-redux'
-import ProgressBar from './View/ProgressBar'
+import ProgressBar from './components/ProgressBar'
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
@@ -17,7 +17,7 @@ function App(props) {
 
 const mapStateToProps = state => {
   return {
-    state: state.user.state,
+    state: state.app.state,
     levelsCount: state.game.levelsCount,
     currentLevelIndex: state.game.currentLevelIndex,
  }

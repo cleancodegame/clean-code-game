@@ -1,23 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AppContainer from './components/App'
-import Scoreboard from './components/Scoreboard'
+import AppContainer from './view/App'
+import Scoreboard from './view/Scoreboard'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import authReducer from './core/auth/reducers'
 import gameReducer from './core/game/reducers'
-import userReducer from './core/user/reducers'
+import appReducer from './core/app/reducers'
 import scoreboardReducer from './core/scoreboard/reducers'
 import './core/database'
 import saga from './core/sagas'
 import initAuth from './core/auth/init'
-import initGame from './core/user/init'
+import initGame from './core/app/init'
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 const initialState = {
-  user: { state: 'HOME' },
+  app: { state: 'HOME' },
   scoreboard: { scores: [], userScores: [] },
 }
 
@@ -38,7 +38,7 @@ const store = createStore(
   combineReducers({
     auth: authReducer,
     game: gameReducer,
-    user: userReducer,
+    app: appReducer,
     scoreboard: scoreboardReducer,
     routing: routerReducer,
   }),

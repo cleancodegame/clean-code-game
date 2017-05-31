@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
-import LevelView from './View/LevelView'
-import GameResultsView from './View/GameResultsView'
-import GameOverView from './View/GameOverView'
-import IntroView from './View/IntroView'
-import PackageView from './View/PackageView'
-import RequestAuthorizationView from './View/RequestAuthorizationView'
+import LevelView from './components/LevelView'
+import GameResultsView from './components/GameResultsView'
+import GameOverView from './components/GameOverView'
+import IntroView from './components/IntroView'
+import PackageView from './components/PackageView'
+import RequestAuthorizationView from './components/RequestAuthorizationView'
 import actions from '../core/actions'
 
 class GameView extends Component {
@@ -52,7 +52,7 @@ class GameView extends Component {
 
 const mapStateToProps = state => {
   return {
-    state: state.user.state,
+    state: state.app.state,
     packages: state.game.packages,
     finishedPackages: state.game.finishedPackages,
     game: state.game,

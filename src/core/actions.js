@@ -1,6 +1,6 @@
 import * as authActions from './auth/actions'
 import * as gameActions from './game/actions'
 import * as scoreboardActions from './scoreboard/actions'
-import * as userActions from './user/actions'
+import * as appActions from './app/actions'
 
-export default { ...authActions, ...gameActions, ...scoreboardActions, ...userActions }
+export default { ...authActions, ...gameActions, ...scoreboardActions, ...appActions }

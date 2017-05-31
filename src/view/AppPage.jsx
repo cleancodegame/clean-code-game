@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import AppHeader from './View/AppHeader'
-import AppFooter from './View/AppFooter'
+import AppHeader from './components/AppHeader'
+import AppFooter from './components/AppFooter'
 import actions from '../core/actions'
 
 function AppPage(props) {

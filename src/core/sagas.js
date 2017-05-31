@@ -3,7 +3,7 @@ import sagasAuth from './auth/sagas'
 import sagasUserActions from './game/sagasUserActions'
 import sagasPackage from './game/sagasPackage'
 import sagasScoreboard from './scoreboard/sagas'
-import sagasUser from './user/sagas'
+import sagasApp from './app/sagas'
 
 export default function* rootSaga() {
   yield [
@@ -11,6 +11,6 @@ export default function* rootSaga() {
     fork(sagasUserActions),
     fork(sagasPackage),
     fork(sagasScoreboard),
-    fork(sagasUser)
+    fork(sagasApp)
   ]
 }
