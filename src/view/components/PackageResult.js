@@ -38,10 +38,14 @@ export default class GameResultsView extends Component {
 	render() {
 		return (
 			<div>
-				<h2>Ты прошел { this.props.packageName} с результатом {this.getScorePercentage()}%! ({this.props.totalScore} из {this.props.maxPossibleScore} возможных).</h2>
-        {this.renderNextButton()}
-        {this.renderAgainButton()}
-        <p>Поделимся?</p>
+        <h1>Поздравляем!</h1>
+        <p>Теперь ты {this.props.packageName}!</p>
+				<p>Твой результат {this.props.totalScore} баллов из {this.props.maxPossibleScore} возможных.</p>
+        <div className="PackageResult-buttons">
+          {this.renderAgainButton()}
+          {this.renderNextButton()}
+        </div>
+        <p>Поделиться</p>
         {this.renderShareButtons()}
 			</div>
 		)

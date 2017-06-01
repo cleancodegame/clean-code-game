@@ -191,3 +191,15 @@ body {
   margin-top: -2px;
   font-size: 14px;
 }
+
+.PackageResult-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 660px;
+  margin-bottom: 80px;
+}
+.GameResultsView-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 660px;
+}

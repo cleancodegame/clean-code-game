@@ -40,12 +40,14 @@ class GameView extends Component {
       case 'PACKAGE_FINISHED':
         const packagesIds = Object.keys(this.props.packages)
         const nextPackageId = packagesIds[packagesIds.indexOf(this.props.packageId) + 1]
+        const packageName = this.props.packages[this.props.packageId].name
 
         return <PackageResult
           handleStartPackage={this.props.handleStartPackage}
           maxPossibleScore={this.props.maxPossibleScore}
           totalScore={this.props.totalScore}
           packageId={this.props.packageId}
+          packageName={packageName}
           nextPackageId={nextPackageId}
         />
       case 'FINISHED':

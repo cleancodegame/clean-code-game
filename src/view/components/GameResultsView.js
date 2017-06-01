@@ -67,10 +67,12 @@ export default class GameResultsView extends Component {
 				<h2>{headerPhrase}</h2>
 				<p>Ты прошел Clean Code Game с результатом {this.getScorePercentage()}%! ({this.props.totalScore} из {this.props.maxPossibleScore} возможных).</p>
 				<p>{sharePhrase}</p>
-				<PulsoView title={title} />
+        <PulsoView title={title} />
 				<BooksView />
-				{this.renderAgainButton()}
-				{this.renderScoreboardButton()}
+        <div className="GameResultsView-buttons">
+          {this.renderAgainButton()}
+          {this.renderScoreboardButton()}
+        </div>
 			</div>
 		)
 	}
