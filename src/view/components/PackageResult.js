@@ -1,8 +1,6 @@
+import PulsoView from './PulsoView'
 import React, { Component } from 'react'
 import _ from 'lodash'
-
-import BooksView from './BooksView'
-import PulsoView from './PulsoView'
 
 export default class GameResultsView extends Component {
 	getScorePercentage() {
