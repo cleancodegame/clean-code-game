@@ -19,7 +19,11 @@ export default class AppHeader extends Component {
             <div className="header-login">
               <span className="header-login-username">{ isUserLogin ? this.props.userName : '' }</span>
               {isUserLogin && <div className="header-login-link" onClick={this.props.handleLogout}>Выйти</div>}
-              {isUserLogin || <div className="header-login-link" onClick={this.props.handleLogin}>Войти</div>}
+              {isUserLogin || <div className="header-login-provider">
+                <div className="header-login-link" onClick={this.props.handleLogin}>Войти через Google</div>
+                <br />
+                <div className="header-login-link header-login-addition-provider" onClick={() => this.props.handleLogin('github')}>&nbsp;GitHub</div>
+              </div>}
             </div>
           </div>
           <h1 className="header-name-text pointer" onClick={this.props.handleToMainPage}>

@@ -18,9 +18,9 @@ import { getScores } from '../scoreboard/actions'
 
 function* handleContinueGameEvent() {
   while(true) {
-    yield take(constants.LOGIN_EVENT)
+    const { payload: provider } = yield take(constants.LOGIN_EVENT)
 
-    yield put(requestSignIn())
+    yield put(requestSignIn(provider))
 
     const pathName = yield select(state => state.routing.locationBeforeTransitions.pathname)
 

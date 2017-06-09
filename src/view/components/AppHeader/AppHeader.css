@@ -57,6 +57,7 @@
   text-align: right;
   margin: 10px 10px 0px 0px;
   font-size: 20px;
+  height: 30px;
 }
 
 .header-login-username {
@@ -64,13 +65,17 @@
   font-size: 22px;
   vertical-align: baseline;
 }
+.header-login-provider {
+  display: inline-block;
+}
 
 .header-login-link {
   display: inline-block;
-  line-height: 22px;
   vertical-align: baseline;
+  line-height: 22px;
   cursor: pointer;
 }
+
 .header-login-link:hover {
   color: #337ab7;
 }
