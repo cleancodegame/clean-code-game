@@ -107,6 +107,10 @@ function* handleFinishPackageEvent() {
       yield put(writeResultPackage())
 
       if (isLastPackage) {
+        yield put(actions.toLoadPage())
+        yield put(getPackages())
+        yield take(SUCCESS_GET_PACKAGES)
+
         yield put(actions.toGameFinishedPage())
       } else {
         yield put(actions.toPackageFinishedPage())
@@ -115,17 +119,17 @@ function* handleFinishPackageEvent() {
       yield put(actions.goToAuthorizationPage())
       yield take(SUCCESS_SIGN_IN)
 
-      const { levels, currentLevelIndex } = yield select(state => state.game)
-      const isFinishedPackage = levels.length - 1 <= currentLevelIndex
+      yield put(actions.toLoadPage())
 
-      if (isFinishedPackage) {
-        yield put(writeResultPackage())
+      yield put(writeResultPackage())
 
-        if (isLastPackage) {
-          yield put(actions.toGameFinishedPage())
-        } else {
-          yield put(actions.toPackageFinishedPage())
-        }
+      yield put(getPackages())
+      yield take(SUCCESS_GET_PACKAGES)
+
+      if (isLastPackage) {
+        yield put(actions.toGameFinishedPage())
+      } else {
+        yield put(actions.toPackageFinishedPage())
       }
     }
   }

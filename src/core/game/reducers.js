@@ -19,14 +19,7 @@ const game = (state = {}, action) => {
     case constants.SET_LEVELS:
       return {...state, levels: payload.levels}
     case constants.SET_PACKAGES:
-      const finishedPackages = state.packageId
-        ? { ...payload.finishedPackages, [state.packageId]: {
-            score: state.totalScore,
-            maxScore: state.maxPossibleScore,
-          }}
-        : payload.finishedPackages
-
-      return {...state, packages: payload.packages, finishedPackages }
+      return {...state, packages: payload.packages, finishedPackages: payload.finishedPackages }
     case constants.SET_PACKAGE:
       return {...state, packageId: payload }
     case constants.SET_LEVEL_STATISTIC:
@@ -83,7 +76,7 @@ function startNextLevel(state) {
 }
 
 function missBug(state, miss) {
-    const newScore = state.totalScore - (state.currentLevel.learning ? 0 : 100);
+    const newScore = state.totalScore - (state.currentLevel.learning ? 0 : 200);
     if (newScore < 0) return gameOver(state);
     return {
         lastAction: "WRONG",

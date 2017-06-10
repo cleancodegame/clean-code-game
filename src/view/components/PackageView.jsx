@@ -12,7 +12,7 @@ export default class PackageView extends React.Component {
           {packagesIds.map(id => {
               if (this.props.finishedPackages[this.props.packages[id].beforePackage]) {
                 return <button
-	                    className="btn btn-lg btn-primary btn-styled"
+	                    className="btn btn-lg btn-primary btn-styled btn-package"
 	                    key={id}
 	                    onClick={() => this.props.startPackage(id)}
 	                  >

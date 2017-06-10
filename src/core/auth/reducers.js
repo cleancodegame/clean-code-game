@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT, TURN_ON_ADMIN } from './constants.js'
+import { SIGN_IN, SIGN_OUT, TURN_ON_ADMIN, OPEN_AUTH_MODAL, CLOSE_AUTH_MODAL } from './constants.js'
 import { omit } from 'lodash'
 
 export default function (state = {}, action) {
@@ -11,6 +11,10 @@ export default function (state = {}, action) {
       return omit(state, ['userName', 'uid', 'isAdmin'])
     case TURN_ON_ADMIN:
       return { ...state, isAdmin: true }
+    case OPEN_AUTH_MODAL:
+      return { ...state, modalOpen: true }
+    case CLOSE_AUTH_MODAL:
+      return { ...state, modalOpen: false }
     default:
       return state
   }

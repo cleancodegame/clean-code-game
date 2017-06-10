@@ -8,3 +8,6 @@ export const SUCCESS_SING_OUT = 'SUCCESS_SING_OUT'
 export const SIGN_OUT = 'SIGN_OUT'
 export const FAILURE_SIGN_OUT = 'FAILURE_SIGN_OUT'
 export const TURN_ON_ADMIN = 'TURN_ON_ADMIN'
+
+export const CLOSE_AUTH_MODAL = 'CLOSE_AUTH_MODAL'
+export const OPEN_AUTH_MODAL = 'OPEN_AUTH_MODAL'

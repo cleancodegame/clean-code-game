@@ -11,3 +11,6 @@ export const signOut = createAction(constants.SIGN_OUT)
 export const successSignOut = createAction(constants.SUCCESS_SING_OUT)
 export const failureSignOut = createAction(constants.FAILURE_SIGN_OUT)
 export const turnOnAdmin = createAction(constants.TURN_ON_ADMIN)
+
+export const openAuthModal = createAction(constants.OPEN_AUTH_MODAL)
+export const closeAuthModal = createAction(constants.CLOSE_AUTH_MODAL)
