@@ -208,7 +208,10 @@ function* handleRouting() {
   while (true) {
     const action = yield take(constants.ROUTING)
 
-    browserHistory[action.payload.method](action.payload.nextUrl)
+    const routing = yield select(state => state.routing)
+    const url = action.payload.nextUrl + routing.locationBeforeTransitions.search
+
+    browserHistory[action.payload.method](url)
 
     if (action.payload.nextUrl === '/scoreboard') {
       yield put(getScores())
