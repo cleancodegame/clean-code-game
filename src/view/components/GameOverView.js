@@ -1,8 +1,7 @@
 import React from 'react';
-
 import BooksView from "./BooksView";
 
-function GameOverView({onPlayAgain}){
+function GameOverView({handlePlayAgain}){
 	return <div>
 		<h2>Вы проиграли!</h2>
 		<p>
@@ -15,7 +14,7 @@ function GameOverView({onPlayAgain}){
 			Впрочем, возможно, вам просто не повезло. Попробуйте ещё раз!
 		</p>
 
-		<button className="btn btn-lg btn-primary btn-styled" onClick={onPlayAgain}>Ещё раз</button>
+		<button className="btn btn-lg btn-primary btn-styled" onClick={handlePlayAgain}>Ещё раз</button>
 	</div>;
 }
 

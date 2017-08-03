@@ -1,0 +1,27 @@
+.AuthModal-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.AuthModal-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #fff;
+  opacity: 0.7;
+}
+.AuthModal-block {
+  background: #fff;
+  z-index: 2;
+  padding: 40px 20px;
+  border: 1px solid #ddd;
+}
+.AuthModal-first-button {
+  margin-right: 10px;
+}

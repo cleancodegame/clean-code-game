@@ -1,7 +1,7 @@
 import React from 'react';
-import cleancode from '../img/cleancode.jpg'
-import codecomplete from '../img/codecomplete.jpg'
-import cat from '../img/cat.png'
+import cleancode from '../../img/cleancode.jpg'
+import codecomplete from '../../img/codecomplete.jpg'
+import cat from '../../img/cat.png'
 
 const books = [
 	{

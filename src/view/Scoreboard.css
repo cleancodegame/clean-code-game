@@ -1,0 +1,32 @@
+
+.scoreboard-title {
+  display: flex;
+  justify-content: center;
+}
+
+.scoreboard-header {
+  display: flex;
+}
+
+.scoreboard-item {
+  display: flex;
+}
+
+.scoreboard-rank {
+  width: 20%;
+  min-width: 90px;
+  text-align: center;
+}
+
+.scoreboard-name {
+  width: 60%;
+}
+
+.scoreboard-points {
+  width: 15%;
+  text-align: center;
+}
+
+.scoreboard-breaker {
+  height: 20px;
+}

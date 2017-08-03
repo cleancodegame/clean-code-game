@@ -11,13 +11,18 @@
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
     "codemirror": "^5.22.0",
+    "firebase": "^3.6.8",
     "jquery": "^3.1.1",
     "react": "^15.4.1",
     "react-bootstrap": "^0.30.7",
     "react-codemirror": "^0.3.0",
     "react-dom": "^15.4.1",
     "react-redux": "^5.0.1",
-    "redux": "^3.6.0"
+    "react-router": "^3.0.0",
+    "react-router-redux": "^4.0.8",
+    "redux": "^3.6.0",
+    "redux-actions": "^1.2.1",
+    "redux-saga": "^0.14.3"
   },
   "scripts": {
     "start": "react-scripts start",

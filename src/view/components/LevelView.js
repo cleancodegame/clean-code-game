@@ -3,7 +3,6 @@ import MessageButton from './MessageButton'
 import CodeView from './CodeView'
 import _ from 'lodash';
 import "animate.css";
-import classes from 'classnames'
 
 class LevelView extends React.Component {
 	static propTypes = {
@@ -15,23 +14,72 @@ class LevelView extends React.Component {
 	}
 
 	isFinished() {
-		return this.props.game.currentLevel.bugsCount() === 0;
+		return this.props.game.currentLevel.bugsCount === 0;
 	}
-	handleClick = (line, ch, word) => {
+
+	handleClick = (line, ch, token) => {
 		if (this.isFinished()) return;
-		var bug = this.props.game.currentLevel.findBug(line, ch);
-		if (bug != null) {
-			this.props.onBugFix(bug);
-		}
-		else {
-			word = word.trim().substring(0, 20);
-			if (!this.props.game.misses.includes(word))
-				this.props.onMiss(word);
+
+		var bugKey = this.props.game.currentLevel.findBugKey(line, ch);
+
+		if (bugKey != null) {
+			this.props.onBugFix(bugKey);
+		} else {
+      const word = token.string.trim().substring(0, 20)
+
+      if (this.props.game.misses.includes(word)) {
+        return
+      }
+
+      const { start, end, missLine } = this.props.game.bugOffsets.reduce(({ start, end, missLine }, offsets) => {
+        const offset = this.findOffset(offsets, missLine, start)
+
+        return {
+          start: start + offset.characterDifference,
+          end: end + offset.characterDifference,
+          missLine: missLine + offset.lineDifference
+        }
+			}, { start: token.start, end: token.end, missLine: line })
+
+			this.props.onMiss(this.props.uid, missLine, start, end, word);
 		}
 	}
 
+	findOffset(bugOffsets, line, start, end) {
+		let offsetMiss = {
+      characterDifference: 0,
+      lineDifference: 0,
+    }
+
+		for (let offset of bugOffsets) {
+      if (line > offset.endLine - offset.lineDifference) {
+				if (offset.lineDifference > 0) {
+					offsetMiss = { ...offset, characterDifference: 0 }
+				}
+
+				continue
+			}
+
+			if (line !== offset.endLine - offset.lineDifference) {
+				continue
+			}
+
+			if (start > offset.endCharacter - offset.characterDifference
+					|| (line === offset.endLine - offset.lineDifference && offset.lineDifference)) {
+				offsetMiss = offset
+				continue
+			}
+
+			break
+		}
+
+		return offsetMiss
+	}
+
 	renderExplanations() {
-		if (this.props.game.foundBugs.length === 0) return "";
+		if (this.props.game.foundBugs.length === 0)
+			return "";
+
 		return <div>
 			<h3>Объяснения:</h3>
 			<ol>
@@ -49,15 +97,15 @@ class LevelView extends React.Component {
 
 	getHint() {
 		if (this.props.game.availableHints.length > 0) {
-			let bugId = this.props.game.availableHints[0];
-			return this.props.game.currentLevel.bugs[bugId].description;
+			let bugId = this.props.game.availableHints[0]
+
+			return this.props.game.currentLevel.bugs[bugId].description
 		}
-		else
-			return undefined;
 	}
 	renderBugsCount() {
 		var classes = this.props.game.lastAction === "RIGHT" ? "animated rubberBand" : "";
-		var bugsCount = this.props.game.currentLevel.bugsCount();
+		var bugsCount = this.props.game.currentLevel.bugsCount
+
 		return <div className="score">
 			Осталось найти: <span style={{display:'inline-block'}} key={bugsCount} className={classes}>{bugsCount}</span>
 		</div>
@@ -82,9 +130,13 @@ class LevelView extends React.Component {
 									enabled={this.getHint() !== undefined}
 									text={this.getHint()}
 									modalTitle="Подсказка"
-									onClick={e => this.props.onUseHint(this.props.game.availableHints[0])} />
+									onClick={e => this.props.onUseHint(this.props.uid, this.props.game.availableHints[0])} />
 							</span>
-							<CodeView code={code.text} onClick={this.handleClick} />
+							<CodeView
+								code={code.text}
+								onClick={this.handleClick}
+								heatMap={this.props.heatMap}
+							/>
 						</div>
 					</div>
 				</div>

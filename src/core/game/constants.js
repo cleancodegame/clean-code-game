@@ -1,0 +1,33 @@
+export const RESTART_GAME = 'RESTART_GAME'
+export const GET_LEVELS = 'GET_LEVELS'
+export const SET_LEVELS = 'SET_LEVELS'
+export const GET_PACKAGE = 'GET_PACKAGE'
+export const GET_PACKAGES = 'GET_PACKAGES'
+export const SUCCESS_GET_PACKAGES = 'SUCCESS_GET_PACKAGES'
+export const SET_PACKAGE = 'SET_PACKAGE'
+export const SET_PACKAGES = 'SET_PACKAGES'
+export const START_PACKAGE = 'START_PACKAGE'
+
+export const USE_HINT = 'USE_HINT'
+export const BUG_FIX = 'BUG_FIX'
+
+export const MISS = 'MISS'
+export const SET_MISS_CLICK = 'SET_MISS_CLICK'
+export const SET_BUG_FIX = 'SET_BUG_FIX'
+export const SET_USE_HINT = 'SET_USE_HINT'
+
+export const START_NEXT_LEVEL = 'START_NEXT_LEVEL'
+
+export const END_LEVEL = 'END_LEVEL'
+export const FIND_BUG = 'FIND_BUG'
+export const SET_LEVEL_TIME = 'SET_LEVEL_TIME'
+export const SET_START_LEVEL_TIME = 'SET_START_LEVEL_TIME'
+
+export const SEND_MISS_CLICK = 'SEND_MISS_CLICK'
+export const SEND_BUG_FIX = 'SEND_BUG_FIX'
+export const SEND_USE_HINT = 'SEND_USE_HINT'
+export const SEND_FINISH_LEVEL = 'SEND_FINISH_LEVEL'
+export const SEND_START_LEVEL = 'SEND_START_LEVEL'
+
+export const WRITE_RESULT_PACKAGE = 'WRITE_RESULT_PACKAGE'
+export const SET_LEVEL_STATISTIC = 'SET_LEVEL_STATISTIC'
